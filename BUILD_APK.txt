@@ -1,0 +1,9 @@
+LORD OF THE NORTH — APK BUILD
+
+1) Open this folder in Android Studio.
+2) Let Gradle sync.
+3) Use Build > Generate App Bundles or APKs > Generate APKs.
+4) For a release APK, use the Gradle task: :app:assembleRelease
+5) Output: app/build/outputs/apk/release/app-release.apk
+
+The project itself contains the offline game assets, so the runtime game does not rely on a CDN.
