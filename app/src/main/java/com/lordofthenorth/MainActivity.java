@@ -55,7 +55,8 @@ public class MainActivity extends Activity {
         public GameView(Context c) {
             super(c);
             setEGLContextClientVersion(2);
-            setPreserveEGLContextOnPause(true);
+            setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+            setPreserveEGLContextOnPause(false);
             renderer = new NorthRenderer(c.getApplicationContext());
             setRenderer(renderer);
             setRenderMode(RENDERMODE_CONTINUOUSLY);
@@ -116,6 +117,7 @@ public class MainActivity extends Activity {
     public static class NorthRenderer implements GLSurfaceView.Renderer {
         final Context ctx; final float[] proj=new float[16],view=new float[16],vp=new float[16],m=new float[16],tmp=new float[16];
         int program, posH,normH,uvH,mvpH,modelH,colH,lightH,texH,useTexH;
+        volatile boolean glReady=false;
         Mesh cube, ground, cone; int texTerrain,texStone,texWood,texRock,texSnow,texForest;
         final ArrayList<NPC> npcs=new ArrayList<>(); final ArrayList<Site> siteData=new ArrayList<>();
         final Random rng=new Random(7); float playerX=0,playerZ=22,playerYaw=0,camYaw=0,camPitch=.36f; float joystickX,joystickY;
@@ -134,25 +136,44 @@ public class MainActivity extends Activity {
         void npc(String n,String h,String bio,float x,float z,int c){npcs.add(new NPC(n,h,bio,x,z,c));}
 
         @Override public void onSurfaceCreated(javax.microedition.khronos.opengles.GL10 gl, javax.microedition.khronos.egl.EGLConfig cfg){
-            GLES20.glClearColor(.055f,.09f,.11f,1); GLES20.glEnable(GLES20.GL_DEPTH_TEST); GLES20.glEnable(GLES20.GL_CULL_FACE); GLES20.glCullFace(GLES20.GL_BACK);
-            program=makeProgram(VS,FS);
-            if(program==0) return;
-            posH=GLES20.glGetAttribLocation(program,"aPos");
-            normH=GLES20.glGetAttribLocation(program,"aNormal");
-            uvH=GLES20.glGetAttribLocation(program,"aUV");
-            mvpH=GLES20.glGetUniformLocation(program,"uMVP");
-            modelH=GLES20.glGetUniformLocation(program,"uModel");
-            colH=GLES20.glGetUniformLocation(program,"uColor");
-            lightH=GLES20.glGetUniformLocation(program,"uLight");
-            texH=GLES20.glGetUniformLocation(program,"uTex");
-            useTexH=GLES20.glGetUniformLocation(program,"uUseTex");
-            cube=meshCube(); cone=meshCone(); ground=meshGround();
-            texStone=loadTex("castle_stone.jpg");
-            texWood=loadTex("wood_bark.jpg");
-            texRock=loadTex("wet_rock.jpg");
-            texSnow=loadTex("frozen_ground.jpg");
-            texForest=loadTex("pine_forest.jpg");
-            last=System.nanoTime();
+            glReady=false;
+            try{
+                GLES20.glClearColor(.055f,.09f,.11f,1);
+                GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+                GLES20.glEnable(GLES20.GL_CULL_FACE);
+                GLES20.glCullFace(GLES20.GL_BACK);
+
+                program=makeProgram(VS,FS);
+                if(program==0) return;
+
+                posH=GLES20.glGetAttribLocation(program,"aPos");
+                normH=GLES20.glGetAttribLocation(program,"aNormal");
+                uvH=GLES20.glGetAttribLocation(program,"aUV");
+                mvpH=GLES20.glGetUniformLocation(program,"uMVP");
+                modelH=GLES20.glGetUniformLocation(program,"uModel");
+                colH=GLES20.glGetUniformLocation(program,"uColor");
+                lightH=GLES20.glGetUniformLocation(program,"uLight");
+                texH=GLES20.glGetUniformLocation(program,"uTex");
+                useTexH=GLES20.glGetUniformLocation(program,"uUseTex");
+
+                if(posH<0 || normH<0 || uvH<0 || mvpH<0 || modelH<0 || colH<0 || lightH<0 || texH<0 || useTexH<0) return;
+
+                cube=meshCube();
+                cone=meshCone();
+                ground=meshGround();
+                if(cube==null || cone==null || ground==null) return;
+
+                texStone=loadTex("castle_stone.jpg");
+                texWood=loadTex("wood_bark.jpg");
+                texRock=loadTex("wet_rock.jpg");
+                texSnow=loadTex("frozen_ground.jpg");
+                texForest=loadTex("pine_forest.jpg");
+
+                last=System.nanoTime();
+                glReady=true;
+            }catch(Throwable ignored){
+                glReady=false;
+            }
         }
         @Override public void onSurfaceChanged(javax.microedition.khronos.opengles.GL10 gl,int w,int h){
             if(w<=0 || h<=0) return;
@@ -183,12 +204,12 @@ public class MainActivity extends Activity {
             // roads
             for(int i=0;i<siteData.size();i++){Site s=siteData.get(i); drawBuilding(s.x,0,s.z,10,12,10,texStone); for(int k=0;k<7;k++){float ax=s.x+(k-3)*3.5f, az=s.z+15; drawMesh(cube,ax,.08f,az,3.1f,.16f,3.1f,texRock,new float[]{.7f,.72f,.71f,1});}}
             // forests around the North
-            for(int i=0;i<80;i++){float a=(float)Math.sin(i*91.7)*.5f+.5f;float b=(float)Math.cos(i*37.1)*.5f+.5f;float x=(a*396)-198,z=(b*480)-400; if(Math.hypot(x,z-22)<30)continue; drawTree(x,z,.75f+.65f*(float)((i*17)%10)/10f);}
+            for(int i=0;i<30;i++){float a=(float)Math.sin(i*91.7)*.5f+.5f;float b=(float)Math.cos(i*37.1)*.5f+.5f;float x=(a*396)-198,z=(b*480)-400; if(Math.hypot(x,z-22)<30)continue; drawTree(x,z,.75f+.65f*(float)((i*17)%10)/10f);}
             // rocks / hills
-            for(int i=0;i<40;i++){float x=(float)Math.sin(i*14.31)*190,z=-45-(float)Math.cos(i*11.19)*360;drawMesh(cone,x,0,z,1.2f+(i%5),1.3f+(i%4)*.6f,1.2f+(i%5),texRock,new float[]{.65f,.68f,.67f,1});}
+            for(int i=0;i<15;i++){float x=(float)Math.sin(i*14.31)*190,z=-45-(float)Math.cos(i*11.19)*360;drawMesh(cone,x,0,z,1.2f+(i%5),1.3f+(i%4)*.6f,1.2f+(i%5),texRock,new float[]{.65f,.68f,.67f,1});}
             for(NPC n:npcs)drawNPC(n);
             // wall monument
-            for(int k=0;k<20;k++) drawMesh(cube,65+k*9,10,-395,7,24,8,texStone,new float[]{.76f,.78f,.79f,1});
+            for(int k=0;k<10;k++) drawMesh(cube,65+k*9,10,-395,7,24,8,texStone,new float[]{.76f,.78f,.79f,1});
         }
         void drawBuilding(float x,float y,float z,float sx,float sy,float sz,int tex){
             drawMesh(cube,x,y+sy*.5f,z,sx,sy,sz,tex,new float[]{.92f,.92f,.91f,1});
@@ -203,7 +224,9 @@ public class MainActivity extends Activity {
         void drawPlayer(){drawMesh(cube,playerX,1.15f,playerZ,.8f,1.7f,.52f,texWood,new float[]{.74f,.77f,.80f,1});drawMesh(cube,playerX,2.28f,playerZ,.66f,.66f,.66f,texSnow,new float[]{.98f,.80f,.70f,1});drawMesh(cube,playerX,1.45f,playerZ-.38f,.98f,1.18f,.12f,texForest,new float[]{.9f,.9f,.9f,1});}
         void drawSnow(){/* visual atmosphere is handled by animated world tint; avoids expensive particles on low-end phones */}
         float[] color(int c){return new float[]{((c>>16)&255)/255f,((c>>8)&255)/255f,(c&255)/255f,1};}
-        void drawMesh(Mesh mesh,float x,float y,float z,float sx,float sy,float sz,int tex,float[] col){Matrix.setIdentityM(m,0);Matrix.translateM(m,0,x,y,z);Matrix.scaleM(m,0,sx,sy,sz);Matrix.multiplyMM(tmp,0,vp,0,m,0);GLES20.glUniformMatrix4fv(mvpH,1,false,tmp,0);GLES20.glUniformMatrix4fv(modelH,1,false,m,0);GLES20.glUniform4fv(colH,1,col,0);GLES20.glUniform1i(useTexH,tex>0?1:0);if(tex>0){GLES20.glActiveTexture(GLES20.GL_TEXTURE0);GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,tex);GLES20.glUniform1i(texH,0);}mesh.bind(posH,normH,uvH);mesh.ib.position(0);
+        void drawMesh(Mesh mesh,float x,float y,float z,float sx,float sy,float sz,int tex,float[] col){
+            if(!glReady || mesh==null || program==0 || posH<0 || normH<0 || uvH<0) return;
+            Matrix.setIdentityM(m,0);Matrix.translateM(m,0,x,y,z);Matrix.scaleM(m,0,sx,sy,sz);Matrix.multiplyMM(tmp,0,vp,0,m,0);GLES20.glUniformMatrix4fv(mvpH,1,false,tmp,0);GLES20.glUniformMatrix4fv(modelH,1,false,m,0);GLES20.glUniform4fv(colH,1,col,0);GLES20.glUniform1i(useTexH,tex>0?1:0);if(tex>0){GLES20.glActiveTexture(GLES20.GL_TEXTURE0);GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,tex);GLES20.glUniform1i(texH,0);}mesh.bind(posH,normH,uvH);mesh.ib.position(0);
             GLES20.glDrawElements(GLES20.GL_TRIANGLES,mesh.count,GLES20.GL_UNSIGNED_SHORT,mesh.ib);
             mesh.ib.position(0);mesh.unbind(posH,normH,uvH);}
         String[] interact(){NPC best=null;float bd=4.2f;for(NPC n:npcs){float d=(float)Math.hypot(playerX-n.x,playerZ-n.z);if(d<bd){bd=d;best=n;}}if(best==null)return null;renown+=5; if(best.name.equals("Eddard Stark"))quest="Visit the northern lords and strengthen your standing."; if(best.name.equals("Howland Reed"))quest="Reach the Wall and speak with the Night's Watch."; save(); return new String[]{best.name+"  •  House "+best.house,dialogLine(best.name)};}
@@ -243,7 +266,7 @@ public class MainActivity extends Activity {
                     android.graphics.BitmapFactory.decodeStream(in1,null,bounds);
                     int max=Math.max(bounds.outWidth,bounds.outHeight);
                     o.inSampleSize=1;
-                    while(max/o.inSampleSize>1024) o.inSampleSize*=2;
+                    while(max/o.inSampleSize>512) o.inSampleSize*=2;
                 }
                 try(java.io.InputStream in2=am.open(name)){ b=android.graphics.BitmapFactory.decodeStream(in2,null,o); }
                 if(b==null) return 0;
@@ -267,7 +290,7 @@ public class MainActivity extends Activity {
         static class Mesh{FloatBuffer vb;ShortBuffer ib;int count;Mesh(float[] v,short[] i){vb=ByteBuffer.allocateDirect(v.length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();vb.put(v).position(0);ib=ByteBuffer.allocateDirect(i.length*2).order(ByteOrder.nativeOrder()).asShortBuffer();ib.put(i).position(0);count=i.length;}void bind(int p,int n,int u){vb.position(0);GLES20.glEnableVertexAttribArray(p);GLES20.glVertexAttribPointer(p,3,GLES20.GL_FLOAT,false,32,vb);vb.position(3);GLES20.glEnableVertexAttribArray(n);GLES20.glVertexAttribPointer(n,3,GLES20.GL_FLOAT,false,32,vb);vb.position(6);GLES20.glEnableVertexAttribArray(u);GLES20.glVertexAttribPointer(u,2,GLES20.GL_FLOAT,false,32,vb);}void unbind(int p,int n,int u){GLES20.glDisableVertexAttribArray(p);GLES20.glDisableVertexAttribArray(n);GLES20.glDisableVertexAttribArray(u);}}
         static class NPC{String name,house,bio;float x,z;int color;NPC(String n,String h,String b,float X,float Z,int c){name=n;house=h;bio=b;x=X;z=Z;color=c;}}
         static class Site{float x,z;String name,house;Site(float X,float Z,String N,String H){x=X;z=Z;name=N;house=H;}}
-        static final String VS="attribute vec3 aPos; attribute vec3 aNormal; attribute vec2 aUV; uniform mat4 uMVP; uniform mat4 uModel; varying vec3 vN; varying vec2 vUV; void main(){vN=mat3(uModel)*aNormal;vUV=aUV;gl_Position=uMVP*vec4(aPos,1.0);}";
+        static final String VS="attribute vec3 aPos; attribute vec3 aNormal; attribute vec2 aUV; uniform mat4 uMVP; uniform mat4 uModel; varying vec3 vN; varying vec2 vUV; void main(){vN=aNormal;vUV=aUV;gl_Position=uMVP*vec4(aPos,1.0);}";
         static final String FS="precision mediump float; varying vec3 vN; varying vec2 vUV; uniform vec4 uColor; uniform vec3 uLight; uniform sampler2D uTex; uniform int uUseTex; void main(){float d=max(dot(normalize(vN),normalize(uLight)),0.0);vec4 base=uColor;if(uUseTex==1)base*=texture2D(uTex,vUV);vec3 outc=base.rgb*(0.32+0.68*d);gl_FragColor=vec4(outc,1.0);} ";
     }
 }
