@@ -21,9 +21,9 @@ jobs:
 
       - name: Set up Android SDK
         run: |
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+  SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+  yes | "$SDKMANAGER" --licenses || true
+  "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Build APK
         run: |
