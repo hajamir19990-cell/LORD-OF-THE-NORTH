@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
                 cube=meshCube();
                 cone=meshCone();
                 ground=meshGround();
+
                 if(cube==null || cone==null || ground==null) return;
 
                 texStone=loadTex("castle_stone.jpg");
@@ -180,7 +181,14 @@ public class MainActivity extends Activity {
             GLES20.glViewport(0,0,w,h);
             Matrix.perspectiveM(proj,0,63,(float)w/h,.1f,700f);
         }
-        @Override public void onDrawFrame(javax.microedition.khronos.opengles.GL10 gl){ if(program==0) return; long now=System.nanoTime();float dt=Math.min(.04f,(now-last)/1e9f);last=now;update(dt);render(); }
+        @Override public void onDrawFrame(javax.microedition.khronos.opengles.GL10 gl){
+            if(!glReady || program==0) return;
+            long now=System.nanoTime();
+            float dt=Math.min(.04f,(now-last)/1e9f);
+            last=now;
+            update(dt);
+            render();
+        }
         void update(float dt){
             dayTime=(dayTime+dt*.006f)%1f;
             float fx=-joystickY, rx=joystickX; float len=(float)Math.hypot(fx,rx); if(len>1){fx/=len;rx/=len;}
@@ -283,7 +291,7 @@ public class MainActivity extends Activity {
             finally{ if(b!=null && !b.isRecycled()) b.recycle(); }
         }
         Mesh meshCube(){float[] v={-1,-1,-1, 1,-1,-1,1,1,-1,-1,1,-1,-1,-1,1,1,-1,1,1,1,1,-1,1,1};float[][] uv={{0,0},{1,0},{1,1},{0,1}};short[] idx={0,1,2,2,3,0,1,5,6,6,2,1,5,4,7,7,6,5,4,0,3,3,7,4,3,2,6,6,7,3,4,5,1,1,0,4};float[] verts=new float[24*8];int k=0;float[][] ns={{0,0,-1},{1,0,0},{0,0,1},{-1,0,0},{0,1,0},{0,-1,0}};int[][] faces={{0,1,2,3},{1,5,6,2},{5,4,7,6},{4,0,3,7},{3,2,6,7},{4,5,1,0}};float[][] corners={{-1,-1,-1},{1,-1,-1},{1,1,-1},{-1,1,-1},{-1,-1,1},{1,-1,1},{1,1,1},{-1,1,1}};for(int f=0;f<6;f++)for(int q=0;q<4;q++){float[] c=corners[faces[f][q]];verts[k++]=c[0];verts[k++]=c[1];verts[k++]=c[2];verts[k++]=ns[f][0];verts[k++]=ns[f][1];verts[k++]=ns[f][2];verts[k++]=uv[q][0];verts[k++]=uv[q][1];}short[] id=new short[36];int p=0;for(short f=0;f<6;f++){short b=(short)(f*4);id[p++]=(short)(b);id[p++]=(short)(b+1);id[p++]=(short)(b+2);id[p++]=(short)(b+2);id[p++]=(short)(b+3);id[p++]=(short)(b);}return new Mesh(verts,id);}
-        Mesh meshCone(){int N=12;float[] a=new float[(N+1)*8*2];short[] idx=new short[N*6];int k=0,p=0;for(int i=0;i<N;i++){double aa=i*2*Math.PI/N,bb=(i+1)*2*Math.PI/N;float x1=(float)Math.cos(aa),z1=(float)Math.sin(aa),x2=(float)Math.cos(bb),z2=(float)Math.sin(bb);float[] quad={x1,-1,z1,x1,0,z1,.0f,0,x2,-1,z2,x2,0,z2,1,0,x2,1,z2,x2,0,z2,1,1,x1,1,z1,x1,0,z1,0,1};System.arraycopy(quad,0,a,k,quad.length>0?0:0);k+=quad.length;}/* fallback: use cube-like cone through parametric helper */ return meshPyramid();}
+        Mesh meshCone(){ return meshPyramid(); }
         Mesh meshPyramid(){int N=8;ArrayList<Float> v=new ArrayList<>();ArrayList<Short> id=new ArrayList<>();for(int i=0;i<N;i++){double a=i*2*Math.PI/N,b=(i+1)*2*Math.PI/N;float x1=(float)Math.cos(a),z1=(float)Math.sin(a),x2=(float)Math.cos(b),z2=(float)Math.sin(b);int base=v.size()/8;put(v,x1,-1,z1,0,.7f,0,0,0);put(v,x2,-1,z2,0,.7f,0,1,0);put(v,0,1,0,0,.7f,0,.5f,1);id.add((short)base);id.add((short)(base+1));id.add((short)(base+2));}float[] va=new float[v.size()];for(int i=0;i<v.size();i++)va[i]=v.get(i);short[] ia=new short[id.size()];for(int i=0;i<id.size();i++)ia[i]=id.get(i);return new Mesh(va,ia);}
         void put(ArrayList<Float> v,float x,float y,float z,float nx,float ny,float nz,float u,float vv){v.add(x);v.add(y);v.add(z);v.add(nx);v.add(ny);v.add(nz);v.add(u);v.add(vv);}
         Mesh meshGround(){int N=72;float size=440;ArrayList<Float> v=new ArrayList<>();ArrayList<Short> id=new ArrayList<>();for(int z=0;z<=N;z++)for(int x=0;x<=N;x++){float px=-size/2+size*x/N,pz=-size/2+size*z/N;float h=(float)(2.2*Math.sin(px*.018)*Math.cos(pz*.014)+1.2*Math.sin((px+pz)*.035));put(v,px,h-3,pz,0,1,0,px/44f,pz/44f);}for(int z=0;z<N;z++)for(int x=0;x<N;x++){int a=z*(N+1)+x,b=a+1,c=a+(N+1),d=c+1;id.add((short)a);id.add((short)c);id.add((short)b);id.add((short)b);id.add((short)c);id.add((short)d);}float[] va=new float[v.size()];for(int i=0;i<v.size();i++)va[i]=v.get(i);short[] ia=new short[id.size()];for(int i=0;i<id.size();i++)ia[i]=id.get(i);return new Mesh(va,ia);}
