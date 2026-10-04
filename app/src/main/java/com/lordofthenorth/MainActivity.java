@@ -136,7 +136,7 @@ public class MainActivity extends Activity {
             texTerrain=loadTex("terrain_snow.jpg"); texStone=loadTex("castle_stone.jpg"); texWood=loadTex("wood_bark.jpg"); texRock=loadTex("wet_rock.jpg"); texSnow=loadTex("frozen_ground.jpg"); texForest=loadTex("pine_forest.jpg");
             last=System.nanoTime();
         }
-        @Override public void onSurfaceChanged(javax.microedition.khronos.opengles.GL10 gl, javax.microedition.khronos.egl.EGLConfig cfg,int w,int h){GLES20.glViewport(0,0,w,h);float ar=(float)w/h;Matrix.perspectiveM(proj,0,63,ar,.1f,700f);}
+        @Override public void onSurfaceChanged(javax.microedition.khronos.opengles.GL10 gl,int w,int h){GLES20.glViewport(0,0,w,h);float ar=(float)w/h;Matrix.perspectiveM(proj,0,63,ar,.1f,700f);}
         @Override public void onDrawFrame(javax.microedition.khronos.opengles.GL10 gl){ long now=System.nanoTime();float dt=Math.min(.04f,(now-last)/1e9f);last=now;update(dt);render(); }
         void update(float dt){
             dayTime=(dayTime+dt*.006f)%1f;
