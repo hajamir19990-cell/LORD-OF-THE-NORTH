@@ -24,20 +24,11 @@ public class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle b) {
         super.onCreate(b);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        hideSystemUI();
-        prefs = getSharedPreferences("north_save", MODE_PRIVATE);
-        game = new GameView(this);
-        hud = new HudView(this, game);
-        android.widget.FrameLayout root = new android.widget.FrameLayout(this);
-        root.addView(game, new android.widget.FrameLayout.LayoutParams(-1,-1));
-        root.addView(hud, new android.widget.FrameLayout.LayoutParams(-1,-1));
-        setContentView(root);
-        try {
-            ambience = MediaPlayer.create(this, android.net.Uri.parse("file:///android_asset/north_ambience.wav"));
-            if(ambience!=null){ ambience.setLooping(true); ambience.setVolume(.28f,.28f); ambience.start(); }
-        } catch (Exception ignored) {}
+        android.widget.TextView t = new android.widget.TextView(this);
+        t.setText("LORD OF THE NORTH\\n\\nSAFE MODE OK");
+        t.setTextSize(28);
+        t.setGravity(android.view.Gravity.CENTER);
+        setContentView(t);
     }
 
     void hideSystemUI() {
