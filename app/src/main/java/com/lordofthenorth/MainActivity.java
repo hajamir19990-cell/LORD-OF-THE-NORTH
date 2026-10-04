@@ -193,7 +193,7 @@ public class MainActivity extends Activity {
             for(int i=0;i<35;i++){float x=(float)Math.sin(i*14.31)*190,z=-45-(float)Math.cos(i*11.19)*360;drawMesh(cone,x,0,z,1.2f+(i%5),1.3f+(i%4)*.6f,1.2f+(i%5),texRock,new float[]{.65f,.68f,.67f,1});}
             for(NPC n:npcs)drawNPC(n);
             // wall monument
-            for(int k=0;k<10;k) drawMesh(cube,65+k*9,10,-395,7,24,8,texStone,new float[]{.76f,.78f,.79f,1});
+            for(int k=0;k<10;k++) drawMesh(cube,65+k*9,10,-395,7,24,8,texStone,new float[]{.76f,.78f,.79f,1});
         }
         void drawBuilding(float x,float y,float z,float sx,float sy,float sz,int tex){
             drawMesh(cube,x,y+sy*.5f,z,sx,sy,sz,tex,new float[]{.92f,.92f,.91f,1});
