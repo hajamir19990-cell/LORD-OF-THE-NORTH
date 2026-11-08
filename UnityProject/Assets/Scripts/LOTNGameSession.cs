@@ -48,6 +48,7 @@ namespace LOTN
             PlayerPrefs.SetFloat("LOTN.PosX", position.x);
             PlayerPrefs.SetFloat("LOTN.PosY", position.y);
             PlayerPrefs.SetFloat("LOTN.PosZ", position.z);
+            PlayerPrefs.Save();
         }
 
         public bool TryGetPlayerPosition(string sceneName, out Vector3 position)
