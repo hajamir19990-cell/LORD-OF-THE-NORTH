@@ -15,6 +15,7 @@ namespace LOTN.Editor
         private const string SceneFolder = "Assets/Scenes";
         private const string GeneratedFolder = "Assets/Generated/Terrain";
         private const string MeshFolder = "Assets/Art/SourceOBJ";
+        private static Terrain currentTerrain;
 
         public static void PreExport()
         {
@@ -174,6 +175,7 @@ namespace LOTN.Editor
             AssetDatabase.DeleteAsset(assetPath);
             AssetDatabase.CreateAsset(data, assetPath);
             Terrain terrain = Terrain.CreateTerrainGameObject(data).GetComponent<Terrain>();
+            currentTerrain = terrain;
             terrain.transform.position = new Vector3(-60f, -0.2f, -60f);
             terrain.heightmapPixelError = 12;
             terrain.basemapDistance = 450f;
@@ -288,7 +290,7 @@ namespace LOTN.Editor
 
             GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             npc.name = "Northern Guard — Quest Giver";
-            npc.transform.position = new Vector3(-0.2f, 0.9f, -27.5f);
+            npc.transform.position = GroundedPosition(new Vector3(-0.2f, 0f, -27.5f), 0.9f);
             npc.transform.localScale = new Vector3(0.8f, 1.1f, 0.8f);
             npc.GetComponent<Renderer>().sharedMaterial = MakeMaterial(new Color(0.22f, 0.29f, 0.38f));
             LOTNInteractable giver = npc.AddComponent<LOTNInteractable>();
@@ -342,7 +344,7 @@ namespace LOTN.Editor
             if (source == null) { Debug.LogWarning("LOTN missing source model: " + path); return null; }
             GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(source);
             instance.name = objectName;
-            instance.transform.position = position;
+            instance.transform.position = GroundedPosition(position);
             instance.transform.rotation = Quaternion.identity;
             instance.transform.localScale = Vector3.one;
             Renderer[] renderers = instance.GetComponentsInChildren<Renderer>();
@@ -370,7 +372,7 @@ namespace LOTN.Editor
             GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "LOTN Player — Temporary Greybox";
             player.tag = "Player";
-            player.transform.position = new Vector3(0f, 0f, -34.5f);
+            player.transform.position = GroundedPosition(new Vector3(0f, 0f, -34.5f), 0.02f);
             player.transform.localScale = new Vector3(0.8f, 1f, 0.8f);
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
             player.AddComponent<CharacterController>();
@@ -386,6 +388,13 @@ namespace LOTN.Editor
             camera.AddComponent<AudioListener>();
             LOTNCameraFollow follow = camera.AddComponent<LOTNCameraFollow>();
             follow.target = player.transform;
+        }
+
+        private static Vector3 GroundedPosition(Vector3 position, float verticalOffset = 0f)
+        {
+            if (currentTerrain != null)
+                position.y = currentTerrain.SampleHeight(position) + verticalOffset;
+            return position;
         }
 
         private static Material MakeMaterial(Color color)
