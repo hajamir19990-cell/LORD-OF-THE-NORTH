@@ -59,5 +59,6 @@ namespace LOTN
 
         private void OnApplicationPause(bool paused) { if (paused) Save(); }
         private void OnApplicationQuit() { Save(); }
+        private void OnDestroy() { if (Instance == this) Instance = null; }
     }
 }
