@@ -50,20 +50,30 @@ void ALOTNCharacter::Tick(float DeltaSeconds)
     const float UpdateDelta = StaminaUpdateAccumulator;
     StaminaUpdateAccumulator = 0.f;
 
-    if (PlayerStats && bSprintRequested && PlayerStats->Stamina > 0.f)
+    if (PlayerStats && bSprintRequested)
     {
-        bIsSprinting = PlayerStats->ConsumeStamina(SprintStaminaDrainPerSecond * UpdateDelta);
+        const float StaminaCost = SprintStaminaDrainPerSecond * UpdateDelta;
+        bIsSprinting = PlayerStats->Stamina >= StaminaCost && PlayerStats->ConsumeStamina(StaminaCost);
+        if (!bIsSprinting)
+        {
+            bSprintRequested = false;
+        }
     }
     else
     {
         bIsSprinting = false;
-        if (PlayerStats)
-        {
-            PlayerStats->RestoreStamina(StaminaRegenPerSecond * UpdateDelta);
-        }
     }
 
-    GetCharacterMovement()->MaxWalkSpeed = bIsSprinting ? SprintSpeed : WalkSpeed;
+    if (!bIsSprinting && PlayerStats && PlayerStats->Stamina < PlayerStats->MaxStamina)
+    {
+        PlayerStats->RestoreStamina(StaminaRegenPerSecond * UpdateDelta);
+    }
+
+    const float DesiredSpeed = bIsSprinting ? SprintSpeed : WalkSpeed;
+    if (!FMath::IsNearlyEqual(GetCharacterMovement()->MaxWalkSpeed, DesiredSpeed))
+    {
+        GetCharacterMovement()->MaxWalkSpeed = DesiredSpeed;
+    }
 }
 
 void ALOTNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
