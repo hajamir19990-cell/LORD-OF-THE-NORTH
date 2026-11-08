@@ -1,6 +1,8 @@
 #include "LOTNInteractionComponent.h"
 #include "LOTNInteractable.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
 #include "Engine/World.h"
 
 ULOTNInteractionComponent::ULOTNInteractionComponent()
@@ -18,7 +20,22 @@ AActor* ULOTNInteractionComponent::FindInteractable() const
 
     FVector ViewLocation;
     FRotator ViewRotation;
-    OwnerActor->GetActorEyesViewPoint(ViewLocation, ViewRotation);
+
+    if (APawn* OwnerPawn = Cast<APawn>(OwnerActor))
+    {
+        if (AController* OwnerController = OwnerPawn->GetController())
+        {
+            OwnerController->GetPlayerViewPoint(ViewLocation, ViewRotation);
+        }
+        else
+        {
+            OwnerActor->GetActorEyesViewPoint(ViewLocation, ViewRotation);
+        }
+    }
+    else
+    {
+        OwnerActor->GetActorEyesViewPoint(ViewLocation, ViewRotation);
+    }
 
     const FVector End = ViewLocation + ViewRotation.Vector() * InteractionDistance;
     FCollisionQueryParams Params(SCENE_QUERY_STAT(LOTNInteraction), false, OwnerActor);
@@ -43,6 +60,7 @@ bool ULOTNInteractionComponent::TryInteract()
     if (!Target || !OwnerActor)
     {
         OnPromptChanged.Broadcast(FText::GetEmpty());
+        OnInteractionMessage.Broadcast(NSLOCTEXT("LOTN", "NoInteractable", "Nothing is within reach."));
         return false;
     }
 
