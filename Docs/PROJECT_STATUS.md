@@ -9,7 +9,7 @@ Last updated: 2026-11-08
 
 ## Implemented in C++ source
 - Landscape-oriented Android configuration and package identifier.
-- Third-person character movement, camera, mobile joystick axes and stamina-based sprint.
+- Third-person character movement, camera, mobile joystick axes and stamina-based sprint. A visible six-part low-poly humanoid greybox uses engine primitive meshes until a licensed skeletal character/animation asset is imported.
 - Player stats: health, stamina, gold and renown.
 - Native landscape HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls; save/load controls are positioned clear of the lower-left landscape virtual joystick; player controller now uses GameAndUI input mode so touch UI can receive input alongside gameplay.
 - Interactable interface, camera-view line trace, NPC dialogue and quest offer/turn-in.
