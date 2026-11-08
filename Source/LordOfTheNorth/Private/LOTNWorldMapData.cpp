@@ -22,7 +22,11 @@ ULOTNWorldMapData::ULOTNWorldMapData()
         Entry.RequiredRenown = Renown;
         Entry.MapPosition = MapPosition;
         Entry.RegionType = RegionType;
-        Entry.ConnectedLocationIds = TArray<FName>(Connections);
+        Entry.ConnectedLocationIds.Reserve(static_cast<int32>(Connections.size()));
+        for (const FName Connection : Connections)
+        {
+            Entry.ConnectedLocationIds.Add(Connection);
+        }
         Locations.Add(Entry);
     };
 
