@@ -118,3 +118,23 @@ The native landscape HUD map uses normalized coordinates so the regional layout 
 | The Wall | (0.49, 0.08) | 80 | Frontier | Winterfell, Karhold, Last Hearth, Greywater Watch |
 
 Selecting a node shows its description, region type, current/required renown, unlock state, connected routes and travel readiness. Winterfell is the only region linked to a built level (WinterfellApproach); the other eight remain visible and unlockable in the regional interface, but travel stays unavailable until their individual maps are created and tested.
+
+
+## Eight additional regional greybox levels
+
+The following eight standalone level assets are now defined in the regional assembly pipeline. Each receives the shared rolling terrain, a region-specific landmark/settlement composition, a batched non-blocking pine forest, PlayerStart, navigation bounds, static directional-light baseline and restrained non-volumetric fog.
+
+| Region | Unreal level | Visual identity / layout focus |
+|---|---|---|
+| The Dreadfort | LOTN_TheDreadfort | Dark stone seat, paired towers, broad gate landmark and sparse outer pines |
+| White Harbor | LOTN_WhiteHarbor | Port-town arrangement, longhouse market cluster, broad stone quayside paths and carts |
+| Bear Island | LOTN_BearIsland | Rugged woodland island, isolated watchtower, rocky margins and central hearth |
+| Karhold | LOTN_Karhold | Remote northern seat, large stone landmark group, snow accents and open approach |
+| Last Hearth | LOTN_LastHearth | Compact settlement, three longhouses, central hearth, wood stores and cart |
+| Deepwood Motte | LOTN_DeepwoodMotte | Dense pine woodland, timber hall, small watch landmark and forest clearings |
+| Greywater Watch | LOTN_GreywaterWatch | Misty marshland greybox, separated timber halls, sparse paths and low visibility atmosphere |
+| The Wall | LOTN_TheWall | Vast frontier composition, long stone wall landmark, paired towers and sparse treeline |
+
+Run `Scripts/create_northern_region_levels.py` inside Unreal Editor after the Winterfell mesh-import script. Then run `Scripts/validate_northern_region_levels.py` in the Editor. The scripts create and validate actual binary map assets only when executed by Unreal Editor; committing these scripts does not itself create .umap files.
+
+The C++ world-map data assigns each secondary region its matching `LOTN_...` level name. The HUD now has an explicit Travel button: it re-checks unlock renown and level readiness immediately before calling Unreal's level travel API. The eight regional level assets are still greyboxes and require visual review, collision/nav validation, lighting build and device profiling before release.
