@@ -10,12 +10,15 @@
 6. Create Blueprint children of LOTNNPC and LOTNQuestObjective and place them at the coordinates in MAPS_README.md.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
-The script imports the four OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees and PlayerStart. It also adds a navigation bounds volume, directional light and temporary exponential-height fog, then saves the new level.
+The script imports the six OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees and PlayerStart. It also adds a navigation bounds volume, directional light and temporary exponential-height fog, then saves the new level.
 
 ## Important limitations
 
 - This is a greybox assembly script. The OBJ meshes are first-pass geometry and need art polish.
-- The ground plane is explicitly temporary; it is not a finished Landscape.\n- Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.\n- The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.\n- The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
+- The ground plane is explicitly temporary; it is not a finished Landscape.
+- Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.
+- The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
+- The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
 - The script does not generate a final .umap outside Unreal Editor and does not create NPC/quest Blueprints.
 - Verify imported mesh pivots, material assignments, collision, normals and scale in the editor.
 - No compile, Android package or device performance result is implied by running the script.
