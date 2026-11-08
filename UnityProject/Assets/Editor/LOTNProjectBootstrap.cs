@@ -193,7 +193,7 @@ namespace LOTN.Editor
             Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
             if (texture == null)
             {
-                Texture2D generated = new Texture2D(128, 128, TextureFormat.RGB24, false, true);
+                Texture2D generated = new Texture2D(128, 128, TextureFormat.RGB24, false, false);
                 Color[] pixels = new Color[128 * 128];
                 for (int y = 0; y < 128; y++)
                 for (int x = 0; x < 128; x++)
