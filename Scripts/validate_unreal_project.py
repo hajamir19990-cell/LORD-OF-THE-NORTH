@@ -264,7 +264,8 @@ if regional_assembly.is_file():
         "Winterfell_Gatehouse", "Northern_Longhouse", "Northern_Watchtower",
         "Northern_Cobblestone_Road", "Northern_Rolling_Terrain",
         "LOTNFoliageCluster", "PlayerStart", "NavMeshBoundsVolume",
-        "DirectionalLight", "ExponentialHeightFog", "save_current_level")),
+        "DirectionalLight", "ExponentialHeightFog", "save_current_level",
+        "terrain_world_z", "terrain_vertices")),
         "regional assembly creates terrain, landmarks, HISM forest, starts, navigation and atmosphere")
 if regional_validation.is_file():
     regional_validation_text = regional_validation.read_text(encoding="utf-8")
