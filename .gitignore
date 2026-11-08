@@ -1,6 +1,6 @@
-.gradle/
-.idea/
-local.properties
+.godot/
+.import/
+.export/
 build/
-app/build/
-*.iml
+*.tmp
+*.log

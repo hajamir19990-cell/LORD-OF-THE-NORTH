@@ -1,27 +1,31 @@
-# LORD OF THE NORTH — Native Android Edition
+# LORD OF THE NORTH — Rebuild
 
-A native Android game foundation using Java and OpenGL ES 2.0. The runtime does not use a WebView or require an internet connection.
+A clean rebuild of the northern open-world fantasy RPG, now using **Godot 4.7 stable** and GDScript instead of the previous hand-written Android/OpenGL renderer.
 
-## Current implementation
-- Third-person northern terrain exploration
-- Nine named locations: Winterfell, the Dreadfort, White Harbor, Bear Island, Karhold, Last Hearth, Deepwood Motte, Greywater Watch and the Wall
-- Named northern NPCs, basic dialogue and proximity interaction
-- Basic quest text and renown progression
-- Landscape presentation with touch joystick and touch-look controls
-- Day/night ambient color cycle
-- Local terrain, stone, bark, rock and forest textures
-- Local save/load for player position, gold and renown
+## Preserved game concept
 
-## Build toolchain
-The checked-in project currently uses:
-- Android Gradle Plugin: 8.7.3
-- Gradle wrapper: 8.9
-- JDK: 17
-- Android compile SDK / target SDK: 35
-- Minimum Android SDK: 26
+- Nine northern destinations: Winterfell, the Dreadfort, White Harbor, Bear Island, Karhold, Last Hearth, Deepwood Motte, Greywater Watch, and the Wall.
+- Third-person exploration, camera-relative movement, mobile touch controls, and a readable landscape HUD.
+- Main quest, named locations, NPC interaction and dialogue, gold, renown, stamina, and local save/load.
+- Main menu: New Game, Continue, Settings, How to Play, Developers, and Exit.
+- Developers: **AmirReza — Game Director & Creator**; **Raha — Creative & Technical Assistant**.
 
-Use a compatible Android Studio installation, allow Gradle sync, then run `./gradlew :app:assembleDebug`.
+## New technical direction
 
-## APK output
-Debug APK: `app/build/outputs/apk/debug/app-debug.apk`
-Release APK: `app/build/outputs/apk/release/app-release.apk` (requires release signing configuration before distribution).
+- Godot 4.7 stable, GDScript, Mobile renderer.
+- Procedural 3D environment for the first playable milestone; no fragile runtime mesh-buffer code.
+- Original vector direwolf app icon.
+- Android ARM64 debug APK exported by GitHub Actions.
+- Project validation and APK artifact checks in CI.
+
+## Current milestone
+
+This branch is the new foundation, not a finished open-world game. It contains a procedural northern landscape, settlement blockouts, a third-person player, basic mobile controls, a first NPC interaction, HUD, menu, and local save data. Realistic character/environment models, authored textures, audio, deeper quest/inventory/equipment systems, weather and optimization are staged for later milestones and must be tested before being marked complete.
+
+## Build
+
+Open this folder in Godot 4.7 stable. For Android, install matching export templates, OpenJDK 17, Android SDK Platform 35 and Build Tools 35.0.0, then export the Android preset. GitHub Actions performs the same export and uploads the debug APK.
+
+## Performance target
+
+Mobile-first landscape mode. The first target is stable operation on mid-range Android hardware; visual quality and scene density will be tuned against real-device measurements, not guessed.

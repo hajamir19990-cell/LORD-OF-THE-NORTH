@@ -1,0 +1,66 @@
+name: Godot Android Build
+on:
+  push:
+    branches: [ "rebuild/godot-4" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: godot-android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+      - name: Download Godot 4.7 stable
+        run: |
+          curl -L --fail -o godot.zip https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_linux.x86_64.zip
+          unzip -q godot.zip -d godot-bin
+          chmod +x godot-bin/Godot_v4.7-stable_linux.x86_64
+      - name: Install matching export templates
+        run: |
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.stable"
+          curl -L --fail -o templates.tpz https://github.com/godotengine/godot/releases/download/4.7-stable/Godot_v4.7-stable_export_templates.tpz
+          mkdir -p template-unpack
+          unzip -q templates.tpz -d template-unpack
+          cp -R template-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.stable/"
+      - name: Configure Android paths
+        run: |
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+          [resource]
+          export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          EOF
+      - name: Import and validate project
+        run: godot-bin/Godot_v4.7-stable_linux.x86_64 --headless --editor --path . --import --quit
+      - name: Export debug APK
+        run: |
+          mkdir -p build
+          godot-bin/Godot_v4.7-stable_linux.x86_64 --headless --path . --export-debug "Android" build/LORD-OF-THE-NORTH-debug.apk
+      - name: Verify APK
+        run: |
+          test -s build/LORD-OF-THE-NORTH-debug.apk
+          file build/LORD-OF-THE-NORTH-debug.apk
+          sha256sum build/LORD-OF-THE-NORTH-debug.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LORD-OF-THE-NORTH-GODOT-APK
+          path: build/LORD-OF-THE-NORTH-debug.apk
+          if-no-files-found: error
+          retention-days: 30
