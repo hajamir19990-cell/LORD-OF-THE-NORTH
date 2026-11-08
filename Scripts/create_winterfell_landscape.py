@@ -123,5 +123,5 @@ if not unreal.EditorLevelLibrary.save_current_level():
 unreal.log(
     "LOTN: WinterfellApproach landscape greybox saved. "
     "Inspect rolling terrain collision/materials, add quest NPC Blueprints, "
-    "add quest NPC Blueprints, and profile mobile lighting before sign-off."
+    "and profile mobile lighting before sign-off."
 )
