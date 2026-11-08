@@ -106,7 +106,8 @@ namespace LOTN.Editor
 
         private static void ConfigureModelImporters()
         {
-            string[] modelFiles = Directory.GetFiles(MeshFolder, "*.obj", SearchOption.TopDirectoryOnly);
+            string absoluteMeshFolder = Path.Combine(Application.dataPath, "Art/SourceOBJ");
+            string[] modelFiles = Directory.GetFiles(absoluteMeshFolder, "*.obj", SearchOption.TopDirectoryOnly);
             foreach (string absolutePath in modelFiles)
             {
                 string assetPath = MeshFolder + "/" + Path.GetFileName(absolutePath);
