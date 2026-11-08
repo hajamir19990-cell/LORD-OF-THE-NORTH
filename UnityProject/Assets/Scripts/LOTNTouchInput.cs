@@ -46,8 +46,8 @@ namespace LOTN
                     lookPrevious = p;
                     if (t.phase == TouchPhase.Ended || t.phase == TouchPhase.Canceled) lookFinger = -1;
                 }
-                if (p.x > Screen.width * 0.72f && p.y > Screen.height * 0.78f && t.phase == TouchPhase.Stationary) Sprint = true;
-                if (p.x > Screen.width * 0.84f && p.y > Screen.height * 0.58f && t.phase == TouchPhase.Began) InteractPressed = true;
+                if (p.x > Screen.width * 0.72f && p.y < Screen.height * 0.22f && t.phase == TouchPhase.Stationary) Sprint = true;
+                if (p.x > Screen.width * 0.84f && p.y < Screen.height * 0.38f && t.phase == TouchPhase.Began) InteractPressed = true;
             }
         }
 
