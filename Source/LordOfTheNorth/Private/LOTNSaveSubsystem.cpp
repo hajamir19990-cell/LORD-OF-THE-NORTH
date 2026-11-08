@@ -78,8 +78,8 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
 
     if (ULOTNPlayerStatsComponent* Stats = Player->PlayerStats)
     {
-        Stats->Health = FMath::Clamp(SaveObject->Health, 0.f, Stats->MaxHealth);
-        Stats->Stamina = FMath::Clamp(SaveObject->Stamina, 0.f, Stats->MaxStamina);
+        Stats->Health = FMath::Clamp(SaveObject->Health, 0.f, FMath::Max(0.f, Stats->MaxHealth));
+        Stats->Stamina = FMath::Clamp(SaveObject->Stamina, 0.f, FMath::Max(0.f, Stats->MaxStamina));
         Stats->Gold = FMath::Max(0, SaveObject->Gold);
         Stats->Renown = FMath::Max(0, SaveObject->Renown);
         Stats->OnStatsChanged.Broadcast();
