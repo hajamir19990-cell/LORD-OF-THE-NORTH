@@ -4,6 +4,7 @@
 #include "LOTNInventoryComponent.h"
 #include "LOTNQuestComponent.h"
 #include "LOTNWorldMapData.h"
+#include "LOTNPlayerStatsComponent.h"
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(
     FLOTNInventoryStackingTest,
@@ -192,6 +193,62 @@ bool FLOTNQuestRestoreTest::RunTest(const FString& Parameters)
     TestEqual(TEXT("Progress is clamped to requirement"), Quests->ActiveQuests[0].CurrentProgress, 2);
     TestEqual(TEXT("Negative rewards are clamped"), Quests->ActiveQuests[0].GoldReward, 0);
     TestEqual(TEXT("Negative renown is clamped"), Quests->ActiveQuests[0].RenownReward, 0);
+    return true;
+}
+
+
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FLOTNInventoryInputBoundsTest,
+    "LOTN.Inventory.InputBounds",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FLOTNInventoryInputBoundsTest::RunTest(const FString& Parameters)
+{
+    ULOTNInventoryComponent* Inventory = NewObject<ULOTNInventoryComponent>();
+    if (!Inventory)
+    {
+        return false;
+    }
+
+    TestEqual(TEXT("Empty item ID is rejected"), Inventory->AddItem(
+        NAME_None, FText::GetEmpty(), FText::GetEmpty(), ELOTNItemCategory::Material, 5), 5);
+    TestEqual(TEXT("Zero quantity is a no-op"), Inventory->AddItem(
+        TEXT("ZeroItem"), FText::GetEmpty(), FText::GetEmpty(), ELOTNItemCategory::Material, 0), 0);
+    TestEqual(TEXT("Oversized request reports unaccepted remainder"), Inventory->AddItem(
+        TEXT("BoundedItem"), FText::FromString(TEXT("Bounded Item")), FText::GetEmpty(),
+        ELOTNItemCategory::Material, 10001, 250), 1);
+    TestEqual(TEXT("Inventory accepts no more than the per-call safety cap"),
+        Inventory->GetItemCount(TEXT("BoundedItem")), 10000);
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FLOTNPlayerStatsBoundsTest,
+    "LOTN.PlayerStats.BoundsAndRecovery",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FLOTNPlayerStatsBoundsTest::RunTest(const FString& Parameters)
+{
+    ULOTNPlayerStatsComponent* Stats = NewObject<ULOTNPlayerStatsComponent>();
+    if (!Stats)
+    {
+        return false;
+    }
+
+    Stats->ApplyDamage(-10.f);
+    TestEqual(TEXT("Negative damage is ignored"), Stats->Health, 100.f);
+    Stats->ApplyDamage(150.f);
+    TestEqual(TEXT("Damage cannot reduce health below zero"), Stats->Health, 0.f);
+    Stats->RestoreHealth(150.f);
+    TestEqual(TEXT("Healing cannot exceed maximum health"), Stats->Health, Stats->MaxHealth);
+
+    TestFalse(TEXT("Insufficient stamina is rejected"), Stats->ConsumeStamina(101.f));
+    TestEqual(TEXT("Rejected stamina cost does not mutate stamina"), Stats->Stamina, 100.f);
+    TestTrue(TEXT("Valid stamina cost succeeds"), Stats->ConsumeStamina(40.f));
+    TestEqual(TEXT("Stamina cost is applied"), Stats->Stamina, 60.f);
+    Stats->RestoreStamina(100.f);
+    TestEqual(TEXT("Stamina recovery is capped"), Stats->Stamina, Stats->MaxStamina);
     return true;
 }
 
