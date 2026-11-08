@@ -55,7 +55,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm the three road tiles meet without visible gaps and remain clear from PlayerStart to the gate.
 - [ ] Confirm the temporary fog does not obscure NPC interaction range or exceed the mobile performance budget.
 - [ ] Confirm NavMeshBoundsVolume covers the walkable approach and Recast navigation generates successfully.
-- [ ] Confirm the temporary ground plane has been replaced with a sculpted terrain Landscape.
+- [ ] Confirm the rolling terrain mesh has valid simple collision and the player can traverse the full approach.\n- [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.\n- [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
 - [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
 - [ ] Check scale, pivots, normals, UVs, materials, collisions and LODs for every imported asset.
