@@ -6,7 +6,7 @@
 2. Open the Python console or execute the script through the editor's Python execution command.
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
-5. Replace the temporary ground plane with a sculpted Landscape; add collision, material layers, foliage, a mobile-appropriate sky and baked/static lighting.
+5. Inspect terrain collision; add snow/rock materials, foliage, a mobile-appropriate sky and baked/static lighting. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
 6. Create Blueprint children of LOTNNPC and LOTNQuestObjective and place them at the coordinates in MAPS_README.md.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
