@@ -7,6 +7,7 @@
 class ULOTNPlayerStatsComponent;
 class ULOTNQuestComponent;
 class ULOTNInteractionComponent;
+class ULOTNInventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -32,6 +33,9 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Interaction")
     TObjectPtr<ULOTNInteractionComponent> InteractionComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Inventory")
+    TObjectPtr<ULOTNInventoryComponent> InventoryComponent;
 
 protected:
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
