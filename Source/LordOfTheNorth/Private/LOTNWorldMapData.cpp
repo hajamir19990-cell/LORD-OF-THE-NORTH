@@ -8,7 +8,7 @@ ULOTNWorldMapData::ULOTNWorldMapData()
         Entry.LocationId = Id;
         Entry.DisplayName = FText::FromString(Name);
         Entry.Description = FText::FromString(Description);
-        Entry.LevelName = Id;
+        Entry.LevelName = NAME_None;
         Entry.bUnlockedByDefault = bStartingLocation;
         Entry.RequiredRenown = Renown;
         Locations.Add(Entry);
