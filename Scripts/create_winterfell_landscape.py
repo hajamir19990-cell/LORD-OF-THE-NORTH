@@ -24,6 +24,10 @@ MESH_NAMES = (
     "Northern_Palisade_Fence",
     "Northern_Rock_Cluster",
     "Northern_Stone_Firepit",
+    "Northern_Woodpile",
+    "Northern_Handcart",
+    "Northern_Snowdrift",
+    "Northern_Wolf_Banner",
 )
 
 for folder in ("/Game/Maps", "/Game/Environment",
@@ -86,6 +90,10 @@ NON_BLOCKING_MESHES = {
     "Northern_Rock_Cluster",
     "Northern_Stone_Firepit",
     "Northern_Supply_Crate",
+    "Northern_Woodpile",
+    "Northern_Handcart",
+    "Northern_Snowdrift",
+    "Northern_Wolf_Banner",
 }
 
 for name in COLLISION_MESHES:
@@ -102,7 +110,7 @@ for name in COLLISION_MESHES:
     asset.post_edit_change()
     unreal.EditorAssetLibrary.save_loaded_asset(asset)
 
-def mesh_actor(name, location, yaw=0.0, scale=1.0):
+def mesh_actor(name, location, yaw=0.0, scale=1.0, label=None):
     asset = unreal.load_asset(DEST + "/" + name + "." + name)
     if not asset:
         raise RuntimeError("Imported mesh not found: " + name)
@@ -114,7 +122,7 @@ def mesh_actor(name, location, yaw=0.0, scale=1.0):
     if not actor:
         raise RuntimeError("Could not place mesh actor: " + name)
     actor.set_actor_scale3d(unreal.Vector(scale, scale, scale))
-    actor.set_actor_label(name)
+    actor.set_actor_label(label or name)
     if name in NON_BLOCKING_MESHES:
         actor.set_actor_enable_collision(False)
     return actor
@@ -220,6 +228,29 @@ mesh_actor("Northern_Longhouse", (1850, -1150, terrain_world_z(1850, -1150)), ya
 
 # A small stone firepit adds a readable settlement landmark away from the road.
 mesh_actor("Northern_Stone_Firepit", (1400, -1550, terrain_world_z(1400, -1550)), yaw=12.0)
+
+# Lived-in settlement dressing: stacked firewood and a handcart beside the longhouses.
+mesh_actor("Northern_Woodpile", (-1570, -1010, terrain_world_z(-1570, -1010)),
+           yaw=8.0, label="PROP_Western_Stacked_Firewood")
+mesh_actor("Northern_Woodpile", (1530, -770, terrain_world_z(1530, -770)),
+           yaw=174.0, scale=0.88, label="PROP_Eastern_Stacked_Firewood")
+mesh_actor("Northern_Handcart", (1780, -1350, terrain_world_z(1780, -1350)),
+           yaw=12.0, label="PROP_Eastern_Supply_Handcart")
+
+# Snow berms soften the road edges while preserving the full playable lane.
+for index, (x, y) in enumerate((
+    (-690, -1400), (690, -1400), (-690, -750), (690, -750),
+    (-690, -100), (690, -100),
+)):
+    mesh_actor("Northern_Snowdrift", (x, y, terrain_world_z(x, y) - 1.0),
+               yaw=float(index * 19), scale=0.9 + (index % 2) * 0.12,
+               label="ENV_Roadside_Snowdrift_" + str(index + 1))
+
+# Heraldic standards make the gatehouse read as the seat of the northern house.
+mesh_actor("Northern_Wolf_Banner", (-385, -238, 500),
+           yaw=0.0, label="PROP_West_Gatehouse_Wolf_Standard")
+mesh_actor("Northern_Wolf_Banner", (385, -238, 500),
+           yaw=0.0, label="PROP_East_Gatehouse_Wolf_Standard")
 
 # Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
