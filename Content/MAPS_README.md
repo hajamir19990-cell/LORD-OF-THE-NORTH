@@ -14,9 +14,9 @@ Use centimeters; world Z is vertical. The gatehouse front faces toward negative 
 
 | Area | Suggested center (X,Y) | Footprint / notes |
 |---|---:|---|
-| Gatehouse | (0, 0) | Imported gatehouse source mesh; approx. 10.5 m wide, 10.5 m tall |
+| Gatehouse | (0, 0) | Imported gatehouse source mesh; focal landmark |\n| Curtain walls | (+/- 1775, 0) | Modular crenellated wall segments connect gatehouse to outer watchtowers |\n| Watchtowers | (+/- 3100, 0) | Square defensive towers at the ends of the first wall section |
 | Player start | (0, -1700) | Facing +Y toward gate; keep clear of the road |
-| Main approach | (0, -900) | 5–7 m wide, gradually narrowing toward gate |
+| Main approach | (0, -900) | Three adjoining road mesh tiles from player start to gate |
 | West settlement edge | (-1250, -350) | Longhouse, storehouse, timber fence |
 | East settlement edge | (1250, -250) | Two small buildings, stacked firewood, carts/props |
 | West pine grove | (-1900, 250) | 5–8 trees, varied scale and spacing |
@@ -30,9 +30,9 @@ Keep the central approach readable from the player start. The gate should occupy
 ## Required actors and setup
 
 - PlayerStart at (0, -1700, 100), yaw +90 degrees, facing the gate.
-- Walkable landscape or terrain mesh with collision; use a temporary plane only for greybox testing.
-- Imported environment meshes from Content/SourceMeshes: Winterfell_Gatehouse.obj, Northern_Pine_Tree.obj, Northern_Longhouse.obj and Northern_Cobblestone_Road.obj.
-- One Blueprint child of LOTNNPC configured to offer Winterfell_Delivery.
+- Walkable landscape or terrain mesh with collision; the assembly script currently creates a temporary plane only.
+- Imported environment meshes from Content/SourceMeshes: Winterfell_Gatehouse.obj, Northern_Pine_Tree.obj, Northern_Longhouse.obj, Northern_Cobblestone_Road.obj, Northern_Curtain_Wall.obj and Northern_Watchtower.obj.
+- One Blueprint child of LOTNNPC configured to offer Winterfell_Delivery.\n- Exponential height fog and a directional daylight baseline; tune conservatively for mobile.\n- NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
 - One Blueprint child of LOTNQuestObjective using the same QuestId.
 - Directional light, skylight and fog/sky setup suitable for mobile; bake/static lighting where practical.
 - LOTNGameMode as the map's GameMode override unless a child GameMode is intentionally used.
