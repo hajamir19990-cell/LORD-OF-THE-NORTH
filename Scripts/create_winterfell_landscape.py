@@ -317,7 +317,7 @@ fog_component.set_editor_property("fog_density", 0.0025)
 fog_component.set_editor_property("fog_height_falloff", 0.22)
 fog_component.set_editor_property("fog_max_opacity", 0.58)
 fog_component.set_editor_property("start_distance", 2200.0)
-fog_component.set_editor_property("b_enable_volumetric_fog", False)
+fog_component.set_editor_property("enable_volumetric_fog", False)
 
 if not level_editor.save_current_level():
     raise RuntimeError("Level was created but could not be saved")
