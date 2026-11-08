@@ -115,7 +115,9 @@ for mesh_name in ("Winterfell_Gatehouse.obj", "Northern_Pine_Tree.obj",
                   "Northern_Curtain_Wall.obj", "Northern_Watchtower.obj",
                   "Northern_Rolling_Terrain.obj", "Northern_Supply_Crate.obj",
                   "Northern_Palisade_Fence.obj", "Northern_Rock_Cluster.obj",
-                  "Northern_Stone_Firepit.obj"):
+                  "Northern_Stone_Firepit.obj", "Northern_Woodpile.obj",
+                  "Northern_Handcart.obj", "Northern_Snowdrift.obj",
+                  "Northern_Wolf_Banner.obj"):
     require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")
 
 assembly_script = ROOT / "Scripts/create_winterfell_landscape.py"
@@ -158,10 +160,18 @@ if assembly_script.is_file():
             "NON_BLOCKING_MESHES" in assembly_text and
             "actor.set_actor_enable_collision(False)" in assembly_text,
             "decorative environment meshes avoid unnecessary blocking collision")
+    for prop in ("Northern_Woodpile", "Northern_Handcart",
+                 "Northern_Snowdrift", "Northern_Wolf_Banner"):
+        require(prop in assembly_text and prop in assembly_text.split("MESH_NAMES = (", 1)[1].split(")", 1)[0],
+                prop + " is imported and placed by the landscape assembly")
+    require(all(prop in assembly_text.split("NON_BLOCKING_MESHES = {", 1)[1].split("}", 1)[0]
+                for prop in ("Northern_Woodpile", "Northern_Handcart",
+                             "Northern_Snowdrift", "Northern_Wolf_Banner")),
+            "decorative settlement props are non-blocking on mobile")
     require("imported_object_paths" in assembly_text,
             "landscape import tasks fail fast when a source mesh does not import")
-    tree_match = re.search(r"tree_positions\\s*=\\s*\\((.*?)\\n\\)", assembly_text, re.S)
-    tree_count = len(re.findall(r"\\(\\s*-?\\d+\\s*,\\s*-?\\d+\\s*\\)",
+    tree_match = re.search(r"tree_positions\s*=\s*\((.*?)\n\)", assembly_text, re.S)
+    tree_count = len(re.findall(r"\(\s*-?\d+\s*,\s*-?\d+\s*\)",
                                 tree_match.group(1))) if tree_match else 0
     require(tree_count == 24,
             "landscape assembly includes 24 outer and settlement pine trees")
