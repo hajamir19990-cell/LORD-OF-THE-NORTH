@@ -129,7 +129,10 @@ def as_text(value):
     return unreal.TextLibrary.conv_string_to_text(value)
 
 def spawn_npc(label, display_name, location, dialogue, offers_quest=False):
-    npc = actor_of(npc_class, label, location, unreal.Rotator(0.0, 0.0, 0.0))
+    # ACharacter's capsule origin is its center; lift it by the default 96 cm
+    # half-height so the capsule rests on the terrain instead of clipping below it.
+    npc_location = (location[0], location[1], location[2] + 96.0)
+    npc = actor_of(npc_class, label, npc_location, unreal.Rotator(0.0, 0.0, 0.0))
     npc.set_editor_property("display_name", as_text(display_name))
     npc.set_editor_property("dialogue_text", as_text(dialogue))
     npc.set_editor_property("b_offers_quest", offers_quest)
