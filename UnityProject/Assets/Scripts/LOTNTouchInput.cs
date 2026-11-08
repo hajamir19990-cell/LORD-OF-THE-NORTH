@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace LOTN
 {
+    [DefaultExecutionOrder(-100)]
     public sealed class LOTNTouchInput : MonoBehaviour
     {
         public static Vector2 Move { get; private set; }
