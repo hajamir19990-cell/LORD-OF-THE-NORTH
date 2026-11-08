@@ -87,3 +87,9 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] All eleven imported OBJ meshes expose their intended MTL material slots.
 - [ ] Rolling terrain uses the snow slot; curtain wall and watchtower use the stone slot.
 - [ ] Replace flat starter MTL colors with optimized PBR textures before final art sign-off.
+
+
+## NPC visual placeholder
+- [ ] Northern Guard and Winterfell Scout render as six-part humanoid greyboxes, not invisible capsules or floating pillars.
+- [ ] NPC primitive visuals do not block Visibility traces; the Character capsule remains the interaction collision shape.
+- [ ] Replace NPC greyboxes with licensed skeletal meshes, clothing materials and idle/talk animations before release.
