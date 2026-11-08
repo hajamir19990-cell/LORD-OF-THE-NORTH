@@ -9,7 +9,7 @@ int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText De
 {
     if (ItemId.IsNone() || Quantity <= 0)
     {
-        return Quantity;
+        return FMath::Max(0, Quantity);
     }
 
     const int32 AcceptedQuantity = FMath::Min(Quantity, 10000);
@@ -148,7 +148,37 @@ bool ULOTNInventoryComponent::UnequipItem(FName ItemId)
 
 void ULOTNInventoryComponent::RestoreInventory(const TArray<FLOTNInventoryItem>& InItems, const TArray<FName>& InEquippedItemIds)
 {
-    Items = InItems;
-    EquippedItemIds = InEquippedItemIds;
+    Items.Reset();
+    for (const FLOTNInventoryItem& SavedItem : InItems)
+    {
+        if (SavedItem.ItemId.IsNone() || SavedItem.Quantity <= 0)
+        {
+            continue;
+        }
+
+        FLOTNInventoryItem SafeItem = SavedItem;
+        SafeItem.MaxStack = FMath::Max(1, SavedItem.MaxStack);
+        SafeItem.Quantity = FMath::Clamp(SavedItem.Quantity, 1, SafeItem.MaxStack);
+        Items.Add(SafeItem);
+    }
+
+    EquippedItemIds.Reset();
+    TArray<ELOTNEquipmentSlot> UsedSlots;
+    for (const FName EquippedId : InEquippedItemIds)
+    {
+        const FLOTNInventoryItem* Item = Items.FindByPredicate(
+            [EquippedId](const FLOTNInventoryItem& Entry) { return Entry.ItemId == EquippedId; });
+
+        if (!Item || Item->EquipmentSlot == ELOTNEquipmentSlot::None ||
+            (Item->Category != ELOTNItemCategory::Apparel && Item->Category != ELOTNItemCategory::Trinket) ||
+            UsedSlots.Contains(Item->EquipmentSlot))
+        {
+            continue;
+        }
+
+        EquippedItemIds.AddUnique(EquippedId);
+        UsedSlots.Add(Item->EquipmentSlot);
+    }
+
     OnInventoryChanged.Broadcast();
 }
