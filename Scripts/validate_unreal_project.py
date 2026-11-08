@@ -244,8 +244,22 @@ if assembly_script.is_file():
             '"fog_density", 0.0025' in assembly_text,
             "atmospheric fog is non-volumetric and mobile-conscious")
 
+master_map_pipeline = ROOT / "Scripts/build_all_maps.py"
 regional_assembly = ROOT / "Scripts/create_northern_region_levels.py"
 regional_validation = ROOT / "Scripts/validate_northern_region_levels.py"
+require(master_map_pipeline.is_file(), "one-command nine-map Editor pipeline exists")
+if master_map_pipeline.is_file():
+    pipeline_text = master_map_pipeline.read_text(encoding="utf-8")
+    try:
+        ast.parse(pipeline_text, filename=str(master_map_pipeline))
+        require(True, "nine-map Editor pipeline has valid Python syntax")
+    except SyntaxError as exc:
+        require(False, "nine-map Editor pipeline syntax: " + str(exc))
+    require(all(name in pipeline_text for name in (
+        "create_winterfell_landscape.py", "create_northern_region_levels.py",
+        "validate_winterfell_level.py", "validate_northern_region_levels.py",
+        "EditorLoadingAndSavingUtils.load_map")),
+        "nine-map Editor pipeline assembles and validates all map sets")
 require(regional_assembly.is_file(), "eight-region Unreal assembly script exists")
 require(regional_validation.is_file(), "eight-region Unreal validation script exists")
 if regional_assembly.is_file():
