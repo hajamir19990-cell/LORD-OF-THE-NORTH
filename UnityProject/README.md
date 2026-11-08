@@ -12,7 +12,9 @@ This is the active Unity migration branch. The Unity project is in this folder s
 - Fifteen original OBJ environment source meshes migrated from the Unreal branch.
 - Editor automation to generate nine landscape scenes.
 - Third-person CharacterController movement, keyboard/editor fallback and touch input.
-- Follow camera, player health/stamina/gold/renown.
+- Follow camera, player health/stamina/gold/renown HUD.
+- Stackable inventory, cloak/trinket equipment, quest item collection and local persistence.
+- Generated snow TerrainLayer and mobile URP asset with forward rendering settings.
 - Quest giver and supply-crate interaction with persistent quest progress.
 - Nine-region world map with renown-gated travel.
 - Player and quest values persisted with PlayerPrefs.
