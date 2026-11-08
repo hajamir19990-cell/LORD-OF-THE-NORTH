@@ -3,9 +3,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "LOTNInteractable.h"
-#include "LOTNNPC.generated.h"
 
 class UStaticMeshComponent;
+
+#include "LOTNNPC.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLOTNDialogueRequested, const FText&, DialogueText);
 
