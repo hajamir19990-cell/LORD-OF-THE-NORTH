@@ -23,8 +23,8 @@ Use centimeters; world Z is vertical. The gatehouse front faces toward negative 
 | East settlement edge | (1250, -250) | Two small buildings, stacked firewood, carts/props |
 | West pine grove | (-1900, 250) | 5–8 trees, varied scale and spacing |
 | East pine grove | (1900, 350) | 5–8 trees, preserve playable sightlines |
-| Quest supply marker | (450, -850) | Visible from the road, reachable without obstruction |
-| Quest giver NPC | (-420, -650) | Near the settlement edge, facing the approach |
+| Quest supply marker | (0, -430) | Native interactable objective beside the approach road |
+| Quest giver NPC | (0, -1320) | Native interactable quest giver near PlayerStart |
 | Outer wall continuation | +/- 900, 0 | Extend wall silhouette beyond the gatehouse |
 
 Keep the central approach readable from the player start. The gate should occupy the middle distance, not fill the whole screen. Put trees and buildings toward the side edges to frame the route without blocking the camera.
@@ -32,12 +32,12 @@ Keep the central approach readable from the player start. The gate should occupy
 ## Required actors and setup
 
 - PlayerStart at (0, -1700, 100), yaw +90 degrees, facing the gate.
-- Walkable landscape or terrain mesh with collision; the assembly script currently creates a temporary plane only.
+- Walkable rolling terrain source mesh; verify imported collision and walkability in Unreal Editor before treating it as production-ready.
 - Imported environment meshes from Content/SourceMeshes: Winterfell_Gatehouse.obj, Northern_Pine_Tree.obj, Northern_Longhouse.obj, Northern_Cobblestone_Road.obj, Northern_Curtain_Wall.obj and Northern_Watchtower.obj.
-- One Blueprint child of LOTNNPC configured to offer Winterfell_Delivery.
+- Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary pillar visual must be replaced with a skeletal character asset.
 - Exponential height fog and a directional daylight baseline; tune conservatively for mobile.
 - NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
-- One Blueprint child of LOTNQuestObjective using the same QuestId.
+- Native LOTNQuestObjective supply marker using the same QuestId; temporary cube visual must be replaced with a final prop.
 - Directional light and conservative fog setup suitable for mobile; bake/static lighting where practical.
 - LOTNGameMode as the map's GameMode override unless a child GameMode is intentionally used.
 
