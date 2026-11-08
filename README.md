@@ -1,27 +1,31 @@
-# LORD OF THE NORTH — Native Android Edition
+# LORD OF THE NORTH
 
-A native Android game foundation using Java and OpenGL ES 2.0. The runtime does not use a WebView or require an internet connection.
+**Active development branch:** migration/unity-urp
+
+The current development target is a landscape 3D mobile RPG built with **Unity 6.3 LTS + URP**, with Android ARM64 as the first release platform.
+
+## Project
+
+- Unity project: [UnityProject/](UnityProject/)
+- Migration implementation: [Docs/UNITY_MIGRATION.md](Docs/UNITY_MIGRATION.md)
+- Cloud build setup: [Docs/CLOUD_BUILD_SETUP.md](Docs/CLOUD_BUILD_SETUP.md)
+- Static validation: `python3 Scripts/validate_unity_project.py`
 
 ## Current implementation
-- Third-person northern terrain exploration
-- Nine named locations: Winterfell, the Dreadfort, White Harbor, Bear Island, Karhold, Last Hearth, Deepwood Motte, Greywater Watch and the Wall
-- Named northern NPCs, basic dialogue and proximity interaction
-- Basic quest text and renown progression
-- Landscape presentation with touch joystick and touch-look controls
-- Day/night ambient color cycle
-- Local terrain, stone, bark, rock and forest textures
-- Local save/load for player position, gold and renown
 
-## Build toolchain
-The checked-in project currently uses:
-- Android Gradle Plugin: 8.7.3
-- Gradle wrapper: 8.9
-- JDK: 17
-- Android compile SDK / target SDK: 35
-- Minimum Android SDK: 26
+- Fifteen source OBJ environment meshes migrated into the Unity project.
+- Nine regional scene definitions and an Editor bootstrap that generates and saves the scenes.
+- Mobile URP pipeline, procedural snow terrain layer and terrain-sampled environment placement.
+- Third-person movement, touch controls, camera follow and player stats.
+- Inventory, cloak/trinket equipment, quest interaction, dialogue, save data and regional travel.
+- GitHub Actions static validation and a prepared Unity Android cloud-build workflow.
 
-Use a compatible Android Studio installation, allow Gradle sync, then run `./gradlew :app:assembleDebug`.
+## Verification status
 
-## APK output
-Debug APK: `app/build/outputs/apk/debug/app-debug.apk`
-Release APK: `app/build/outputs/apk/release/app-release.apk` (requires release signing configuration before distribution).
+GitHub static validation has passed, including checks of all 15 OBJ meshes (vertices, faces, UV/normal references and MTL files). This does **not** prove Unity Editor compilation, actual scene generation, Android packaging or device QA.
+
+A Unity cloud Editor run is still required to generate the nine Unity scenes, compile C#, run EditMode tests, produce the APK and verify it on a physical Android device.
+
+## Preserved legacy work
+
+Earlier native Android and Unreal experiments remain in their existing branches. This Unity migration is isolated and does not delete or overwrite them.
