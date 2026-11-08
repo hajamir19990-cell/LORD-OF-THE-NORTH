@@ -72,7 +72,20 @@ def actor_of(actor_class, label, location, rotation, scale=None):
     return actor
 
 # Rolling terrain source mesh replaces the featureless temporary plane.
-# It is a first-pass terrain surface; verify/import simple collision in Editor.
+# Use complex-as-simple collision for this static, low-poly ground surface so
+# the first playable slice has a continuous walkable surface. Profile on device.
+terrain_asset = unreal.load_asset(DEST + "/Northern_Rolling_Terrain.Northern_Rolling_Terrain")
+if not terrain_asset:
+    raise RuntimeError("Imported rolling terrain mesh is missing")
+terrain_body = terrain_asset.get_editor_property("body_setup")
+if not terrain_body:
+    raise RuntimeError("Rolling terrain has no BodySetup; collision could not be configured")
+terrain_body.set_editor_property(
+    "collision_trace_flag",
+    unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE,
+)
+terrain_asset.post_edit_change()
+unreal.EditorAssetLibrary.save_loaded_asset(terrain_asset)
 mesh_actor("Northern_Rolling_Terrain", (0, 0, -8))
 
 # Landmark and flanking defensive wall: wall segments meet the gatehouse edges.
