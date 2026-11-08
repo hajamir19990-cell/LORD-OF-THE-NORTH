@@ -2,7 +2,7 @@
 
 ## Fast editor setup
 
-1. Open the project in Unreal Engine 5 and enable **Python Editor Script Plugin** (restart the editor if requested).
+1. Open the project in Unreal Engine 5; PythonScriptPlugin and EditorScriptingUtilities are enabled in the project file. Restart the editor if Unreal prompts you.
 2. Open the Python console or execute the script through the editor's Python execution command.
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
