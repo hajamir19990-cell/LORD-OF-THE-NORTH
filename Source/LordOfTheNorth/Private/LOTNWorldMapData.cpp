@@ -45,7 +45,7 @@ ULOTNWorldMapData::ULOTNWorldMapData()
 
     AddLocation(TEXT("WhiteHarbor"), TEXT("White Harbor"),
         TEXT("The North's great port, alive with ships, merchants and sailors."),
-        15, false, FVector2D(0.72f, 0.22f), TEXT("Port"),
+        15, false, FVector2D(0.68f, 0.18f), TEXT("Port"),
         { TEXT("Winterfell"), TEXT("TheDreadfort"), TEXT("BearIsland") });
 
     AddLocation(TEXT("BearIsland"), TEXT("Bear Island"),
@@ -55,7 +55,7 @@ ULOTNWorldMapData::ULOTNWorldMapData()
 
     AddLocation(TEXT("Karhold"), TEXT("Karhold"),
         TEXT("An ancient northern fortress beneath a hard sky."),
-        25, false, FVector2D(0.84f, 0.34f), TEXT("Castle"),
+        25, false, FVector2D(0.90f, 0.34f), TEXT("Castle"),
         { TEXT("Winterfell"), TEXT("TheDreadfort"), TEXT("LastHearth"), TEXT("TheWall") });
 
     AddLocation(TEXT("LastHearth"), TEXT("Last Hearth"),
