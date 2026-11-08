@@ -87,6 +87,12 @@ require((public_dir / "LOTNInventoryItemRowWidget.h").is_file(), "inventory row 
 require((private_dir / "LOTNInventoryItemRowWidget.cpp").is_file(), "inventory row widget source exists")
 require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
+require((public_dir / "LOTNFoliageCluster.h").is_file(), "hierarchical foliage cluster header exists")
+require((private_dir / "LOTNFoliageCluster.cpp").is_file(), "hierarchical foliage cluster source exists")
+foliage_source = (private_dir / "LOTNFoliageCluster.cpp").read_text(encoding="utf-8")
+require("UHierarchicalInstancedStaticMeshComponent" in foliage_source and
+        "AddInstance" in foliage_source and "NoCollision" in foliage_source,
+        "pine forest uses non-blocking hierarchical instanced meshes")
 world_map_header = (public_dir / "LOTNWorldMapData.h").read_text(encoding="utf-8")
 world_map_source = (private_dir / "LOTNWorldMapData.cpp").read_text(encoding="utf-8")
 hud_source = (private_dir / "LOTNHUDWidget.cpp").read_text(encoding="utf-8")
@@ -153,6 +159,10 @@ if assembly_script.is_file():
     require("for name in MESH_NAMES:" in assembly_text and
             "imported_object_paths" in assembly_text,
             "all source meshes are imported and import failures are detected")
+    require("LOTNFoliageCluster" in assembly_text and
+            "add_tree_instance" in assembly_text and
+            "ENV_Northern_Forest_HISM" in assembly_text,
+            "24 pine trees are batched into one hierarchical instanced forest actor")
     mesh_match = re.search(r"MESH_NAMES\s*=\s*\((.*?)\n\)", assembly_text, re.S)
     mesh_names = re.findall(r'"([^"]+)"', mesh_match.group(1)) if mesh_match else []
     require(len(mesh_names) == 15 and len(set(mesh_names)) == 15,
