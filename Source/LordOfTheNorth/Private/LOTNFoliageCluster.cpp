@@ -1,5 +1,6 @@
 #include "LOTNFoliageCluster.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Engine/StaticMesh.h"
 
 ALOTNFoliageCluster::ALOTNFoliageCluster()
