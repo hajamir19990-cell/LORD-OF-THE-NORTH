@@ -87,6 +87,18 @@ require((public_dir / "LOTNInventoryItemRowWidget.h").is_file(), "inventory row 
 require((private_dir / "LOTNInventoryItemRowWidget.cpp").is_file(), "inventory row widget source exists")
 require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
+world_map_header = (public_dir / "LOTNWorldMapData.h").read_text(encoding="utf-8")
+world_map_source = (private_dir / "LOTNWorldMapData.cpp").read_text(encoding="utf-8")
+hud_source = (private_dir / "LOTNHUDWidget.cpp").read_text(encoding="utf-8")
+require("MapPosition" in world_map_header and "ConnectedLocationIds" in world_map_header and
+        "RegionType" in world_map_header, "world map records include positions, region types and routes")
+require(all(name in world_map_source for name in
+            ("Winterfell", "TheDreadfort", "WhiteHarbor", "BearIsland", "Karhold",
+             "LastHearth", "DeepwoodMotte", "GreywaterWatch", "TheWall")),
+        "world map seeds all nine northern regions")
+require("BuildWorldMapPanel" in hud_source and "WorldMapNodeButtons" in hud_source and
+        "SetRenderTransformAngle" in hud_source and "HandleWorldMapToggleClicked" in hud_source,
+        "landscape HUD builds an interactive map with route lines and region buttons")
 character_header = (public_dir / "LOTNCharacter.h").read_text(encoding="utf-8")
 character_source = (private_dir / "LOTNCharacter.cpp").read_text(encoding="utf-8")
 for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
