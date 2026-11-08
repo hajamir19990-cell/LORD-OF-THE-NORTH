@@ -21,8 +21,6 @@ try:
                 for m in project.get("Modules", [])), "runtime module is declared")
     require("landscape" in project.get("Description", "").lower(),
             "project description identifies landscape orientation")
-    game_maps = project.get("EngineAssociation", "")
-    require(bool(game_maps is not None), "project EngineAssociation field is readable")
     enabled_plugins = {plugin.get("Name") for plugin in project.get("Plugins", [])
                        if plugin.get("Enabled") is True}
     require("PythonScriptPlugin" in enabled_plugins,
