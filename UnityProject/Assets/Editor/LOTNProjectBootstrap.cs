@@ -159,6 +159,9 @@ namespace LOTN.Editor
 
         private static void CreateGameplay()
         {
+            GameObject session = new GameObject("LOTN Persistent Session");
+            session.AddComponent<LOTNGameSession>();
+
             GameObject systems = new GameObject("LOTN Game Systems");
             systems.AddComponent<LOTNTouchInput>();
             systems.AddComponent<LOTNQuestManager>();
