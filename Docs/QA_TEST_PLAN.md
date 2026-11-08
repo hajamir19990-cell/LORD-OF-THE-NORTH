@@ -125,3 +125,11 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Renown changes refresh locked/unlocked node styling and the selected region's status.
 - [ ] Winterfell is marked as the current region and resolves to WinterfellApproach; other regions clearly report that their destination levels are not built yet.
 - [ ] The map remains readable on 16:9, 20:9 and 16:10 landscape screens and does not overlap the movement joystick.
+
+
+## Architecture detail acceptance
+- [ ] Gatehouse gate leaves, iron bands and stone accents render without visible intersections or unintended blocking gaps.
+- [ ] Curtain wall stone courses and buttresses have consistent normals and do not shimmer at distance.
+- [ ] Watchtower corner detailing and parapet remain aligned with the wall foundations.
+- [ ] Longhouse timber frame, roof shingles and chimney do not intersect or float.
+- [ ] Architecture materials remain within the mobile material/draw-call budget and silhouettes read clearly at gameplay camera distance.
