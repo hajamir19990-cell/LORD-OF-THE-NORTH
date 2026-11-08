@@ -166,6 +166,7 @@ namespace LOTN.Editor
             GameObject systems = new GameObject("LOTN Game Systems");
             systems.AddComponent<LOTNTouchInput>();
             systems.AddComponent<LOTNQuestManager>();
+            systems.AddComponent<LOTNInventory>();
             systems.AddComponent<LOTNWorldMap>();
 
             GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
