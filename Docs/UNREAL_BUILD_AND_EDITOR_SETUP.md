@@ -18,9 +18,9 @@ Install a matching Unreal Engine 5.x version from Epic Games Launcher (or a lice
 2. Allow project files to regenerate if prompted.
 3. Compile the LordOfTheNorthEditor target.
 4. Fix all compiler and editor warnings/errors before proceeding.
-5. Create and save the first map as Content/Maps/VerticalPrototype.
+5. Create and save the first map as Content/Maps/VerticalPrototype; add a PlayerStart and a walkable ground/landscape surface.
 6. Set the map as the editor startup and game default map.
-7. Add a Blueprint child of LOTNCharacter with the licensed player mesh and animation blueprint.
+7. Add a Blueprint child of LOTNCharacter with the licensed player mesh, skeleton and animation blueprint; assign it as the default pawn if you use a child class.
 8. Place an LOTNNPC Blueprint and an LOTNQuestObjective Blueprint in the map. Assign meshes, materials and collision; match the quest IDs.
 9. Create a LOTNWorldMapData asset and review its nine location entries. Assign a real level name only after the corresponding map exists.
 10. The C++ PlayerController creates the native portrait HUD automatically. Optionally create a Widget Blueprint child of LOTNHUDWidget to customize it; keep the named widget bindings documented in QUEST_SYSTEM.md.
