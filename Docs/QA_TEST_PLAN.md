@@ -140,3 +140,10 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] The HISM component has no collision and does not affect navigation.
 - [ ] Instance culling, LOD transitions, cluster bounds and shadows remain stable at gameplay camera distances.
 - [ ] Forest batching reduces actor/component overhead without visible popping or excessive overdraw on the target Android device.
+
+
+## Automated editor-level assembly check
+- [ ] Open /Game/Maps/WinterfellApproach and run Scripts/validate_winterfell_level.py in Unreal Editor.
+- [ ] Confirm the script reports every required source mesh and expected actor count.
+- [ ] Confirm the HISM forest contains 24 instances and has collision disabled.
+- [ ] Resolve every reported failure before visual sign-off; this script does not replace manual visual QA, lighting build, navigation checks or Android profiling.
