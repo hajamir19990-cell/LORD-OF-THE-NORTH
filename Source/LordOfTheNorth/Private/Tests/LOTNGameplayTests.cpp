@@ -117,4 +117,83 @@ bool FLOTNWorldMapDataTest::RunTest(const FString& Parameters)
     return true;
 }
 
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FLOTNInventoryRestoreTest,
+    "LOTN.Inventory.RestoreValidation",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FLOTNInventoryRestoreTest::RunTest(const FString& Parameters)
+{
+    ULOTNInventoryComponent* Inventory = NewObject<ULOTNInventoryComponent>();
+    if (!Inventory)
+    {
+        return false;
+    }
+
+    FLOTNInventoryItem HoodA;
+    HoodA.ItemId = TEXT("HoodA");
+    HoodA.Category = ELOTNItemCategory::Apparel;
+    HoodA.EquipmentSlot = ELOTNEquipmentSlot::Head;
+    HoodA.Quantity = 8;
+    HoodA.MaxStack = 1;
+
+    FLOTNInventoryItem HoodB = HoodA;
+    HoodB.ItemId = TEXT("HoodB");
+    HoodB.Quantity = 1;
+
+    FLOTNInventoryItem InvalidItem;
+    InvalidItem.ItemId = NAME_None;
+    InvalidItem.Quantity = 3;
+
+    TArray<FLOTNInventoryItem> SavedItems = { HoodA, HoodB, InvalidItem };
+    TArray<FName> SavedEquipment = { TEXT("HoodA"), TEXT("HoodB"), TEXT("MissingItem") };
+    Inventory->RestoreInventory(SavedItems, SavedEquipment);
+
+    TestEqual(TEXT("Invalid item IDs are discarded"), Inventory->Items.Num(), 2);
+    TestEqual(TEXT("Saved stack size is clamped"), Inventory->Items[0].Quantity, 1);
+    TestEqual(TEXT("Only one item per equipment slot is restored"), Inventory->EquippedItemIds.Num(), 1);
+    TestTrue(TEXT("First valid equipment entry is retained"), Inventory->EquippedItemIds.Contains(TEXT("HoodA")));
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FLOTNQuestRestoreTest,
+    "LOTN.Quests.RestoreValidation",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FLOTNQuestRestoreTest::RunTest(const FString& Parameters)
+{
+    ULOTNQuestComponent* Quests = NewObject<ULOTNQuestComponent>();
+    if (!Quests)
+    {
+        return false;
+    }
+
+    FLOTNQuestEntry CompletedQuest;
+    CompletedQuest.QuestId = TEXT("AlreadyDone");
+
+    FLOTNQuestEntry ActiveQuest;
+    ActiveQuest.QuestId = TEXT("StillActive");
+    ActiveQuest.RequiredProgress = 2;
+    ActiveQuest.CurrentProgress = 9;
+    ActiveQuest.GoldReward = -10;
+    ActiveQuest.RenownReward = -2;
+
+    FLOTNQuestEntry DuplicateQuest = ActiveQuest;
+    FLOTNQuestEntry EmptyQuest;
+
+    Quests->RestoreQuestState(
+        { TEXT("AlreadyDone"), TEXT("AlreadyDone"), NAME_None },
+        { CompletedQuest, ActiveQuest, DuplicateQuest, EmptyQuest });
+
+    TestEqual(TEXT("Completed IDs are unique"), Quests->CompletedQuestIds.Num(), 1);
+    TestEqual(TEXT("Invalid and duplicate active quests are discarded"), Quests->ActiveQuests.Num(), 1);
+    TestEqual(TEXT("Progress is clamped to requirement"), Quests->ActiveQuests[0].CurrentProgress, 2);
+    TestEqual(TEXT("Negative rewards are clamped"), Quests->ActiveQuests[0].GoldReward, 0);
+    TestEqual(TEXT("Negative renown is clamped"), Quests->ActiveQuests[0].RenownReward, 0);
+    return true;
+}
+
+
 #endif
