@@ -19,6 +19,15 @@ struct FLOTNQuestEntry
     FText Description;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
+    FText ObjectiveText;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
+    int32 CurrentProgress = 0;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
+    int32 RequiredProgress = 1;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
     int32 GoldReward = 0;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
@@ -45,13 +54,19 @@ public:
     TArray<FName> CompletedQuestIds;
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Quest")
-    bool StartQuest(FName QuestId, FText Title, FText Description, int32 GoldReward, int32 RenownReward);
+    bool StartQuest(FName QuestId, FText Title, FText Description, int32 GoldReward, int32 RenownReward, FText ObjectiveText, int32 RequiredProgress = 1);
+
+    UFUNCTION(BlueprintCallable, Category="LOTN|Quest")
+    bool AdvanceQuestProgress(FName QuestId, int32 Amount = 1);
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Quest")
     bool CompleteQuest(FName QuestId);
 
     UFUNCTION(BlueprintPure, Category="LOTN|Quest")
     bool IsQuestCompleted(FName QuestId) const;
+
+    UFUNCTION(BlueprintPure, Category="LOTN|Quest")
+    bool IsQuestReadyToTurnIn(FName QuestId) const;
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Quest")
     void RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FLOTNQuestEntry>& InActiveQuests);
