@@ -204,11 +204,6 @@ void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
 
-    if (!InteractionPromptText)
-    {
-        return;
-    }
-
     PromptRefreshAccumulator += InDeltaTime;
     if (PromptRefreshAccumulator < PromptRefreshInterval)
     {
@@ -227,9 +222,13 @@ void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
         RefreshHUD();
     }
 
-    ALOTNCharacter* Player = CurrentPlayer;
-    const FText Prompt = Player && Player->InteractionComponent
-        ? Player->InteractionComponent->GetCurrentPrompt()
+    if (!InteractionPromptText)
+    {
+        return;
+    }
+
+    const FText Prompt = CurrentPlayer && CurrentPlayer->InteractionComponent
+        ? CurrentPlayer->InteractionComponent->GetCurrentPrompt()
         : FText::GetEmpty();
 
     if (!Prompt.EqualTo(CachedInteractionPrompt))
