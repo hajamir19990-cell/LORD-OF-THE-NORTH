@@ -28,3 +28,25 @@ Saved/
 *.pak
 *.ucas
 *.utoc
+
+# Unity generated editor data
+UnityProject/Library/
+UnityProject/Temp/
+UnityProject/Obj/
+UnityProject/Build/
+UnityProject/Builds/
+UnityProject/Logs/
+UnityProject/UserSettings/
+UnityProject/MemoryCaptures/
+UnityProject/Recordings/
+UnityProject/.vs/
+UnityProject/*.csproj
+UnityProject/*.sln
+UnityProject/*.user
+UnityProject/*.pidb
+UnityProject/*.booproj
+UnityProject/*.svd
+UnityProject/*.pdb
+UnityProject/*.mdb
+UnityProject/*.opendb
+UnityProject/*.VC.db
