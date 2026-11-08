@@ -34,7 +34,6 @@ namespace LOTN
 
         private void Awake()
         {
-            if (Instance != null && Instance != this) { Destroy(this); return; }
             Instance = this;
             Load();
             if (entries.Count == 0)
