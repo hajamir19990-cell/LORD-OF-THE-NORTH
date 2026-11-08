@@ -59,8 +59,8 @@ namespace LOTN
             {
                 position = new Vector3(
                     PlayerPrefs.GetFloat(key + "X", 0f),
-                    PlayerPrefs.GetFloat(key + "Y", 4f),
-                    PlayerPrefs.GetFloat(key + "Z", -345f));
+                    PlayerPrefs.GetFloat(key + "Y", 0f),
+                    PlayerPrefs.GetFloat(key + "Z", -34.5f));
                 return true;
             }
             position = Vector3.zero;
