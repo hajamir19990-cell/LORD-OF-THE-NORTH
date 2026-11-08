@@ -19,5 +19,5 @@ public:
     FText GetInteractionText(AActor* InteractingActor) const;
 
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="LOTN|Interaction")
-    void Interact(AActor* InteractingActor);
+    FText Interact(AActor* InteractingActor);
 };
