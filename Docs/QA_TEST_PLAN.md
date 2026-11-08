@@ -9,6 +9,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm no missing modules, reflection errors or asset load errors.
 - [ ] Confirm the default GameMode spawns LOTNCharacter and LOTNPlayerController.
 - [ ] Confirm the native portrait HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
+- [ ] Run the Unreal automation tests under LOTN.Inventory, LOTN.Quests and LOTN.WorldMap.
 
 ## Movement and portrait controls
 
