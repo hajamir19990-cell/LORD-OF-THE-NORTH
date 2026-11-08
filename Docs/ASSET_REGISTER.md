@@ -62,3 +62,10 @@ The eight starter OBJ source meshes are committed, but no Unreal binary environm
 - `Content/SourceMeshes/Northern_Rock_Cluster.obj` — five low-poly stones with snow caps; placed along the outer terrain margins.
 - `Content/SourceMeshes/Northern_Stone_Firepit.obj` — stone ring and crossed charred logs; settlement landmark near the east longhouse.
 - These are greybox source meshes using the shared MTL palette. Verify normals, collision settings and mobile material appearance after import.
+
+
+## Settlement edge and ground dressing
+- `Content/SourceMeshes/Northern_Palisade_Fence.obj` — modular timber palisade segment with pointed stakes and cross rails; used to frame both sides of the approach.
+- `Content/SourceMeshes/Northern_Rock_Cluster.obj` — five low-poly stones with snow caps; placed along the outer terrain margins.
+- `Content/SourceMeshes/Northern_Stone_Firepit.obj` — stone ring and crossed charred logs; settlement landmark near the east longhouse.
+- These are greybox source meshes using the shared MTL palette. Verify normals, collision settings and mobile material appearance after import.
