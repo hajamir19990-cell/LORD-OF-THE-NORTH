@@ -152,10 +152,15 @@ void ULOTNHUDWidget::BuildNativeLayout()
         FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(98.f, -112.f), FVector2D(76.f, 48.f));
 }
 
+void ULOTNHUDWidget::NativeOnInitialized()
+{
+    BuildNativeLayout();
+    Super::NativeOnInitialized();
+}
+
 void ULOTNHUDWidget::NativeConstruct()
 {
     Super::NativeConstruct();
-    BuildNativeLayout();
     BindPlayerEvents(true);
     CachedInteractionPrompt = FText::GetEmpty();
     PromptRefreshAccumulator = 0.f;
