@@ -4,6 +4,7 @@
 ALOTNPlayerController::ALOTNPlayerController()
 {
     bShowMouseCursor = false;
+    HUDWidgetClass = ULOTNHUDWidget::StaticClass();
 }
 
 void ALOTNPlayerController::BeginPlay()
