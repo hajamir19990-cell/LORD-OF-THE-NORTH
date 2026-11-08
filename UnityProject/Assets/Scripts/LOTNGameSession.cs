@@ -42,6 +42,28 @@ namespace LOTN
             Save();
         }
 
+        public void SavePlayerPosition(string sceneName, Vector3 position)
+        {
+            PlayerPrefs.SetString("LOTN.LastScene", sceneName);
+            PlayerPrefs.SetFloat("LOTN.PosX", position.x);
+            PlayerPrefs.SetFloat("LOTN.PosY", position.y);
+            PlayerPrefs.SetFloat("LOTN.PosZ", position.z);
+        }
+
+        public bool TryGetPlayerPosition(string sceneName, out Vector3 position)
+        {
+            if (PlayerPrefs.GetString("LOTN.LastScene", "") == sceneName)
+            {
+                position = new Vector3(
+                    PlayerPrefs.GetFloat("LOTN.PosX", 0f),
+                    PlayerPrefs.GetFloat("LOTN.PosY", 4f),
+                    PlayerPrefs.GetFloat("LOTN.PosZ", -345f));
+                return true;
+            }
+            position = Vector3.zero;
+            return false;
+        }
+
         private void Load()
         {
             health = PlayerPrefs.GetInt("LOTN.Health", 100);
