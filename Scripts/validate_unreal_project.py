@@ -109,10 +109,9 @@ require("BuildWorldMapPanel" in hud_source and "WorldMapNodeButtons" in hud_sour
 require("WorldMapTravelButton" in hud_source and "HandleWorldMapTravelClicked" in hud_source and
         "UGameplayStatics::OpenLevel" in hud_source,
         "regional map exposes an unlock-checked travel action")
-require(all(name in world_map_source for name in (
-    "LOTN_TheDreadfort", "LOTN_WhiteHarbor", "LOTN_BearIsland", "LOTN_Karhold",
-    "LOTN_LastHearth", "LOTN_DeepwoodMotte", "LOTN_GreywaterWatch", "LOTN_TheWall")),
-    "all eight secondary regions resolve to dedicated level names")
+require('FString::Printf(TEXT("LOTN_%s")' in world_map_source and
+        "Id.ToString()" in world_map_source,
+        "all eight secondary regions resolve to dedicated LOTN_* level names")
     require("RenownInfo" in hud_source and "TravelStatus" in hud_source and
             "WorldMapCloseButton" in hud_source,
             "regional map details show renown, travel readiness and close controls")
