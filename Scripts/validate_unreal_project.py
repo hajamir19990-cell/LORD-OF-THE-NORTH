@@ -136,8 +136,12 @@ if assembly_script.is_file():
                      "terrain_vertices", "49 * 49"):
         require(required in assembly_text, "landscape assembly includes " + required)
     require("for name in MESH_NAMES:" in assembly_text and
-            "CTF_USE_COMPLEX_AS_SIMPLE" in assembly_text,
-            "all imported environment meshes receive prototype collision")
+            "imported_object_paths" in assembly_text,
+            "all source meshes are imported and import failures are detected")
+    require("COLLISION_MESHES" in assembly_text and
+            "CTF_USE_COMPLEX_AS_SIMPLE" in assembly_text and
+            "Northern_Rolling_Terrain" in assembly_text,
+            "terrain and structural meshes receive prototype blocking collision")
     require("LevelEditorSubsystem" in assembly_text and
             "EditorActorSubsystem" in assembly_text and
             "EditorLevelLibrary" not in assembly_text,
