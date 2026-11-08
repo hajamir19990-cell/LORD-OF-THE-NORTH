@@ -71,8 +71,10 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 
 ## Additional environment dressing
 - [ ] Four palisade segments frame the approach without blocking the central road, longhouses or camera.
-- [ ] Rock clusters sit on the outer terrain margins without floating or blocking movement.
-- [ ] Stone firepit is placed southeast of the east longhouse without intersecting its footprint or obstructing the road.
+- [ ] Rock clusters sit on the outer terrain margins without floating; decorative rocks are non-blocking.
+- [ ] Stone firepit is placed southeast of the east longhouse without intersecting its footprint or obstructing the road; it is non-blocking.
+- [ ] Pine trees, rock clusters and firepit have collision disabled; terrain, road, walls and buildings retain blocking collision.
+- [ ] Each palisade, rock-cluster and firepit dressing group is spawned exactly once; no duplicate actors appear after a fresh map assembly.
 - [ ] PlayerStart, NPC capsules and the quest crate rest at the sampled road surface height.
 - [ ] The flattened castle foundation keeps both towers and curtain walls seated without burying their lower sections.
 
