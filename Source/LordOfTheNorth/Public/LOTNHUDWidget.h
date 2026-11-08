@@ -97,6 +97,9 @@ protected:
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UButton> WorldMapCloseButton;
 
+    UPROPERTY(Transient)
+    TObjectPtr<UButton> WorldMapTravelButton;
+
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UBorder> WorldMapPanel;
 
@@ -157,6 +160,9 @@ private:
 
     UFUNCTION()
     void HandleWorldMapCloseClicked();
+
+    UFUNCTION()
+    void HandleWorldMapTravelClicked();
 
     FText CachedInteractionPrompt;
     float PromptRefreshAccumulator = 0.f;
