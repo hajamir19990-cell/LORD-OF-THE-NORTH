@@ -23,8 +23,9 @@ for level in REGIONS:
     require(exists, "map asset exists: " + level)
     if not exists:
         continue
-    if not unreal.EditorAssetLibrary.open_editor_for_asset(path):
-        require(False, "could open map: " + level)
+    loaded_world = unreal.EditorLoadingAndSavingUtils.load_map(path)
+    if not loaded_world:
+        require(False, "could load map: " + level)
         continue
     subsystem = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
     actors = subsystem.get_all_level_actors() if subsystem else []
