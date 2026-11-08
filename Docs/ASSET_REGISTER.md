@@ -19,7 +19,7 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Content/SourceMeshes/Northern_Stone_Firepit.obj | Settlement landmark prop | Greybox OBJ committed; needs Unreal import and collision review |
 | Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
 
-These are eleven editable interchange source meshes (plus the shared MTL library), not Unreal .uasset files and not yet integrated into a playable map. They are first-pass geometry, not final production art.
+These are eleven editable interchange source meshes (plus the shared MTL library), not Unreal .uasset files and not yet integrated into a playable map. The assembly script enables Unreal-generated lightmap UVs for every imported static mesh; verify the generated channels in the editor. The meshes remain first-pass geometry, not final production art.
 
 ## Approved source library
 
