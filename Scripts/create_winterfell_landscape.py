@@ -50,19 +50,37 @@ for name in MESH_NAMES:
     task.set_editor_property("replace_existing", True)
     task.set_editor_property("save", True)
     asset_tools.import_asset_tasks([task])
+    imported_paths = task.get_editor_property("imported_object_paths")
+    if not imported_paths:
+        raise RuntimeError("Unreal did not import source mesh: " + source_file)
 
-# Prototype collision: use each low-poly environment mesh as static-world
-# collision so the player cannot pass through walls, buildings, trees or rocks.
-# Replace with simplified UCX collision before release and profile on device.
-for name in MESH_NAMES:
-    if name == "Northern_Supply_Crate":
-        continue  # objective component explicitly disables visual-mesh collision
+# Keep complex collision only on surfaces and structures that must block movement.
+# Decorative trees, rocks and the firepit are non-blocking to avoid snagging and
+# unnecessary mobile collision work. Replace structural complex collision with
+# simplified UCX meshes before release and profile on target devices.
+COLLISION_MESHES = {
+    "Northern_Rolling_Terrain",
+    "Northern_Cobblestone_Road",
+    "Winterfell_Gatehouse",
+    "Northern_Curtain_Wall",
+    "Northern_Watchtower",
+    "Northern_Longhouse",
+    "Northern_Palisade_Fence",
+}
+NON_BLOCKING_MESHES = {
+    "Northern_Pine_Tree",
+    "Northern_Rock_Cluster",
+    "Northern_Stone_Firepit",
+    "Northern_Supply_Crate",
+}
+
+for name in COLLISION_MESHES:
     asset = unreal.load_asset(DEST + "/" + name + "." + name)
     if not asset:
-        raise RuntimeError("Imported environment mesh missing during collision setup: " + name)
+        raise RuntimeError("Imported collision mesh missing during setup: " + name)
     body = asset.get_editor_property("body_setup")
     if not body:
-        raise RuntimeError("No BodySetup available for environment mesh: " + name)
+        raise RuntimeError("No BodySetup available for collision mesh: " + name)
     body.set_editor_property(
         "collision_trace_flag",
         unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE,
@@ -83,6 +101,8 @@ def mesh_actor(name, location, yaw=0.0, scale=1.0):
         raise RuntimeError("Could not place mesh actor: " + name)
     actor.set_actor_scale3d(unreal.Vector(scale, scale, scale))
     actor.set_actor_label(name)
+    if name in NON_BLOCKING_MESHES:
+        actor.set_actor_enable_collision(False)
     return actor
 
 def actor_of(actor_class, label, location, rotation, scale=None):
@@ -179,21 +199,6 @@ for index, (x, y) in enumerate(rock_positions):
     mesh_actor("Northern_Rock_Cluster", (x, y, terrain_world_z(x, y) - 6.0),
                yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
 
-# Timber palisades define the settlement edge without closing the main road.
-for x in (-850, 850):
-    for y in (-1200, -300):
-        mesh_actor("Northern_Palisade_Fence", (x, y, 16),
-                   yaw=0.0 if x < 0 else 180.0)
-
-# Snow-capped rock clusters frame the outer terrain and break up empty margins.
-rock_positions = (
-    (-3300, -1750), (-2850, -650), (-3400, 650), (-2850, 1850),
-    (3300, -1700), (2850, -600), (3400, 700), (2900, 1900),
-)
-for index, (x, y) in enumerate(rock_positions):
-    mesh_actor("Northern_Rock_Cluster", (x, y, -5),
-               yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
-
 # Settlement buildings sit off the central camera and movement corridor.
 mesh_actor("Northern_Longhouse", (-1250, -800, terrain_world_z(-1250, -800)), yaw=8.0, scale=1.0)
 mesh_actor("Northern_Longhouse", (1250, -650, terrain_world_z(1250, -650)), yaw=172.0, scale=0.82)
@@ -201,9 +206,6 @@ mesh_actor("Northern_Longhouse", (1850, -1150, terrain_world_z(1850, -1150)), ya
 
 # A small stone firepit adds a readable settlement landmark away from the road.
 mesh_actor("Northern_Stone_Firepit", (1400, -1550, terrain_world_z(1400, -1550)), yaw=12.0)
-
-# A small stone firepit adds a readable settlement landmark away from the road.
-mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
 
 # Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
