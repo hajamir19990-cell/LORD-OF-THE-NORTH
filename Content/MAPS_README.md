@@ -73,3 +73,12 @@ After the assembly script saves the binary map, the project configuration points
 - Eight snow-capped rock clusters are distributed on the outer terrain margins, away from the central path.
 - A stone firepit sits near the east settlement building at approximately (1400, -1550).
 - NPC capsule roots and the quest crate are placed at Z=16 to align with the road surface; confirm the actual imported collision and terrain intersection in Editor.
+
+
+## Runtime placement and collision rules
+
+- The editor assembly script samples the 49 x 49 terrain grid for every road, building, fence, rock, tree, firepit, NPC, objective and PlayerStart placement. The terrain actor's -8 cm vertical offset is included in the sampler.
+- The three road tiles are centered at Y=-1400, -750 and -100 cm. Their source bounds overlap slightly so the route remains continuous from PlayerStart toward the gate.
+- The palisade, rock and firepit dressing is created exactly once per map assembly; all of these props use sampled terrain height rather than a hard-coded Z value.
+- Terrain, road and major structures keep prototype blocking collision. Pine trees, decorative rock clusters and the firepit are non-blocking; the player capsule remains the only character movement collider.
+- This is still an editor-generated greybox. Confirm imported mesh bounds, pivots, visual overlaps, Recast navigation and Android performance in Unreal Editor before treating the map as playable.
