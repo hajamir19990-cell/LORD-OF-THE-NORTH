@@ -10,12 +10,12 @@
 6. Create Blueprint children of LOTNNPC and LOTNQuestObjective and place them at the coordinates in MAPS_README.md.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
-The script imports the six OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees and PlayerStart. It also adds a navigation bounds volume, directional light and temporary exponential-height fog, then saves the new level.
+The script imports the seven OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees, a rolling terrain surface and PlayerStart. It also adds a navigation bounds volume, directional light and temporary exponential-height fog, then saves the new level.
 
 ## Important limitations
 
 - This is a greybox assembly script. The OBJ meshes are first-pass geometry and need art polish.
-- The ground plane is explicitly temporary; it is not a finished Landscape.
+- The rolling terrain is a first-pass static mesh surface, not a sculpted Unreal Landscape. Verify its collision and replace it with a Landscape if terrain sculpting or landscape-layer materials are required.
 - Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.
 - The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
 - The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
