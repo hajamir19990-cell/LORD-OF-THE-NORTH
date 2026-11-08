@@ -209,9 +209,14 @@ mesh_actor("Northern_Stone_Firepit", (1400, -1550, terrain_world_z(1400, -1550))
 
 # Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
+    # Inner groves frame the settlement without hiding the approach.
     (-1900, -1050), (-2200, -450), (-1850, 250), (-2350, 850),
     (-1700, 1450), (-2600, 1650), (2450, -1000), (2200, -350),
     (1850, 350), (2350, 950), (1750, 1500), (2650, 1750),
+    # Outer tree line gives the landscape a northern-forest silhouette.
+    (-1800, -2550), (-2450, -2200), (-1900, 2250), (-2400, 2700),
+    (1800, -2550), (2450, -2200), (1900, 2250), (2400, 2700),
+    (-900, 2600), (900, 2600), (-900, -2600), (900, -2600),
 )
 for index, (x, y) in enumerate(tree_positions):
     size = 1.05 + (index % 4) * 0.13
@@ -296,8 +301,23 @@ actor_of(unreal.NavMeshBoundsVolume, "NAV_WinterfellApproach",
 # foliage are imported; keep expensive dynamic effects out of the mobile target.
 sun = actor_of(unreal.DirectionalLight, "TEMP_Northern_Directional_Light",
                (0, 0, 1800), unreal.Rotator(-35.0, -35.0, 0.0))
+sun_component = sun.get_component_by_class(unreal.DirectionalLightComponent)
+if not sun_component:
+    raise RuntimeError("Directional light component is missing")
+sun_component.set_mobility(unreal.ComponentMobility.STATIC)
+sun_component.set_editor_property("intensity", 72000.0)
+sun_component.set_editor_property("cast_shadows", True)
+
 fog = actor_of(unreal.ExponentialHeightFog, "TEMP_Northern_Atmospheric_Fog",
                (0, 0, 0), unreal.Rotator(0.0, 0.0, 0.0))
+fog_component = fog.get_component_by_class(unreal.ExponentialHeightFogComponent)
+if not fog_component:
+    raise RuntimeError("Exponential height fog component is missing")
+fog_component.set_editor_property("fog_density", 0.0025)
+fog_component.set_editor_property("fog_height_falloff", 0.22)
+fog_component.set_editor_property("fog_max_opacity", 0.58)
+fog_component.set_editor_property("start_distance", 2200.0)
+fog_component.set_editor_property("b_enable_volumetric_fog", False)
 
 if not level_editor.save_current_level():
     raise RuntimeError("Level was created but could not be saved")
@@ -305,5 +325,5 @@ if not level_editor.save_current_level():
 unreal.log(
     "LOTN: WinterfellApproach landscape greybox saved. "
     "Inspect terrain collision/materials, replace temporary NPC/quest markers "
-    "with final art, and profile mobile lighting before sign-off."
+    "with final art, and build static lighting, verify the cold daylight/fog balance, and profile mobile rendering before sign-off."
 )
