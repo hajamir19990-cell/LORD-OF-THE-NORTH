@@ -37,6 +37,9 @@ protected:
     TObjectPtr<UTextBlock> RenownText;
 
     UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> InventoryCountText;
+
+    UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UTextBlock> QuestTitleText;
 
     UPROPERTY(meta=(BindWidgetOptional))
@@ -63,6 +66,9 @@ private:
 
     UFUNCTION()
     void HandleQuestChanged();
+
+    UFUNCTION()
+    void HandleInventoryChanged();
 
     UFUNCTION()
     void HandleInteractionMessage(const FText& Message);
