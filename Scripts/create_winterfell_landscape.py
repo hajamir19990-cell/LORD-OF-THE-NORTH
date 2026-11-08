@@ -1,8 +1,8 @@
-"""Create a landscape greybox level from the committed OBJ source meshes.
+"""Assemble the WinterfellApproach landscape greybox in Unreal Editor.
 
-Run inside Unreal Editor's Python console after enabling Python Editor Script Plugin.
-This creates a new level and saves it at /Game/Maps/WinterfellApproach.
-It is a greybox assembly helper, not a substitute for final art, lighting, collision or QA.
+Run from the Unreal Editor Python console with Python Editor Script Plugin enabled.
+Imports source OBJ meshes, creates a wide approach composition and saves
+/Game/Maps/WinterfellApproach. This is an editor assembly helper, not a final art pass.
 """
 import os
 import unreal
@@ -12,23 +12,24 @@ SOURCE_DIR = os.path.join(PROJECT_DIR, "Content", "SourceMeshes")
 DEST = "/Game/Environment/North/SourceMeshes"
 LEVEL = "/Game/Maps/WinterfellApproach"
 
-unreal.EditorAssetLibrary.make_directory("/Game/Maps")
-unreal.EditorAssetLibrary.make_directory("/Game/Environment")
-unreal.EditorAssetLibrary.make_directory("/Game/Environment/North")
-unreal.EditorAssetLibrary.make_directory(DEST)
-
-# Start with a clean level so repeated runs do not duplicate every actor.
-if unreal.EditorLevelLibrary.new_level(LEVEL) is False:
-    raise RuntimeError("Could not create level: " + LEVEL)
-
-asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
-mesh_names = (
+MESH_NAMES = (
     "Winterfell_Gatehouse",
     "Northern_Pine_Tree",
     "Northern_Longhouse",
     "Northern_Cobblestone_Road",
+    "Northern_Curtain_Wall",
+    "Northern_Watchtower",
 )
-for name in mesh_names:
+
+for folder in ("/Game/Maps", "/Game/Environment",
+               "/Game/Environment/North", DEST):
+    unreal.EditorAssetLibrary.make_directory(folder)
+
+if unreal.EditorLevelLibrary.new_level(LEVEL) is False:
+    raise RuntimeError("Could not create level: " + LEVEL)
+
+asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
+for name in MESH_NAMES:
     source_file = os.path.join(SOURCE_DIR, name + ".obj")
     if not os.path.isfile(source_file):
         raise RuntimeError("Missing source OBJ: " + source_file)
@@ -41,67 +42,92 @@ for name in mesh_names:
     task.set_editor_property("save", True)
     asset_tools.import_asset_tasks([task])
 
-def mesh_actor(name, location, rotation=None, scale=1.0):
+def mesh_actor(name, location, yaw=0.0, scale=1.0):
     asset = unreal.load_asset(DEST + "/" + name + "." + name)
     if not asset:
         raise RuntimeError("Imported mesh not found: " + name)
     actor = unreal.EditorLevelLibrary.spawn_actor_from_object(
         asset,
-        unreal.Vector(location[0], location[1], location[2]),
-        rotation or unreal.Rotator(0.0, 0.0, 0.0),
+        unreal.Vector(float(location[0]), float(location[1]), float(location[2])),
+        unreal.Rotator(0.0, float(yaw), 0.0),
     )
+    if not actor:
+        raise RuntimeError("Could not place mesh actor: " + name)
     actor.set_actor_scale3d(unreal.Vector(scale, scale, scale))
     actor.set_actor_label(name)
     return actor
 
-# Temporary ground plane: replace with sculpted landscape/terrain before production.
+def actor_of(actor_class, label, location, rotation, scale=None):
+    actor = unreal.EditorLevelLibrary.spawn_actor_from_class(
+        actor_class,
+        unreal.Vector(float(location[0]), float(location[1]), float(location[2])),
+        rotation,
+    )
+    if not actor:
+        raise RuntimeError("Could not spawn actor: " + label)
+    actor.set_actor_label(label)
+    if scale:
+        actor.set_actor_scale3d(unreal.Vector(scale[0], scale[1], scale[2]))
+    return actor
+
+# Temporary collision ground for the first editor inspection. Replace with a
+# sculpted Landscape and layered snow/rock material before gameplay sign-off.
 plane = unreal.load_asset("/Engine/BasicShapes/Plane.Plane")
 if not plane:
     raise RuntimeError("Unreal basic Plane mesh is unavailable")
 ground = unreal.EditorLevelLibrary.spawn_actor_from_object(
-    plane, unreal.Vector(0.0, 0.0, -15.0), unreal.Rotator(0.0, 0.0, 0.0)
+    plane, unreal.Vector(0.0, 0.0, -18.0), unreal.Rotator(0.0, 0.0, 0.0)
 )
-ground.set_actor_scale3d(unreal.Vector(65.0, 65.0, 1.0))
+ground.set_actor_scale3d(unreal.Vector(70.0, 70.0, 1.0))
 ground.set_actor_label("TEMP_Greybox_Ground_Replace_With_Landscape")
 
-# Main landmark and approach road.
-mesh_actor("Winterfell_Gatehouse", (0.0, 0.0, 0.0))
-mesh_actor("Northern_Cobblestone_Road", (0.0, -1050.0, 0.0), scale=1.25)
-mesh_actor("Northern_Cobblestone_Road", (0.0, -350.0, 0.0), scale=1.0)
+# Landmark and flanking defensive wall: wall segments meet the gatehouse edges.
+mesh_actor("Winterfell_Gatehouse", (0, 0, 0))
+mesh_actor("Northern_Curtain_Wall", (-1775, 0, 0))
+mesh_actor("Northern_Curtain_Wall", (1775, 0, 0), yaw=180.0)
+mesh_actor("Northern_Watchtower", (-3100, 0, 0))
+mesh_actor("Northern_Watchtower", (3100, 0, 0))
 
-# Settlement edge: buildings frame the road but leave the center open.
-mesh_actor("Northern_Longhouse", (-1250.0, -250.0, 0.0), scale=1.0)
-mesh_actor("Northern_Longhouse", (1250.0, -150.0, 0.0),
-           unreal.Rotator(0.0, 180.0, 0.0), scale=0.82)
+# Three adjoining road tiles lead from the player start to the gate.
+for index, y in enumerate((-1400, -750, -100)):
+    mesh_actor("Northern_Cobblestone_Road", (0, y, 0),
+               scale=1.0 if index else 1.03)
 
-# Pine groves use repeated instances of the imported source mesh.
+# Settlement buildings sit off the central camera and movement corridor.
+mesh_actor("Northern_Longhouse", (-1250, -800, 0), yaw=8.0, scale=1.0)
+mesh_actor("Northern_Longhouse", (1250, -650, 0), yaw=172.0, scale=0.82)
+mesh_actor("Northern_Longhouse", (1850, -1150, 0), yaw=195.0, scale=0.68)
+
+# Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
-    (-1850, -150), (-2050, 450), (-1700, 1000), (-2250, 1250),
-    (1850, -50), (2050, 550), (1750, 1050), (2250, 1350),
-    (-1100, 1250), (1100, 1450),
+    (-1900, -1050), (-2200, -450), (-1850, 250), (-2350, 850),
+    (-1700, 1450), (-2600, 1650), (1900, -1000), (2200, -350),
+    (1850, 350), (2350, 950), (1750, 1500), (2650, 1750),
 )
 for index, (x, y) in enumerate(tree_positions):
-    size = 0.72 + (index % 3) * 0.12
-    mesh_actor("Northern_Pine_Tree", (float(x), float(y), 0.0),
-               unreal.Rotator(0.0, float((index * 37) % 360), 0.0), size)
+    size = 1.05 + (index % 4) * 0.13
+    mesh_actor("Northern_Pine_Tree", (x, y, 0),
+               yaw=float((index * 37) % 360), scale=size)
 
-# Player begins on the south/north-road approach, facing +Y toward the gate.
-start = unreal.EditorLevelLibrary.spawn_actor_from_class(
-    unreal.PlayerStart,
-    unreal.Vector(0.0, -1700.0, 100.0),
-    unreal.Rotator(0.0, 90.0, 0.0),
-)
-start.set_actor_label("PlayerStart_Landscape_Approach")
+# Player start and navigation coverage for the first walkable slice.
+actor_of(unreal.PlayerStart, "PlayerStart_Landscape_Approach",
+         (0, -1700, 100), unreal.Rotator(0.0, 90.0, 0.0))
+actor_of(unreal.NavMeshBoundsVolume, "NAV_WinterfellApproach",
+         (0, -350, 250), unreal.Rotator(0.0, 0.0, 0.0),
+         (38.0, 24.0, 5.0))
 
-# Basic cold daylight; final lighting should be baked and profiled on target Android hardware.
-sun = unreal.EditorLevelLibrary.spawn_actor_from_class(
-    unreal.DirectionalLight,
-    unreal.Vector(0.0, 0.0, 1800.0),
-    unreal.Rotator(-35.0, -35.0, 0.0),
-)
-sun.set_actor_label("TEMP_Northern_Directional_Light")
+# Cold daylight baseline. Tune/bake the final lighting after materials and
+# foliage are imported; keep expensive dynamic effects out of the mobile target.
+sun = actor_of(unreal.DirectionalLight, "TEMP_Northern_Directional_Light",
+               (0, 0, 1800), unreal.Rotator(-35.0, -35.0, 0.0))
+fog = actor_of(unreal.ExponentialHeightFog, "TEMP_Northern_Atmospheric_Fog",
+               (0, 0, 0), unreal.Rotator(0.0, 0.0, 0.0))
 
 if not unreal.EditorLevelLibrary.save_current_level():
     raise RuntimeError("Level was created but could not be saved")
 
-unreal.log("LOTN: WinterfellApproach greybox created and saved. Add NPC/quest Blueprints, sculpt terrain, collisions, materials, lighting and mobile LODs before gameplay sign-off.")
+unreal.log(
+    "LOTN: WinterfellApproach landscape greybox saved. "
+    "Inspect imported OBJ scale/materials/collision, replace temporary ground, "
+    "add quest NPC Blueprints, and profile mobile lighting before sign-off."
+)
