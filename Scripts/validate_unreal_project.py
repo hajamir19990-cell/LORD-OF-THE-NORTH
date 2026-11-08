@@ -73,6 +73,9 @@ require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header ex
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
 require((private_dir / "Tests/LOTNGameplayTests.cpp").is_file(), "gameplay automation tests exist")
 require((ROOT / ".github/workflows/build-unreal-android.yml").is_file(), "manual Unreal Android workflow exists")
+player_controller = private_dir / "LOTNPlayerController.cpp"
+require(player_controller.is_file() and "FInputModeGameAndUI" in player_controller.read_text(encoding="utf-8"),
+        "player controller allows HUD interaction alongside gameplay input")
 require((ROOT / "Content/MAPS_README.md").is_file(), "first map assembly guide exists")
 
 for item in checks:
