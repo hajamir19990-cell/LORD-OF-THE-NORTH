@@ -214,7 +214,7 @@ namespace LOTN.Editor
         {
             bool fortress = region == 0 || region == 1 || region == 4 || region == 8;
             if (fortress)
-                AddBlockingModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, region == 8 ? 315 : 265), region == 8 ? 78f : 95f,
+                AddModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, region == 8 ? 315 : 265), region == 8 ? 78f : 95f,
                     region == 0 ? "Winterfell Gatehouse" : "Northern Fortress Gatehouse");
 
             if (region == 8)
