@@ -38,10 +38,18 @@ Last updated: 2026-11-08
 1. Open the project in a compatible Unreal Engine 5.x installation.
 2. Run the manual `.github/workflows/compile-unreal-editor.yml` workflow on the configured self-hosted Unreal runner to bootstrap-compile the Editor target. This first compile is required because the map assembly scripts instantiate native C++ NPC, quest and foliage classes.
 3. Run the Winterfell and eight-region assembly scripts inside Unreal Editor, then run both map validators and inspect/save all nine maps.
-4. Run the final `.github/workflows/build-unreal-android.yml` workflow. It recompiles the Editor target after map integration, executes LOTN automation tests, then cooks and packages all nine maps for Android.
+4. Run `.github/workflows/build-unreal-android.yml` on the configured self-hosted Linux runner. It now compiles the Editor target, runs `Scripts/build_all_maps.py` to import meshes/create/save/validate all nine `.umap` levels, executes LOTN automation tests, then cooks and packages all nine maps for Android. The workflow is configured to start on pushes to `rebuild/unreal-5-mobile` as well as manual dispatch.
 5. Replace temporary NPC/player/environment greyboxes with approved final assets, then verify collisions, generated lightmap UVs, static lighting and Recast navigation in the Editor.
 6. Run the manual QA checklist and profile all regional maps on a physical Android device for frame pacing, memory and touch controls.
 7. Install the resulting APK on a physical Android device and verify the full region travel flow.
 
 
 The repository deliberately blocks the manual APK workflow while no .umap exists. Do not mark the project complete until the compile, map, assets, automation tests, package and device QA gates all pass.
+
+
+## Current automation status (2026-11-08)
+
+- Hosted static validation passed on the current map-pipeline commit, including repository structure checks and Python script syntax compilation.
+- The Android build workflow was automatically queued for the latest commit, but its job requires an online self-hosted runner labelled `linux`, `unreal-engine`, and `android`. It has not started; no Unreal C++ compile, `.umap` generation, Android cook/package or APK has been verified.
+- The new `Scripts/build_all_maps.py` is the single Editor commandlet entry point. It imports and assembles WinterfellApproach, generates the eight regional maps, reloads and validates Winterfell, then validates all regional maps.
+- Required runner toolchain: a compatible Unreal Engine 5 installation in `UE_ROOT`, Android SDK/NDK (`ANDROID_HOME` and `NDKROOT` or `ANDROID_NDK_ROOT`), and Java (`JAVA_HOME`).
