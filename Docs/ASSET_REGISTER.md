@@ -49,4 +49,9 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 
 ## Current import status
 
-The seven starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
+The eight starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
+
+
+## Northern supply crate
+- `Content/SourceMeshes/Northern_Supply_Crate.obj` — 216 vertices / 162 quad faces; separate timber planks, dark corner posts and iron straps. Uses the shared northern environment MTL. Imported and assigned to the native quest objective marker in the Winterfell assembly script.
+- This is a greybox prop mesh; verify normals, material slots, collision-off objective visual and mobile rendering in Unreal Editor.
