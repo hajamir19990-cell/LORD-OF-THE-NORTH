@@ -443,9 +443,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif not event.pressed and event.index == look_touch_id:
 			look_touch_id = -1
 	if event is InputEventScreenDrag and event.index == look_touch_id:
-		var delta := event.position - last_look
+		var drag_delta: Vector2 = event.position - last_look
 		last_look = event.position
-		_rotate_camera(delta)
+		_rotate_camera(drag_delta)
 	if event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		_rotate_camera(event.relative)
 
