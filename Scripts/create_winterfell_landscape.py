@@ -20,6 +20,7 @@ MESH_NAMES = (
     "Northern_Curtain_Wall",
     "Northern_Watchtower",
     "Northern_Rolling_Terrain",
+    "Northern_Supply_Crate",
 )
 
 for folder in ("/Game/Maps", "/Game/Environment",
@@ -181,11 +182,13 @@ objective.set_editor_property("quest_id", "Winterfell_Delivery")
 objective.set_editor_property("progress_amount", 1)
 objective.set_editor_property("interaction_label", as_text("Inspect supply marker"))
 objective_mesh = objective.get_editor_property("visual_mesh")
-cube = unreal.load_asset("/Engine/BasicShapes/Cube.Cube")
-if objective_mesh and cube:
-    objective_mesh.set_static_mesh(cube)
-    objective_mesh.set_relative_location(unreal.Vector(0.0, 0.0, 45.0))
-    objective_mesh.set_relative_scale3d(unreal.Vector(0.35, 0.35, 0.9))
+crate = unreal.load_asset(DEST + "/Northern_Supply_Crate.Northern_Supply_Crate")
+if not crate:
+    raise RuntimeError("Imported northern supply crate mesh is missing")
+if objective_mesh:
+    objective_mesh.set_static_mesh(crate)
+    objective_mesh.set_relative_location(unreal.Vector(0.0, 0.0, 0.0))
+    objective_mesh.set_relative_scale3d(unreal.Vector(1.0, 1.0, 1.0))
 
 # Player start and navigation coverage for the first walkable slice.
 actor_of(unreal.PlayerStart, "PlayerStart_Landscape_Approach",
