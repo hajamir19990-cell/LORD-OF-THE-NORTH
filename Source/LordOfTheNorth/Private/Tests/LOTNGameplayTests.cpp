@@ -133,6 +133,11 @@ bool FLOTNWorldMapDataTest::RunTest(const FString& Parameters)
             FLOTNWorldLocation Connected;
             TestTrue(*FString::Printf(TEXT("%s route target exists"), *ConnectedId.ToString()),
                 WorldMap->GetLocationById(ConnectedId, Connected));
+            if (WorldMap->GetLocationById(ConnectedId, Connected))
+            {
+                TestTrue(*FString::Printf(TEXT("%s route is bidirectional"), *ConnectedId.ToString()),
+                    Connected.ConnectedLocationIds.Contains(Location.LocationId));
+            }
         }
     }
     return true;
