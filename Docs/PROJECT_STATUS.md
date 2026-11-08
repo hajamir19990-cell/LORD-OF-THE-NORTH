@@ -8,10 +8,10 @@ Last updated: 2026-11-08
 - Development commits are isolated from main.
 
 ## Implemented in C++ source
-- Portrait-oriented Android configuration and package identifier.
+- Landscape-oriented Android configuration and package identifier.
 - Third-person character movement, camera, mobile joystick axes and stamina-based sprint.
 - Player stats: health, stamina, gold and renown.
-- Native portrait HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls; player controller now uses GameAndUI input mode so touch UI can receive input alongside gameplay.
+- Native landscape HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls; save/load controls are positioned clear of the lower-left landscape virtual joystick; player controller now uses GameAndUI input mode so touch UI can receive input alongside gameplay.
 - Interactable interface, camera-view line trace, NPC dialogue and quest offer/turn-in.
 - Quest objective progress and one-time rewards.
 - Stackable inventory and apparel/trinket equipment slots.
@@ -28,15 +28,16 @@ Last updated: 2026-11-08
 - No Android APK has been produced.
 
 ## Missing editor assets
-- No .umap level has been created yet.
-- No binary .uasset/.ubulk environment, character, animation or UI assets have been imported.
+- No .umap level has been created yet. A new Unreal Editor Python assembly script now imports the four committed OBJ source meshes and lays out a landscape greybox map; it must still be run and inspected in Unreal Editor.
+- The four starter OBJ source meshes (gatehouse, pine, longhouse and cobblestone road) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets.
+- No binary .uasset/.ubulk character, animation or final environment assets have been imported.
 - Candidate CC0 environment sources and mobile import checks are recorded in Docs/ASSET_REGISTER.md.
-- First level assembly instructions are in Content/MAPS_README.md.
+- Landscape layout dimensions are in Content/MAPS_README.md; editor assembly steps are in Content/LANDSCAPE_ASSEMBLY.md and Scripts/create_winterfell_landscape.py.
 
 ## What is required to finish the first APK
 1. Open the project in a compatible Unreal Engine 5.x installation.
 2. Compile the Editor target and resolve any Unreal Header Tool/compiler errors.
-3. Create Content/Maps/VerticalPrototype.umap with PlayerStart and the first environment.
+3. Run Scripts/create_winterfell_landscape.py inside Unreal Editor to create /Game/Maps/WinterfellApproach, then replace its temporary ground plane with a sculpted Landscape and add NPC/quest Blueprints.
 4. Import and profile licensed character/environment assets; assign the character mesh and animation blueprint.
 5. Run the LOTN automation tests and the manual QA checklist.
 6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package. The workflow compiles the Editor target and runs the LOTN automation tests before packaging.
