@@ -67,14 +67,20 @@ namespace LOTN.Tests
         }
 
         [Test]
-        public void QuestRequiresSupplyCrateBeforeCompletion()
+        public void QuestRequiresCrateThenAwardsPersistentRewards()
         {
+            PlayerPrefs.DeleteKey("LOTN.Inventory");
             GameObject sessionObject = new GameObject("Session Test");
             GameObject managerObject = new GameObject("Quest Test");
+            GameObject inventoryObject = new GameObject("Inventory Test");
+            GameObject statsObject = new GameObject("Stats Test");
             try
             {
                 LOTNGameSession session = sessionObject.AddComponent<LOTNGameSession>();
+                session.SetPlayerState(100, 100, 25, 0);
                 session.SetQuestState(false, false);
+                LOTNPlayerStats stats = statsObject.AddComponent<LOTNPlayerStats>();
+                LOTNInventory inventory = inventoryObject.AddComponent<LOTNInventory>();
                 LOTNQuestManager manager = managerObject.AddComponent<LOTNQuestManager>();
 
                 manager.Interact("QuestGiver");
@@ -83,11 +89,20 @@ namespace LOTN.Tests
                 manager.Interact("SupplyCrate");
                 Assert.IsTrue(manager.crateCollected);
                 Assert.IsFalse(manager.questCompleted);
+
+                manager.Interact("QuestGiver");
+                Assert.IsTrue(manager.questCompleted);
+                Assert.AreEqual(55, stats.gold);
+                Assert.AreEqual(10, stats.renown);
+                Assert.IsFalse(inventory.RemoveItem("winterfell_supplies", 1));
             }
             finally
             {
                 Object.DestroyImmediate(managerObject);
+                Object.DestroyImmediate(inventoryObject);
+                Object.DestroyImmediate(statsObject);
                 Object.DestroyImmediate(sessionObject);
+                PlayerPrefs.DeleteKey("LOTN.Inventory");
             }
         }
     }
