@@ -38,4 +38,13 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="World Map")
     TArray<FLOTNWorldLocation> Locations;
+
+    UFUNCTION(BlueprintPure, Category="LOTN|World Map")
+    bool GetLocationById(FName LocationId, FLOTNWorldLocation& OutLocation) const;
+
+    UFUNCTION(BlueprintPure, Category="LOTN|World Map")
+    bool IsLocationUnlocked(FName LocationId, int32 CurrentRenown) const;
+
+    UFUNCTION(BlueprintPure, Category="LOTN|World Map")
+    bool IsLocationReadyToTravel(FName LocationId, int32 CurrentRenown) const;
 };
