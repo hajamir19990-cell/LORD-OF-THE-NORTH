@@ -214,28 +214,28 @@ namespace LOTN.Editor
         {
             bool fortress = region == 0 || region == 1 || region == 4 || region == 8;
             if (fortress)
-                AddModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, region == 8 ? 315 : 265), region == 8 ? 78f : 95f,
+                AddBlockingModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, region == 8 ? 315 : 265), region == 8 ? 78f : 95f,
                     region == 0 ? "Winterfell Gatehouse" : "Northern Fortress Gatehouse");
 
             if (region == 8)
             {
-                AddModel("Northern_Curtain_Wall.obj", new Vector3(-300, 0, 310), 210f, "The Wall — Western Reach");
-                AddModel("Northern_Curtain_Wall.obj", new Vector3(0, 0, 330), 230f, "The Wall — Central Reach");
-                AddModel("Northern_Curtain_Wall.obj", new Vector3(300, 0, 310), 210f, "The Wall — Eastern Reach");
+                AddBlockingModel("Northern_Curtain_Wall.obj", new Vector3(-300, 0, 310), 210f, "The Wall — Western Reach");
+                AddBlockingModel("Northern_Curtain_Wall.obj", new Vector3(0, 0, 330), 230f, "The Wall — Central Reach");
+                AddBlockingModel("Northern_Curtain_Wall.obj", new Vector3(300, 0, 310), 210f, "The Wall — Eastern Reach");
             }
             else if (fortress)
             {
-                AddModel("Northern_Curtain_Wall.obj", new Vector3(-105, 0, 245), 105f, "Western Granite Curtain Wall");
-                AddModel("Northern_Curtain_Wall.obj", new Vector3(105, 0, 245), 105f, "Eastern Granite Curtain Wall");
+                AddBlockingModel("Northern_Curtain_Wall.obj", new Vector3(-105, 0, 245), 105f, "Western Granite Curtain Wall");
+                AddBlockingModel("Northern_Curtain_Wall.obj", new Vector3(105, 0, 245), 105f, "Eastern Granite Curtain Wall");
             }
 
-            AddModel("Northern_Watchtower.obj", new Vector3(-235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Western Watchtower");
-            AddModel("Northern_Watchtower.obj", new Vector3(235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Eastern Watchtower");
-            AddModel("Northern_Cobblestone_Road.obj", new Vector3(0, 0, -55), 28f, "Snowbound Approach Road");
-            AddModel("Northern_Longhouse.obj", new Vector3(-170, 0, -95), 34f, "Western Longhouse");
-            AddModel("Northern_Longhouse.obj", new Vector3(170, 0, -105), 34f, "Eastern Longhouse");
-            AddModel("Northern_Palisade_Fence.obj", new Vector3(-125, 0, -230), 36f, "Western Timber Palisade");
-            AddModel("Northern_Palisade_Fence.obj", new Vector3(125, 0, -230), 36f, "Eastern Timber Palisade");
+            AddBlockingModel("Northern_Watchtower.obj", new Vector3(-235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Western Watchtower");
+            AddBlockingModel("Northern_Watchtower.obj", new Vector3(235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Eastern Watchtower");
+            AddBlockingModel("Northern_Cobblestone_Road.obj", new Vector3(0, 0, -55), 28f, "Snowbound Approach Road");
+            AddBlockingModel("Northern_Longhouse.obj", new Vector3(-170, 0, -95), 34f, "Western Longhouse");
+            AddBlockingModel("Northern_Longhouse.obj", new Vector3(170, 0, -105), 34f, "Eastern Longhouse");
+            AddBlockingModel("Northern_Palisade_Fence.obj", new Vector3(-125, 0, -230), 36f, "Western Timber Palisade");
+            AddBlockingModel("Northern_Palisade_Fence.obj", new Vector3(125, 0, -230), 36f, "Eastern Timber Palisade");
             AddModel("Northern_Wolf_Banner.obj", new Vector3(-48, 0, 205), 16f, "Northern Wolf Standard");
             AddModel("Northern_Wolf_Banner.obj", new Vector3(48, 0, 205), 16f, "Northern Wolf Standard");
             AddModel("Northern_Stone_Firepit.obj", new Vector3(185, 0, -170), 12f, "Settlement Firepit");
@@ -291,6 +291,24 @@ namespace LOTN.Editor
             Collider collider = water.GetComponent<Collider>();
             if (collider != null) Object.DestroyImmediate(collider);
             water.GetComponent<Renderer>().sharedMaterial = MakeMaterial(new Color(0.12f, 0.23f, 0.31f));
+        }
+
+        private static GameObject AddBlockingModel(string file, Vector3 position, float targetSize, string objectName)
+        {
+            GameObject instance = AddModel(file, position, targetSize, objectName);
+            if (instance == null) return null;
+            Renderer[] renderers = instance.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0) return instance;
+            Bounds bounds = renderers[0].bounds;
+            for (int i = 1; i < renderers.Length; i++) bounds.Encapsulate(renderers[i].bounds);
+            BoxCollider collider = instance.AddComponent<BoxCollider>();
+            collider.center = instance.transform.InverseTransformPoint(bounds.center);
+            Vector3 scale = instance.transform.lossyScale;
+            collider.size = new Vector3(
+                bounds.size.x / Mathf.Max(0.001f, scale.x),
+                bounds.size.y / Mathf.Max(0.001f, scale.y),
+                bounds.size.z / Mathf.Max(0.001f, scale.z));
+            return instance;
         }
 
         private static GameObject AddModel(string file, Vector3 position, float targetSize, string objectName)
