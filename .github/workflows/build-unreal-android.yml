@@ -28,10 +28,23 @@ jobs:
           test -n "${ANDROID_HOME:-}" || { echo "ANDROID_HOME is not configured"; exit 1; }
           test -n "${JAVA_HOME:-}" || { echo "JAVA_HOME is not configured"; exit 1; }
           test -n "${NDKROOT:-${ANDROID_NDK_ROOT:-}}" || { echo "NDKROOT or ANDROID_NDK_ROOT is not configured"; exit 1; }
-          test -f "$GITHUB_WORKSPACE/Content/Maps/WinterfellApproach.umap" || {
-            echo "Missing Content/Maps/WinterfellApproach.umap. Run Scripts/create_winterfell_landscape.py in Unreal Editor and commit the saved map."
-            exit 1
-          }
+          required_maps=(
+            WinterfellApproach
+            LOTN_TheDreadfort
+            LOTN_WhiteHarbor
+            LOTN_BearIsland
+            LOTN_Karhold
+            LOTN_LastHearth
+            LOTN_DeepwoodMotte
+            LOTN_GreywaterWatch
+            LOTN_TheWall
+          )
+          for map_name in "${required_maps[@]}"; do
+            test -f "$GITHUB_WORKSPACE/Content/Maps/${map_name}.umap" || {
+              echo "Missing Content/Maps/${map_name}.umap. Run the Unreal Editor map assembly scripts and commit every saved map."
+              exit 1
+            }
+          done
 
       - name: Validate repository and OBJ source assets
         shell: bash
@@ -39,6 +52,9 @@ jobs:
           set -euo pipefail
           python3 Scripts/validate_unreal_project.py
           python3 -m py_compile Scripts/create_winterfell_landscape.py
+          python3 -m py_compile Scripts/create_northern_region_levels.py
+          python3 -m py_compile Scripts/validate_winterfell_level.py
+          python3 -m py_compile Scripts/validate_northern_region_levels.py
 
       - name: Compile Unreal Editor target
         shell: bash
