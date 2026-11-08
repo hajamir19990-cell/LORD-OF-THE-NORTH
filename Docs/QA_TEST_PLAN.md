@@ -81,3 +81,9 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Confirm torso, head, both arms and both legs render on the player at the expected scale.
 - [ ] Confirm all placeholder parts have collision disabled and do not interfere with the Character capsule, camera or movement.
 - [ ] Replace the primitive greybox with a licensed skeletal mesh and animation blueprint before release.
+
+
+## Material slot checks
+- [ ] All eleven imported OBJ meshes expose their intended MTL material slots.
+- [ ] Rolling terrain uses the snow slot; curtain wall and watchtower use the stone slot.
+- [ ] Replace flat starter MTL colors with optimized PBR textures before final art sign-off.
