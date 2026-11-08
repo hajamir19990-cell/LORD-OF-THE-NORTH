@@ -9,7 +9,9 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Source OBJ committed; needs Unreal import and art polish |
 | Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Source OBJ committed; needs Unreal import, collision and LOD review |
 | Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Source OBJ committed; needs Unreal import and art polish |
-| Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |\n| Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |\n| Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Greybox OBJ committed; needs detail pass, UV/material and collision review |
+| Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |
+| Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |
+| Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Greybox OBJ committed; needs detail pass, UV/material and collision review |
 | Content/SourceMeshes/Northern_Rolling_Terrain.obj | Gently rolling northern approach terrain | Source OBJ committed; needs Unreal import, collision and snow/rock material pass |
 | Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
 
