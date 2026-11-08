@@ -96,7 +96,30 @@ bool ULOTNQuestComponent::IsQuestReadyToTurnIn(FName QuestId) const
 
 void ULOTNQuestComponent::RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FLOTNQuestEntry>& InActiveQuests)
 {
-    CompletedQuestIds = InCompletedQuestIds;
-    ActiveQuests = InActiveQuests;
+    CompletedQuestIds.Reset();
+    for (const FName QuestId : InCompletedQuestIds)
+    {
+        if (!QuestId.IsNone())
+        {
+            CompletedQuestIds.AddUnique(QuestId);
+        }
+    }
+
+    ActiveQuests.Reset();
+    for (FLOTNQuestEntry SavedQuest : InActiveQuests)
+    {
+        if (SavedQuest.QuestId.IsNone() || CompletedQuestIds.Contains(SavedQuest.QuestId) ||
+            ActiveQuests.ContainsByPredicate([&SavedQuest](const FLOTNQuestEntry& Entry) { return Entry.QuestId == SavedQuest.QuestId; }))
+        {
+            continue;
+        }
+
+        SavedQuest.RequiredProgress = FMath::Max(1, SavedQuest.RequiredProgress);
+        SavedQuest.CurrentProgress = FMath::Clamp(SavedQuest.CurrentProgress, 0, SavedQuest.RequiredProgress);
+        SavedQuest.GoldReward = FMath::Max(0, SavedQuest.GoldReward);
+        SavedQuest.RenownReward = FMath::Max(0, SavedQuest.RenownReward);
+        ActiveQuests.Add(SavedQuest);
+    }
+
     OnQuestStateChanged.Broadcast();
 }
