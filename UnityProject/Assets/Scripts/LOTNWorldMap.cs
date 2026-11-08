@@ -25,6 +25,16 @@ namespace LOTN
             GUI.Box(new Rect(Screen.width - 150, 18, 132, 44), GUIContent.none);
             GUI.color = new Color(0.96f, 0.91f, 0.79f);
             if (GUI.Button(new Rect(Screen.width - 144, 24, 120, 32), open ? "CLOSE MAP" : "WORLD MAP  [M]")) open = !open;
+            LOTNPlayerStats hudStats = FindFirstObjectByType<LOTNPlayerStats>();
+            if (hudStats != null)
+            {
+                GUI.color = new Color(0.08f, 0.11f, 0.14f, 0.90f);
+                GUI.Box(new Rect(Screen.width - 166, 70, 148, 66), GUIContent.none);
+                GUI.color = new Color(0.94f, 0.89f, 0.77f);
+                GUI.Label(new Rect(Screen.width - 156, 76, 132, 54),
+                    "HP " + hudStats.health + "   STA " + hudStats.stamina +
+                    "\\nGOLD " + hudStats.gold + "   RENOWN " + hudStats.renown);
+            }
             if (!open) { GUI.color = Color.white; return; }
 
             float w = Mathf.Min(430, Screen.width - 30);
