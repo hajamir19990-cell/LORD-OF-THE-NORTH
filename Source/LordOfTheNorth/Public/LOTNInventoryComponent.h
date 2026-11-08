@@ -66,6 +66,9 @@ public:
     UFUNCTION(BlueprintPure, Category="LOTN|Inventory")
     int32 GetItemCount(FName ItemId) const;
 
+    UFUNCTION(BlueprintPure, Category="LOTN|Inventory")
+    int32 GetTotalItemCount() const;
+
     UFUNCTION(BlueprintCallable, Category="LOTN|Equipment")
     bool EquipItem(FName ItemId);
 
