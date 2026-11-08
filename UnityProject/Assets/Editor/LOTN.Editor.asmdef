@@ -2,7 +2,8 @@
   "name": "LOTN.Editor",
   "rootNamespace": "LOTN.Editor",
   "references": [
-    "LOTN.Runtime"
+    "LOTN.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
   ],
   "includePlatforms": [
     "Editor"
