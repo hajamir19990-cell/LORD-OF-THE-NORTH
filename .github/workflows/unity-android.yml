@@ -1,0 +1,58 @@
+name: Build LORD OF THE NORTH — Unity Android
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lotn-unity-android
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Verify Unity license is configured
+        shell: bash
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          if [[ -z "$UNITY_LICENSE" && ( -z "$UNITY_EMAIL" || -z "$UNITY_PASSWORD" ) ]]; then
+            echo "::error::Unity license is not configured. Add a valid UNITY_LICENSE secret (preferred) or the credentials required by GameCI before starting a cloud build."
+            exit 1
+          fi
+
+      - name: Validate source project
+        run: python3 Scripts/validate_unity_project.py
+
+      - name: Build Android APK in Unity 6.3 LTS
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: UnityProject
+          unityVersion: auto
+          targetPlatform: Android
+          buildMethod: LOTN.Editor.LOTNBuildPipeline.BuildAndroid
+          manualExit: true
+          buildsPath: UnityProject/Builds
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LORD-OF-THE-NORTH-Unity-Android
+          path: UnityProject/Builds/Android/LORD-OF-THE-NORTH.apk
+          if-no-files-found: error
+          retention-days: 14
