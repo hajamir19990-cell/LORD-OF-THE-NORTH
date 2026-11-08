@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace LOTN
 {
@@ -13,12 +14,45 @@ namespace LOTN
         private LOTNPlayerStats stats;
         private Vector3 verticalVelocity;
         private float staminaTick;
+        private float positionSaveTick = 5f;
 
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
             stats = GetComponent<LOTNPlayerStats>();
         }
+
+        private void Start()
+        {
+            LOTNGameSession session = LOTNGameSession.Instance;
+            if (session != null && session.TryGetPlayerPosition(SceneManager.GetActiveScene().name, out Vector3 savedPosition))
+            {
+                controller.enabled = false;
+                transform.position = savedPosition;
+                controller.enabled = true;
+            }
+        }
+
+        private void LateUpdate()
+        {
+            positionSaveTick -= Time.deltaTime;
+            if (positionSaveTick <= 0f)
+            {
+                SavePosition();
+                positionSaveTick = 5f;
+            }
+        }
+
+        private void SavePosition()
+        {
+            LOTNGameSession session = LOTNGameSession.Instance;
+            if (session != null)
+                session.SavePlayerPosition(SceneManager.GetActiveScene().name, transform.position);
+        }
+
+        private void OnDisable() { SavePosition(); }
+        private void OnApplicationPause(bool paused) { if (paused) SavePosition(); }
+        private void OnApplicationQuit() { SavePosition(); }
 
         private void Update()
         {
