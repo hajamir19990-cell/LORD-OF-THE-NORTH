@@ -134,7 +134,7 @@ public class MainActivity extends Activity {
         int program, posH,normH,uvH,mvpH,modelH,colH,lightH,texH,useTexH;
         Mesh cube, ground, cone; int texTerrain,texStone,texWood,texRock,texSnow,texForest;
         final ArrayList<NPC> npcs=new ArrayList<>(); final ArrayList<Site> siteData=new ArrayList<>();
-        final Random rng=new Random(7); float playerX=0,playerZ=22,playerYaw=0,camYaw=0,camPitch=.36f; float joystickX,joystickY;
+        final Random rng=new Random(7); float playerX=0,playerZ=22,playerYaw=0,camYaw=3.1415926f,camPitch=.36f; float joystickX,joystickY;
         int gold=100,renown=0; float stamina=100; String quest="Find Lord Eddard Stark in Winterfell."; long last; float dayTime=0.35f; int lastSite=-1;
         NorthRenderer(Context c){ctx=c;load();buildData();}
         void buildData(){
@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
         @Override public void onSurfaceCreated(javax.microedition.khronos.opengles.GL10 gl, javax.microedition.khronos.egl.EGLConfig cfg){
             try{
                 GLES20.glClearColor(.055f,.09f,.11f,1); GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-                GLES20.glEnable(GLES20.GL_CULL_FACE); GLES20.glCullFace(GLES20.GL_BACK);
+                GLES20.glDisable(GLES20.GL_CULL_FACE); // Keep terrain and low-poly meshes visible while validating face winding.
                 program=makeProgram(VS,FS); if(program==0)return;
                 posH=GLES20.glGetAttribLocation(program,"aPos"); normH=GLES20.glGetAttribLocation(program,"aNormal"); uvH=GLES20.glGetAttribLocation(program,"aUV");
                 mvpH=GLES20.glGetUniformLocation(program,"uMVP"); modelH=GLES20.glGetUniformLocation(program,"uModel"); colH=GLES20.glGetUniformLocation(program,"uColor");
@@ -212,7 +212,7 @@ public class MainActivity extends Activity {
         String[] interact(){NPC best=null;float bd=4.2f;for(NPC n:npcs){float d=(float)Math.hypot(playerX-n.x,playerZ-n.z);if(d<bd){bd=d;best=n;}}if(best==null)return null;renown+=5; if(best.name.equals("Eddard Stark"))quest="Visit the northern lords and strengthen your standing."; if(best.name.equals("Howland Reed"))quest="Reach the Wall and speak with the Night's Watch."; save(); return new String[]{best.name+"  •  House "+best.house,dialogLine(best.name)};}
         String dialogLine(String name){switch(name){case "Eddard Stark":return "The North is held by oaths, old roads, and the people who keep both.";case "Robb Stark":return "A pack moves farther than a lone wolf. Remember your allies.";case "Jon Snow":return "The cold teaches you to watch the horizon and listen before you act.";case "Wyman Manderly":return "White Harbor remembers every friend who arrives at its gates.";case "Maege Mormont":return "Bear Island stands stubborn beneath a northern sky.";case "Roose Bolton":return "The North has many banners. Know where each one stands.";case "Greatjon Umber":return "Last Hearth keeps a long memory and a loud hall.";case "Howland Reed":return "The Neck hides more paths than any map can show.";default:return "The North remembers. Every lord and village has a place in its story.";}}
         void setJoystick(float x,float y){joystickX=x;joystickY=y;} void touchDown(float x,float y){} void touchUp(){} void touchLook(float dx,float dy){if(Math.abs(dx)+Math.abs(dy)<1)return;camYaw-=dx*.0042f;camPitch=Math.max(.15f,Math.min(.62f,camPitch-dy*.0022f));}
-        void newGame(){playerX=0;playerZ=22;playerYaw=0;camYaw=0;camPitch=.36f;gold=100;renown=0;stamina=100;lastSite=-1;quest="Find Lord Eddard Stark in Winterfell.";save();}
+        void newGame(){playerX=0;playerZ=22;playerYaw=0;camYaw=3.1415926f;camPitch=.36f;gold=100;renown=0;stamina=100;lastSite=-1;quest="Find Lord Eddard Stark in Winterfell.";save();}
         void save(){ctx.getSharedPreferences("north_save",Context.MODE_PRIVATE).edit().putInt("renown",renown).putInt("gold",gold).putFloat("x",playerX).putFloat("z",playerZ).apply();}
         void load(){android.content.SharedPreferences p=ctx.getSharedPreferences("north_save",Context.MODE_PRIVATE);renown=p.getInt("renown",0);gold=p.getInt("gold",100);playerX=p.getFloat("x",0);playerZ=p.getFloat("z",22);}
         static int makeProgram(String vs,String fs){int v=compile(GLES20.GL_VERTEX_SHADER,vs),f=compile(GLES20.GL_FRAGMENT_SHADER,fs);if(v==0||f==0)return 0;int p=GLES20.glCreateProgram();GLES20.glAttachShader(p,v);GLES20.glAttachShader(p,f);GLES20.glLinkProgram(p);int[] ok=new int[1];GLES20.glGetProgramiv(p,GLES20.GL_LINK_STATUS,ok,0);if(ok[0]==0){GLES20.glDeleteProgram(p);return 0;}return p;}
