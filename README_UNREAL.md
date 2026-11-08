@@ -1,26 +1,39 @@
-# LORD OF THE NORTH — Unreal Engine Mobile
+# LORD OF THE NORTH — Unreal Engine 5 Mobile
 
-This is the isolated Unreal Engine 5 development branch. The original Android/OpenGL project and the earlier Godot experiment remain untouched on their own branches.
+This is the isolated Unreal Engine development branch. The original Android/OpenGL project and the earlier Godot experiment remain untouched on their own branches.
 
-## Current foundation
-- Portrait Android orientation.
-- Mobile-oriented renderer defaults (mobile HDR off; no Lumen/Nanite dependency).
-- C++ third-person pawn with spring-arm camera and movement bindings.
-- Default Unreal mobile virtual joystick enabled.
-- Enhanced Input plugin enabled for future touch UI and action mapping.
+## Project foundation
+
+- Portrait Android configuration and mobile-oriented renderer defaults.
+- Third-person C++ character with spring-arm camera and keyboard/gamepad/virtual joystick movement axes.
+- Player stats component: health, stamina, gold and renown.
+- Interaction interface and visibility-channel trace component.
+- NPC dialogue event and configurable quest offer/turn-in flow.
+- Quest objective actors with progress tracking and reward handling.
+- Save Game object and Game Instance save subsystem for player transform, stats and active/completed quest records.
+- World map data asset seeded with the nine northern locations.
+- UMG HUD base class with health/stamina bars, progression labels, quest objective/progress, interaction and save/load buttons.
+- Player controller that can instantiate a HUD Widget Blueprint assigned in the editor.
+- GitHub Actions static source-structure validation.
 
 ## First playable milestone
-1. Open `LORD_OF_THE_NORTH.uproject` in an installed Unreal Engine 5.x version.
-2. Generate IDE project files and compile the Editor target.
-3. Create the first vertical greybox level in-editor, then replace all blockout geometry with licensed modular environment assets.
-4. Add a custom portrait HUD, touch camera control, interaction, dialogue, and save data.
-5. Package and test on a physical Android device before adding large environments.
+
+The first slice is the road outside Winterfell:
+1. Create the portrait-friendly map in Unreal Editor.
+2. Create a Blueprint child of LOTNCharacter and assign a properly licensed character mesh and animation blueprint.
+3. Create a HUD Widget Blueprint based on LOTNHUDWidget and assign it to a Player Controller Blueprint child of LOTNPlayerController.
+4. Place an NPC Blueprint based on LOTNNPC and an objective Blueprint based on LOTNQuestObjective; match their quest IDs and bind dialogue events to the HUD.
+5. Import and profile the selected environment assets using the asset register.
+6. Compile, test the interaction/quest/save loop, and package to Android only after the required toolchain is installed.
 
 ## Visual direction
-A grounded, atmospheric northern-fantasy world: snow-covered stone fortress, dense pine forest, timber villages, cold overcast lighting, readable silhouettes, detailed PBR surfaces, and restrained particles. Avoid primitive cube-only environments.
 
-## Performance policy
-Target scalable Android settings first. Use baked/static lighting where possible, LODs, instancing, texture streaming, and conservative material complexity. High-end desktop features are not assumed to work on mobile.
+A grounded, atmospheric northern-fantasy world: weathered stone fortress, timber settlement, dense pine forest, snow-covered paths, cold overcast lighting and detailed PBR surfaces. No cube-only final environment.
 
-## Important
-The GitHub source scaffold is not yet a compiled Unreal project or APK. Unreal Editor, Android SDK/NDK, and a real device build are required to validate and package it.
+## Mobile performance policy
+
+Target scalable Android settings first. Do not depend on Lumen or Nanite. Prefer baked/static lighting, LODs, instancing, texture streaming, simple collision and conservative material complexity. Profile on a physical device.
+
+## Build truth
+
+The GitHub branch contains Unreal C++ source and configuration, not yet a compiled Unreal project or APK. GitHub Actions currently runs static source-structure checks only. A real Unreal compile/cook/package requires Unreal Engine and its matching Android toolchain.
