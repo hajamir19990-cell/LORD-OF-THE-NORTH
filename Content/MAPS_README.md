@@ -37,7 +37,7 @@ Keep the central approach readable from the player start. The gate should occupy
 - Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary pillar visual must be replaced with a skeletal character asset.
 - Exponential height fog and a directional daylight baseline; tune conservatively for mobile.
 - NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
-- Native LOTNQuestObjective supply marker using the same QuestId; temporary cube visual must be replaced with a final prop.
+- Native LOTNQuestObjective supply marker using the same QuestId; timber-and-iron crate source mesh is assigned as a greybox prop; replace it with a final art asset after import.
 - Directional light and conservative fog setup suitable for mobile; bake/static lighting where practical.
 - LOTNGameMode as the map's GameMode override unless a child GameMode is intentionally used.
 
