@@ -49,7 +49,8 @@ bool ULOTNQuestComponent::AdvanceQuestProgress(FName QuestId, int32 Amount)
         return false;
     }
 
-    Entry->CurrentProgress = FMath::Min(Entry->RequiredProgress, Entry->CurrentProgress + Amount);
+    const int64 NewProgress = static_cast<int64>(Entry->CurrentProgress) + Amount;
+    Entry->CurrentProgress = static_cast<int32>(FMath::Min<int64>(Entry->RequiredProgress, NewProgress));
     OnQuestStateChanged.Broadcast();
     return true;
 }
