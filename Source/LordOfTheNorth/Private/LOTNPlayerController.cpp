@@ -22,6 +22,9 @@ void ALOTNPlayerController::BeginPlay()
         }
     }
 
-    FInputModeGameOnly InputMode;
+    // Keep gameplay input active while allowing the native HUD to receive touch/clicks.
+    FInputModeGameAndUI InputMode;
+    InputMode.SetHideCursorDuringCapture(false);
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
     SetInputMode(InputMode);
 }
