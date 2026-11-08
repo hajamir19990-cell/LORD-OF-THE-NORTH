@@ -17,6 +17,8 @@ namespace LOTN
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            Application.targetFrameRate = 60;
+            QualitySettings.vSyncCount = 0;
             Load();
         }
 
