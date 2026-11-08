@@ -100,3 +100,21 @@ After the assembly script saves the binary map, the project configuration points
 - Six low snow berms line the outside of the approach road, leaving the 600 cm road lane and player/NPC route unobstructed.
 - Two red-and-gold wolf standards flank the gatehouse entrance. Their cloth and crest are source-mesh geometry with shared MTL colors, not final cloth simulation or texture art.
 - All four new source prop families are imported and receive generated lightmap UV preparation by the assembly script; confirm the UV channel and visual shading in Unreal Editor.
+
+## Northern regional world map
+
+The native landscape HUD map uses normalized coordinates so the regional layout scales across supported landscape aspect ratios. Route links are bidirectional and are rendered behind selectable region nodes.
+
+| Region | Map position (0–1) | Unlock renown | Region type | Connected routes |
+|---|---:|---:|---|---|
+| Winterfell | (0.50, 0.53) | 0 | Castle | The Dreadfort, White Harbor, Karhold, Last Hearth, Deepwood Motte, Greywater Watch, The Wall |
+| The Dreadfort | (0.82, 0.57) | 30 | Castle | Winterfell, White Harbor, Karhold |
+| White Harbor | (0.68, 0.18) | 15 | Port | Winterfell, The Dreadfort, Bear Island |
+| Bear Island | (0.14, 0.20) | 45 | Island | White Harbor, Deepwood Motte |
+| Karhold | (0.90, 0.34) | 25 | Castle | Winterfell, The Dreadfort, Last Hearth, The Wall |
+| Last Hearth | (0.66, 0.78) | 20 | Keep | Winterfell, Karhold, The Wall |
+| Deepwood Motte | (0.25, 0.45) | 35 | Woodland | Winterfell, Bear Island, Greywater Watch |
+| Greywater Watch | (0.35, 0.86) | 60 | Marsh | Winterfell, Deepwood Motte, The Wall |
+| The Wall | (0.49, 0.08) | 80 | Frontier | Winterfell, Karhold, Last Hearth, Greywater Watch |
+
+Selecting a node shows its description, region type, current/required renown, unlock state, connected routes and travel readiness. Winterfell is the only region linked to a built level (WinterfellApproach); the other eight remain visible and unlockable in the regional interface, but travel stays unavailable until their individual maps are created and tested.
