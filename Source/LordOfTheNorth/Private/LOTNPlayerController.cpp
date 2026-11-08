@@ -4,6 +4,8 @@
 ALOTNPlayerController::ALOTNPlayerController()
 {
     bShowMouseCursor = false;
+    bEnableTouchEvents = true;
+    bEnableClickEvents = true;
     HUDWidgetClass = ULOTNHUDWidget::StaticClass();
 }
 
