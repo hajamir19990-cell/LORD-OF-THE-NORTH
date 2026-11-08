@@ -112,8 +112,10 @@ namespace LOTN.Editor
                 if (importer == null) continue;
                 bool changed = false;
                 if (Mathf.Abs(importer.globalScale - 0.01f) > 0.00001f) { importer.globalScale = 0.01f; changed = true; }
+                if (importer.useFileUnits) { importer.useFileUnits = false; changed = true; }
                 if (!importer.bakeAxisConversion) { importer.bakeAxisConversion = true; changed = true; }
                 if (!importer.generateSecondaryUV) { importer.generateSecondaryUV = true; changed = true; }
+                if (importer.useSRGBMaterialColor) { importer.useSRGBMaterialColor = false; changed = true; }
                 if (importer.addCollider) { importer.addCollider = false; changed = true; }
                 if (changed) importer.SaveAndReimport();
             }
