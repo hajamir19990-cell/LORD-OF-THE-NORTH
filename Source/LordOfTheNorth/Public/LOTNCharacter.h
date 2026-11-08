@@ -4,6 +4,8 @@
 #include "GameFramework/Character.h"
 #include "LOTNCharacter.generated.h"
 
+class ULOTNPlayerStatsComponent;
+
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -29,4 +31,7 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category="Camera")
     TObjectPtr<UCameraComponent> FollowCamera;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Stats", meta=(AllowPrivateAccess="true"))
+    TObjectPtr<ULOTNPlayerStatsComponent> PlayerStats;
 };
