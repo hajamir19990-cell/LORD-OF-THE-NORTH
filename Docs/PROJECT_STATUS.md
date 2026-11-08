@@ -21,7 +21,7 @@ Last updated: 2026-11-08
 
 ## Build and test status
 - GitHub Actions static source-structure validation exists.
-- GitHub Actions passed 61 static structure checks with 0 failures on commit 950cd288. These checks validate repository structure only; they are explicitly not an Unreal compile.
+- GitHub Actions passed 61 static structure checks with 0 failures on commit 3dcbdbc1. The following commit only tightened the asset register. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
 - No Unreal C++ compile has been verified.
 - No Android APK has been produced.
