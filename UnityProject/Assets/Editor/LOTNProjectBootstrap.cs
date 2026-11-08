@@ -45,6 +45,8 @@ namespace LOTN.Editor
             EnsureURPAssets();
             EnsureFolder(GeneratedFolder);
             EnsureFolder(SceneFolder);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            ConvertImportedMaterialsToURP();
 
             string[] sceneNames = LOTNRegionData.SceneNames;
             var buildScenes = new EditorBuildSettingsScene[sceneNames.Length];
@@ -94,6 +96,26 @@ namespace LOTN.Editor
             QualitySettings.renderPipeline = pipeline;
             EditorUtility.SetDirty(rendererData);
             EditorUtility.SetDirty(pipeline);
+            AssetDatabase.SaveAssets();
+        }
+
+        private static void ConvertImportedMaterialsToURP()
+        {
+            Shader urpLit = Shader.Find("Universal Render Pipeline/Lit");
+            if (urpLit == null) throw new System.Exception("URP Lit shader is unavailable; verify the URP package import.");
+            string[] materialGuids = AssetDatabase.FindAssets("t:Material", new[] { MeshFolder });
+            foreach (string guid in materialGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                Material material = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (material == null || material.shader == urpLit) continue;
+                Color color = material.HasProperty("_Color") ? material.GetColor("_Color") : Color.white;
+                Texture texture = material.HasProperty("_MainTex") ? material.GetTexture("_MainTex") : null;
+                material.shader = urpLit;
+                if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+                if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", texture);
+                EditorUtility.SetDirty(material);
+            }
             AssetDatabase.SaveAssets();
         }
 
