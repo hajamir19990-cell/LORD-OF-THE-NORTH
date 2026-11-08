@@ -2,6 +2,7 @@
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
 #include "LOTNInteractionComponent.h"
+#include "LOTNInventoryComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -13,6 +14,7 @@ ALOTNCharacter::ALOTNCharacter()
     PlayerStats = CreateDefaultSubobject<ULOTNPlayerStatsComponent>(TEXT("PlayerStats"));
     QuestComponent = CreateDefaultSubobject<ULOTNQuestComponent>(TEXT("QuestComponent"));
     InteractionComponent = CreateDefaultSubobject<ULOTNInteractionComponent>(TEXT("InteractionComponent"));
+    InventoryComponent = CreateDefaultSubobject<ULOTNInventoryComponent>(TEXT("InventoryComponent"));
 
     bUseControllerRotationPitch = false;
     bUseControllerRotationYaw = false;
