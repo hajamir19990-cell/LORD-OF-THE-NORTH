@@ -8,13 +8,13 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Generate project files and compile the Editor target.
 - [ ] Confirm no missing modules, reflection errors or asset load errors.
 - [ ] Confirm the default GameMode spawns LOTNCharacter and LOTNPlayerController.
-- [ ] Confirm the native portrait HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
+- [ ] Confirm the native landscape HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
 - [ ] Confirm GameAndUI input mode lets HUD buttons receive touch/click input while character gameplay input remains available.
 - [ ] Run the Unreal automation tests under LOTN.Inventory, LOTN.Quests, LOTN.WorldMap and LOTN.PlayerStats.
 
-## Movement and portrait controls
+## Movement and landscape controls
 
-- [ ] Android orientation remains portrait through launch, pause and resume.
+- [ ] Android orientation remains landscape through launch, pause and resume.
 - [ ] Left virtual joystick moves the character in camera-relative directions.
 - [ ] Right virtual joystick controls camera yaw and pitch without rotating the movement input incorrectly.
 - [ ] Interact, inventory, save and load HUD buttons respond to touch; UI interaction does not permanently block movement input.
@@ -22,7 +22,8 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Stamina decreases during sprint and regenerates while walking.
 - [ ] Sprint cannot continue indefinitely after stamina is exhausted.
 - [ ] Health and stamina remain within configured bounds after damage, healing, consumption and recovery.
-- [ ] Touch targets remain reachable and do not overlap quest/dialogue text on the smallest target screen.
+- [ ] The lower-left virtual joystick remains unobstructed by save/load controls; right-side action buttons remain reachable.
+- [ ] Touch targets remain reachable and do not overlap quest/dialogue text on 16:9, 20:9 and 16:10 screens.
 
 ## Interaction and quest loop
 
@@ -50,6 +51,9 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 
 ## Visual and performance acceptance
 
+- [ ] Confirm both gatehouse towers and the approach road read clearly in landscape.
+- [ ] Confirm the temporary ground plane has been replaced with a sculpted terrain Landscape.
+- [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
 - [ ] Check scale, pivots, normals, UVs, materials, collisions and LODs for every imported asset.
 - [ ] Verify the scene has no visible floating pieces, broken seams or obvious texture stretching.
