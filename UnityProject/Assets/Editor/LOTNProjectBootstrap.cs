@@ -91,12 +91,9 @@ namespace LOTN.Editor
 
             pipeline.renderScale = 0.9f;
             pipeline.supportsHDR = false;
-            pipeline.supportsMainLightShadows = true;
-            pipeline.supportsSoftShadows = false;
             pipeline.shadowDistance = 65f;
             pipeline.msaaSampleCount = 2;
             pipeline.useSRPBatcher = true;
-            pipeline.EnsureGlobalSettings();
             GraphicsSettings.defaultRenderPipeline = pipeline;
             QualitySettings.renderPipeline = pipeline;
             EditorUtility.SetDirty(rendererData);
