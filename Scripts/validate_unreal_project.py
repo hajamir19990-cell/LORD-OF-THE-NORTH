@@ -142,6 +142,16 @@ if assembly_script.is_file():
             "EditorActorSubsystem" in assembly_text and
             "EditorLevelLibrary" not in assembly_text,
             "landscape assembly uses current Unreal editor subsystems")
+    require((assembly_text.count("# Timber palisades define") == 1 and
+             assembly_text.count("# Snow-capped rock clusters") == 1 and
+             assembly_text.count("# A small stone firepit") == 1),
+            "landscape dressing blocks are not duplicated")
+    require("COLLISION_MESHES" in assembly_text and
+            "NON_BLOCKING_MESHES" in assembly_text and
+            "actor.set_actor_enable_collision(False)" in assembly_text,
+            "decorative environment meshes avoid unnecessary blocking collision")
+    require("imported_object_paths" in assembly_text,
+            "landscape import tasks fail fast when a source mesh does not import")
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
 for mesh_path in sorted(source_meshes.glob("*.obj")):
