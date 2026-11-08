@@ -292,7 +292,7 @@ namespace LOTN.Editor
 
             GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             npc.name = "Northern Guard — Quest Giver";
-            npc.transform.position = GroundedPosition(new Vector3(-0.2f, 0f, -27.5f), 0.9f);
+            npc.transform.position = GroundedPosition(new Vector3(-0.2f, 0f, -27.5f), 1.1f);
             npc.transform.localScale = new Vector3(0.8f, 1.1f, 0.8f);
             npc.GetComponent<Renderer>().sharedMaterial = MakeMaterial(new Color(0.22f, 0.29f, 0.38f));
             LOTNInteractable giver = npc.AddComponent<LOTNInteractable>();
@@ -374,10 +374,13 @@ namespace LOTN.Editor
             GameObject player = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             player.name = "LOTN Player — Temporary Greybox";
             player.tag = "Player";
-            player.transform.position = GroundedPosition(new Vector3(0f, 0f, -34.5f), 0.02f);
+            player.transform.position = GroundedPosition(new Vector3(0f, 0f, -34.5f), 1f);
             player.transform.localScale = new Vector3(0.8f, 1f, 0.8f);
             Object.DestroyImmediate(player.GetComponent<CapsuleCollider>());
-            player.AddComponent<CharacterController>();
+            CharacterController characterController = player.AddComponent<CharacterController>();
+            characterController.center = Vector3.zero;
+            characterController.height = 2f;
+            characterController.radius = 0.4f;
             player.AddComponent<LOTNPlayerStats>();
             player.AddComponent<LOTNPlayerController>();
             player.GetComponent<Renderer>().sharedMaterial = MakeMaterial(new Color(0.18f, 0.23f, 0.29f));
@@ -390,6 +393,7 @@ namespace LOTN.Editor
             camera.AddComponent<AudioListener>();
             LOTNCameraFollow follow = camera.AddComponent<LOTNCameraFollow>();
             follow.target = player.transform;
+            follow.lookHeight = 0.7f;
         }
 
         private static Vector3 GroundedPosition(Vector3 position, float verticalOffset = 0f)
