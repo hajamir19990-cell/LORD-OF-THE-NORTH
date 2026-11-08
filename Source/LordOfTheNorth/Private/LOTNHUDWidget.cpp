@@ -35,6 +35,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
     {
         UBorder* Border = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), Name);
         Border->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.88f));
+        Border->SetPadding(FMargin(10.f, 8.f, 10.f, 8.f));
         UVerticalBox* Box = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
         Border->SetContent(Box);
         if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(Border))
@@ -92,9 +93,11 @@ void ULOTNHUDWidget::BuildNativeLayout()
 
     InteractionPromptPanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("InteractionPromptPanel"));
     InteractionPromptPanel->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.88f));
+    InteractionPromptPanel->SetPadding(FMargin(8.f, 4.f, 8.f, 4.f));
     InteractionPromptText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("InteractionPromptText"));
     InteractionPromptText->SetColorAndOpacity(FSlateColor(TextColor));
     InteractionPromptText->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 13));
+    InteractionPromptText->SetAutoWrapText(true);
     InteractionPromptPanel->SetContent(InteractionPromptText);
     if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(InteractionPromptPanel))
     {
@@ -107,6 +110,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
 
     DialoguePanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("DialoguePanel"));
     DialoguePanel->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.92f));
+    DialoguePanel->SetPadding(FMargin(10.f, 8.f, 10.f, 8.f));
     DialogueText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DialogueText"));
     DialogueText->SetColorAndOpacity(FSlateColor(TextColor));
     DialogueText->SetFont(FCoreStyle::GetDefaultFontStyle("Regular", 13));
@@ -131,6 +135,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
         Label->SetText(FText::FromString(LabelText));
         Label->SetColorAndOpacity(FSlateColor(TextColor));
         Label->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 12));
+        Label->SetJustification(ETextJustify::Center);
         Button->AddChild(Label);
         if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(Button))
         {
