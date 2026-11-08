@@ -9,13 +9,13 @@ This is the isolated Unreal Engine development branch. The original Android/Open
 - Stamina-limited sprint with hold-to-run control and regeneration.
 - Player stats component: health, stamina, gold and renown.
 - Stackable inventory and apparel/trinket equipment state.
-- Interaction interface and camera-view trace component.
+- Interaction interface and camera-view trace component with contextual prompts.
 - NPC dialogue event and configurable quest offer/turn-in flow.
 - Quest objective actors with progress tracking and reward handling.
 - Save Game object and Game Instance save subsystem for player transform, stats, inventory, equipment and active/completed quest records.
 - World map data asset seeded with the nine northern locations and renown unlock checks.
-- UMG HUD base class with health/stamina bars, progression labels, inventory count, quest objective/progress, interaction, hold-to-sprint and save/load buttons.
-- Player controller that can instantiate a HUD Widget Blueprint assigned in the editor.
+- Native portrait HUD fallback with health/stamina bars, progression labels, inventory count, quest objective/progress, interaction, hold-to-sprint and save/load controls.
+- Player controller that creates the native HUD by default; a Widget Blueprint can override it for visual customization.
 - GitHub Actions static source-structure validation.
 
 ## First playable milestone
@@ -23,7 +23,7 @@ This is the isolated Unreal Engine development branch. The original Android/Open
 The first slice is the road outside Winterfell:
 1. Create the portrait-friendly map in Unreal Editor.
 2. Create a Blueprint child of LOTNCharacter and assign a properly licensed character mesh and animation blueprint.
-3. Create a HUD Widget Blueprint based on LOTNHUDWidget and assign it to a Player Controller Blueprint child of LOTNPlayerController.
+3. Open the map with the default C++ GameMode and verify the native HUD; optionally create a Widget Blueprint child of LOTNHUDWidget for a custom visual design.
 4. Place an NPC Blueprint based on LOTNNPC and an objective Blueprint based on LOTNQuestObjective; match their quest IDs.
 5. Import and profile the selected environment assets using the asset register.
 6. Compile, test the movement, sprint, interaction/quest/inventory/save loop, and package to Android only after the required toolchain is installed.
