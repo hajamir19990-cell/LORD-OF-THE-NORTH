@@ -189,10 +189,12 @@ void ULOTNHUDWidget::BuildNativeLayout()
         FAnchors(0.5f, 1.f, 0.5f, 1.f), FVector2D(0.5f, 1.f), FVector2D(-38.f, -112.f), FVector2D(76.f, 64.f));
     SprintButton = AddButton(TEXT("SprintButton"), TEXT("SPRINT"),
         FAnchors(1.f, 1.f, 1.f, 1.f), FVector2D(1.f, 1.f), FVector2D(-14.f, -112.f), FVector2D(78.f, 64.f));
+    // Keep the lower-left quadrant clear for Unreal's landscape virtual movement joystick.
+    // Save/load controls live beneath the inventory button in the upper-right corner.
     SaveButton = AddButton(TEXT("SaveButton"), TEXT("SAVE"),
-        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(14.f, -112.f), FVector2D(50.f, 44.f));
+        FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-160.f, 62.f), FVector2D(66.f, 38.f));
     LoadButton = AddButton(TEXT("LoadButton"), TEXT("LOAD"),
-        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(70.f, -112.f), FVector2D(50.f, 44.f));
+        FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-86.f, 62.f), FVector2D(66.f, 38.f));
 }
 
 void ULOTNHUDWidget::NativeOnInitialized()
