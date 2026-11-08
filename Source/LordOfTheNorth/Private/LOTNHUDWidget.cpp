@@ -511,7 +511,7 @@ void ULOTNHUDWidget::RefreshInventoryPanel()
 
     InventoryList->ClearChildren();
     ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
-    if (!Player || !Player->InventoryComponent || Player->InventoryComponent->Items.IsEmpty())
+    if (!Player || !Player->InventoryComponent || Player->InventoryComponent->Items.Num() == 0)
     {
         UTextBlock* EmptyText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
         EmptyText->SetText(NSLOCTEXT("LOTN", "InventoryEmpty", "Your pack is empty."));
