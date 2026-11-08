@@ -2,10 +2,11 @@
 
 Unreal Editor will generate and manage binary assets here. The first editor milestone should create:
 
-- Maps/VerticalPrototype — first portrait-friendly playable test map
-- Characters/Player — player skeletal mesh, animation blueprint, and materials
-- Environment/North — modular stone fortress, pine forest, snow and ground materials
-- UI/HUD — portrait HUD, touch controls, interaction prompts
-- Audio/Ambience — wind, snowstorm, footsteps, and northern settlement ambience
+- Maps/VerticalPrototype — portrait-friendly first playable map, with a PlayerStart and walkable terrain
+- Characters/Player — licensed player skeletal mesh, skeleton, animation blueprint and materials
+- Environment/North — detailed stone fortress exterior, timber settlement, pine forest, snow and ground materials
+- Environment/Props — licensed non-combat world props and quest markers
+- UI/HUD — optional Widget Blueprint customization; the C++ native portrait HUD works by default
+- Audio/Ambience — wind, snowfall, footsteps and northern settlement ambience
 
-Do not commit Unreal-generated cache folders or derived build output. Add only source assets with confirmed redistribution licenses.
+Do not commit Unreal-generated cache folders or derived build output. Add only source assets with confirmed redistribution licenses. See Docs/ASSET_REGISTER.md for candidate sources and mobile import checks.
