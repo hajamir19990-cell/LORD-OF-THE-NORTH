@@ -162,7 +162,7 @@ for index, y in enumerate((-1400, -750, -100)):
 
 # Timber palisades define the settlement edge without closing the main road.
 for x in (-850, 850):
-    for y in (-1200, -600):
+    for y in (-1200, -300):
         mesh_actor("Northern_Palisade_Fence", (x, y, terrain_world_z(x, y)),
                    yaw=0.0 if x < 0 else 180.0)
 
@@ -177,7 +177,7 @@ for index, (x, y) in enumerate(rock_positions):
 
 # Timber palisades define the settlement edge without closing the main road.
 for x in (-850, 850):
-    for y in (-1200, -600):
+    for y in (-1200, -300):
         mesh_actor("Northern_Palisade_Fence", (x, y, 16),
                    yaw=0.0 if x < 0 else 180.0)
 
@@ -196,7 +196,7 @@ mesh_actor("Northern_Longhouse", (1250, -650, terrain_world_z(1250, -650)), yaw=
 mesh_actor("Northern_Longhouse", (1850, -1150, terrain_world_z(1850, -1150)), yaw=195.0, scale=0.68)
 
 # A small stone firepit adds a readable settlement landmark away from the road.
-mesh_actor("Northern_Stone_Firepit", (1600, -1000, terrain_world_z(1600, -1000)), yaw=12.0)
+mesh_actor("Northern_Stone_Firepit", (1400, -1550, terrain_world_z(1400, -1550)), yaw=12.0)
 
 # A small stone firepit adds a readable settlement landmark away from the road.
 mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
@@ -204,7 +204,7 @@ mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
 # Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
     (-1900, -1050), (-2200, -450), (-1850, 250), (-2350, 850),
-    (-1700, 1450), (-2600, 1650), (1900, -1000), (2200, -350),
+    (-1700, 1450), (-2600, 1650), (2450, -1000), (2200, -350),
     (1850, 350), (2350, 950), (1750, 1500), (2650, 1750),
 )
 for index, (x, y) in enumerate(tree_positions):
