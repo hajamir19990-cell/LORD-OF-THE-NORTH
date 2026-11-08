@@ -156,6 +156,14 @@ if assembly_script.is_file():
             "decorative environment meshes avoid unnecessary blocking collision")
     require("imported_object_paths" in assembly_text,
             "landscape import tasks fail fast when a source mesh does not import")
+    require("tree_positions" in assembly_text and "(-900, 2600)" in assembly_text,
+            "outer northern pine tree line is included")
+    require("ComponentMobility.STATIC" in assembly_text and
+            '"intensity", 72000.0' in assembly_text,
+            "mobile directional light uses a static-lighting baseline")
+    require('"b_enable_volumetric_fog", False' in assembly_text and
+            '"fog_density", 0.0025' in assembly_text,
+            "atmospheric fog is non-volumetric and mobile-conscious")
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
 for mesh_path in sorted(source_meshes.glob("*.obj")):
@@ -196,6 +204,16 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
     require(bool(vertices) and faces > 0 and not malformed,
             mesh_path.name + ": OBJ vertices and face indices are valid")
     require(bool(used_materials), mesh_path.name + ": at least one material slot is assigned")
+    if mesh_path.name == "Northern_Rolling_Terrain.obj" and vertices:
+        heights = [vertex[2] for vertex in vertices]
+        require(max(heights) - min(heights) >= 400.0,
+                "terrain has meaningful rolling elevation rather than a flat plane")
+        require({"snow", "stone_light", "stone_dark"}.issubset(used_materials),
+                "terrain has snow and slope-rock material zones")
+        approach = [vertex for vertex in vertices
+                    if abs(vertex[0]) <= 350.0 and -1800.0 <= vertex[1] <= 100.0]
+        require(bool(approach) and all(abs(vertex[2]) < 0.01 for vertex in approach),
+                "player and road approach remains level for traversal")
     if material_library:
         mtl_path = mesh_path.parent / material_library
         require(mtl_path.is_file(), mesh_path.name + ": referenced MTL file exists")
