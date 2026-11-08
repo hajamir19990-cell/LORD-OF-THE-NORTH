@@ -37,7 +37,7 @@ Last updated: 2026-11-08
 ## What is required to finish the first APK
 1. Open the project in a compatible Unreal Engine 5.x installation.
 2. Compile the Editor target and resolve any Unreal Header Tool/compiler errors.
-3. Run Scripts/create_winterfell_landscape.py inside Unreal Editor to create /Game/Maps/WinterfellApproach, then replace its temporary ground plane with a sculpted Landscape and add NPC/quest Blueprints.
+3. Run Scripts/create_winterfell_landscape.py inside Unreal Editor to create /Game/Maps/WinterfellApproach, then inspect terrain collision/materials and add NPC/quest Blueprints; a sculpted Landscape can replace the terrain mesh if layered landscape materials are needed.
 4. Import and profile licensed character/environment assets; assign the character mesh and animation blueprint.
 5. Run the LOTN automation tests and the manual QA checklist.
 6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package. The workflow compiles the Editor target and runs the LOTN automation tests before packaging.
