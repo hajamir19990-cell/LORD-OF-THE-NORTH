@@ -14,40 +14,29 @@ FText ALOTNNPC::GetInteractionText_Implementation(AActor* InteractingActor) cons
     return FText::Format(NSLOCTEXT("LOTN", "TalkPrompt", "Talk to {0}"), DisplayName);
 }
 
-void ALOTNNPC::Interact_Implementation(AActor* InteractingActor)
+FText ALOTNNPC::Interact_Implementation(AActor* InteractingActor)
 {
-    if (!InteractingActor)
-    {
-        return;
-    }
-
-    if (bOffersQuest)
+    FText Message = DialogueText;
+    if (InteractingActor && bOffersQuest)
     {
         if (ULOTNQuestComponent* QuestComponent = InteractingActor->FindComponentByClass<ULOTNQuestComponent>())
         {
             if (QuestComponent->IsQuestReadyToTurnIn(QuestId))
             {
                 QuestComponent->CompleteQuest(QuestId);
-                OnDialogueRequested.Broadcast(NSLOCTEXT("LOTN", "QuestTurnedIn", "Good work. The North remembers those who keep their word."));
-                return;
+                Message = NSLOCTEXT("LOTN", "QuestTurnedIn", "Good work. The North remembers those who keep their word.");
             }
-
-            if (QuestComponent->IsQuestCompleted(QuestId))
+            else if (QuestComponent->IsQuestCompleted(QuestId))
             {
-                OnDialogueRequested.Broadcast(NSLOCTEXT("LOTN", "QuestAlreadyDone", "You have already completed this task."));
-                return;
+                Message = NSLOCTEXT("LOTN", "QuestAlreadyDone", "You have already completed this task.");
             }
-
-            if (QuestComponent->StartQuest(QuestId, QuestTitle, QuestDescription, GoldReward, RenownReward, QuestObjective, RequiredProgress))
+            else if (!QuestComponent->StartQuest(QuestId, QuestTitle, QuestDescription, GoldReward, RenownReward, QuestObjective, RequiredProgress))
             {
-                OnDialogueRequested.Broadcast(DialogueText);
-                return;
+                Message = NSLOCTEXT("LOTN", "QuestInProgress", "The task is not finished yet. Check the objective on the northern road.");
             }
-
-            OnDialogueRequested.Broadcast(NSLOCTEXT("LOTN", "QuestInProgress", "The task is not finished yet. Check the objective on the northern road."));
-            return;
         }
     }
 
-    OnDialogueRequested.Broadcast(DialogueText);
+    OnDialogueRequested.Broadcast(Message);
+    return Message;
 }
