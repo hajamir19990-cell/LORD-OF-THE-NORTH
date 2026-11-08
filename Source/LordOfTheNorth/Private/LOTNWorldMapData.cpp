@@ -17,7 +17,7 @@ ULOTNWorldMapData::ULOTNWorldMapData()
         Entry.LocationId = Id;
         Entry.DisplayName = FText::FromString(Name);
         Entry.Description = FText::FromString(Description);
-        Entry.LevelName = bStartingLocation ? FName(TEXT("WinterfellApproach")) : NAME_None;
+        Entry.LevelName = bStartingLocation ? FName(TEXT("WinterfellApproach")) : FName(*FString::Printf(TEXT("LOTN_%s"), *Id.ToString()));
         Entry.bUnlockedByDefault = bStartingLocation;
         Entry.RequiredRenown = Renown;
         Entry.MapPosition = MapPosition;
