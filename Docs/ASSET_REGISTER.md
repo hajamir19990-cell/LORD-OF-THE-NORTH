@@ -2,24 +2,23 @@
 
 The art target is a grounded, weathered northern-fantasy environment. Avoid primitive cube blockouts as final art. Asset use is conditional on importing, inspecting and profiling the actual files in Unreal Engine 5.
 
-## Candidate assets
+## Approved source library
 
-| Asset | Intended use | Format / size | License | Import notes |
-|---|---|---|---|---|
-| Innerscene — Castle with keep | Distant fortress landmark and exterior gate silhouette for the first approach | GLB, 17.1 MB | CC0 | Real-world scale; approximately 49.3 × 49.7 × 29.1 m. The published model has no interior rooms, so do not use it as an explorable interior without additional assets. Inspect mesh density, materials, collision and LODs after import. |
-| Poly Haven | Photorealistic stone, wood, snow/ground PBR materials, environmental models and lighting references | Per-asset formats and resolutions | CC0 | Verify each asset's maps, resolution and file size. Use mobile-appropriate texture sizes and baked/static lighting. |
+| Source | Intended use | License | Import notes |
+|---|---|---|---|
+| Poly Haven | PBR stone, timber, snow/ground materials, environmental models and lighting references | CC0 | Verify each asset's maps, resolution and file size. Use mobile-appropriate texture sizes and baked/static lighting. |
 
-## Source pages and license evidence
+## Source page and license evidence
 
-- Castle with keep: https://www.innerscene.com/tools/library/3d-parts/castle-with-keep-1a75a9e1
+- Poly Haven asset library: https://polyhaven.com/
 - Poly Haven asset license: https://polyhaven.com/license
 
-CC0 means the publisher permits broad reuse, including commercial projects, without mandatory attribution. Keep this register and re-check the individual source page before shipping.
+CC0 means the publisher permits broad reuse, including commercial projects, without mandatory attribution. Re-check the individual source page before shipping.
 
 ## Visual production plan
 
-- Use the castle model as an exterior landmark only; it has no published interior.
-- Build the playable village edge from separately verified architectural pieces and custom meshes.
+- Create an original northern stone-and-timber landmark with a readable silhouette and believable scale.
+- Build the playable settlement edge from separately verified architectural pieces and custom meshes.
 - Use high-quality PBR stone, timber, snow and ground materials from CC0 sources.
 - Source a licensed player character and animation set separately; do not treat an unimported source URL as an integrated asset.
 
@@ -34,4 +33,4 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 
 ## Current import status
 
-These are candidate sources, not imported project assets. The repository currently contains no binary castle, village, character, animation, snow or foliage assets. Import and device profiling must happen in Unreal Editor; a source URL alone is not evidence that the asset is integrated.
+No binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source URL alone is not evidence that the asset is integrated.
