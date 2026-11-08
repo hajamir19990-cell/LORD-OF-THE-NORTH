@@ -436,6 +436,11 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
         }
     }
 
+    const FString RenownInfo = FString::Printf(
+        TEXT("Renown: %d current  /  %d required"),
+        CurrentRenown,
+        Location.RequiredRenown);
+
     FString Routes;
     for (const FName ConnectedId : Location.ConnectedLocationIds)
     {
@@ -451,12 +456,13 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
     }
 
     WorldMapDetailsText->SetText(FText::FromString(FString::Printf(
-        TEXT("%s  |  %s  |  %s\n%s\n%s\nRoutes: %s"),
+        TEXT("%s  |  %s  |  %s\n%s\n%s\n%s\nRoutes: %s"),
         *Location.DisplayName.ToString(),
         *Location.RegionType.ToString(),
         *Status,
         *Location.Description.ToString(),
         *TravelStatus,
+        *RenownInfo,
         *Routes)));
 }
 
