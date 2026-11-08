@@ -33,6 +33,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|Quest", meta=(EditCondition="bOffersQuest", MultiLine="true"))
     FText QuestDescription;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|Quest", meta=(EditCondition="bOffersQuest"))
+    FText QuestObjective = FText::FromString(TEXT("Inspect the supply marker on the northern road."));
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|Quest", meta=(EditCondition="bOffersQuest", ClampMin="1"))
+    int32 RequiredProgress = 1;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|Quest", meta=(EditCondition="bOffersQuest", ClampMin="0"))
     int32 GoldReward = 25;
 
