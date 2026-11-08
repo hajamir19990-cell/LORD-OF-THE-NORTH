@@ -28,10 +28,17 @@ jobs:
           test -n "${ANDROID_HOME:-}" || { echo "ANDROID_HOME is not configured"; exit 1; }
           test -n "${JAVA_HOME:-}" || { echo "JAVA_HOME is not configured"; exit 1; }
           test -n "${NDKROOT:-${ANDROID_NDK_ROOT:-}}" || { echo "NDKROOT or ANDROID_NDK_ROOT is not configured"; exit 1; }
-          find Content -type f -name '*.umap' -print -quit | grep -q . || {
-            echo "No Unreal map asset exists yet. Create Content/Maps/VerticalPrototype.umap before packaging."
+          test -f "$GITHUB_WORKSPACE/Content/Maps/WinterfellApproach.umap" || {
+            echo "Missing Content/Maps/WinterfellApproach.umap. Run Scripts/create_winterfell_landscape.py in Unreal Editor and commit the saved map."
             exit 1
           }
+
+      - name: Validate repository and OBJ source assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/validate_unreal_project.py
+          python3 -m py_compile Scripts/create_winterfell_landscape.py
 
       - name: Compile Unreal Editor target
         shell: bash
