@@ -1,4 +1,5 @@
 # LOTN rolling northern approach terrain | centimeters | Z up
+mtllib LOTN_Northern_Environment.mtl
 o Northern_Rolling_Terrain
 usemtl snow
 v -4200.00 -4200.00 22.02
