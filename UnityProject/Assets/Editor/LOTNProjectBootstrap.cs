@@ -97,7 +97,8 @@ namespace LOTN.Editor
                 }
                 generated.SetPixels(pixels);
                 generated.Apply();
-                File.WriteAllBytes(Path.GetFullPath(texturePath), generated.EncodeToPNG());
+                string absoluteTexturePath = Path.Combine(Application.dataPath, "Generated/Terrain/Northern_Snow_Albedo.png");
+                File.WriteAllBytes(absoluteTexturePath, generated.EncodeToPNG());
                 Object.DestroyImmediate(generated);
                 AssetDatabase.ImportAsset(texturePath, ImportAssetOptions.ForceUpdate);
                 texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
@@ -170,7 +171,7 @@ namespace LOTN.Editor
             for (int i = 0; i < treeCount; i++)
             {
                 float side = (i % 2 == 0) ? -1f : 1f;
-                float z = -120f + (i / 2) * 38f;
+                float z = -160f + (i / 2) * 30f;
                 float x = side * (300f + (i % 3) * 24f);
                 AddModel("Northern_Pine_Tree.obj", new Vector3(x, 0, z), 22f + (i % 4) * 2.5f, "Snow-Capped Northern Pine");
             }
