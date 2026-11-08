@@ -41,6 +41,8 @@ Keep the central approach readable from the player start. The gate should occupy
 - Directional light and conservative fog setup suitable for mobile; bake/static lighting where practical.
 - LOTNGameMode as the map's GameMode override unless a child GameMode is intentionally used.
 
+After the assembly script saves the binary map, the project configuration points both the Editor startup map and packaged game default map at `/Game/Maps/WinterfellApproach`.
+
 ## Landscape composition and camera
 
 - Android orientation must be Landscape.
