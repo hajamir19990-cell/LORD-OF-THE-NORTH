@@ -90,13 +90,13 @@ void ULOTNHUDWidget::BuildNativeLayout()
     QuestObjectiveText->SetAutoWrapText(true);
     QuestProgressText = AddText(QuestPanel, TEXT(""), 12, TextColor);
 
-    UBorder* PromptPanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("InteractionPromptPanel"));
-    PromptPanel->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.88f));
+    InteractionPromptPanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("InteractionPromptPanel"));
+    InteractionPromptPanel->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.88f));
     InteractionPromptText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("InteractionPromptText"));
     InteractionPromptText->SetColorAndOpacity(FSlateColor(TextColor));
     InteractionPromptText->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 13));
-    PromptPanel->SetContent(InteractionPromptText);
-    if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(PromptPanel))
+    InteractionPromptPanel->SetContent(InteractionPromptText);
+    if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(InteractionPromptPanel))
     {
         Slot->SetAnchors(FAnchors(0.5f, 1.f, 0.5f, 1.f));
         Slot->SetAlignment(FVector2D(0.5f, 1.f));
@@ -105,7 +105,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
     }
     InteractionPromptText->SetVisibility(ESlateVisibility::Collapsed);
 
-    UBorder* DialoguePanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("DialoguePanel"));
+    DialoguePanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("DialoguePanel"));
     DialoguePanel->SetBrushColor(FLinearColor(0.025f, 0.04f, 0.06f, 0.92f));
     DialogueText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("DialogueText"));
     DialogueText->SetColorAndOpacity(FSlateColor(TextColor));
@@ -165,13 +165,13 @@ void ULOTNHUDWidget::NativeConstruct()
     CachedInteractionPrompt = FText::GetEmpty();
     PromptRefreshAccumulator = 0.f;
 
-    if (DialogueText)
+    if (DialoguePanel)
     {
-        DialogueText->SetVisibility(ESlateVisibility::Collapsed);
+        DialoguePanel->SetVisibility(ESlateVisibility::Collapsed);
     }
-    if (InteractionPromptText)
+    if (InteractionPromptPanel)
     {
-        InteractionPromptText->SetVisibility(ESlateVisibility::Collapsed);
+        InteractionPromptPanel->SetVisibility(ESlateVisibility::Collapsed);
     }
 
     if (InteractButton)
@@ -220,7 +220,14 @@ void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     {
         CachedInteractionPrompt = Prompt;
         InteractionPromptText->SetText(Prompt);
-        InteractionPromptText->SetVisibility(Prompt.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+        if (InteractionPromptPanel)
+        {
+            InteractionPromptPanel->SetVisibility(Prompt.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+        }
+        else
+        {
+            InteractionPromptText->SetVisibility(Prompt.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+        }
     }
 }
 
@@ -367,7 +374,14 @@ void ULOTNHUDWidget::ShowDialogue(const FText& Message)
     if (DialogueText)
     {
         DialogueText->SetText(Message);
-        DialogueText->SetVisibility(ESlateVisibility::Visible);
+        if (DialoguePanel)
+        {
+            DialoguePanel->SetVisibility(ESlateVisibility::Visible);
+        }
+        else
+        {
+            DialogueText->SetVisibility(ESlateVisibility::Visible);
+        }
     }
 }
 
