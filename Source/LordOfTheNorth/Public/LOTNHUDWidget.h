@@ -96,6 +96,7 @@ private:
     void HandleLoadClicked();
 
     void BindPlayerEvents(bool bBind);
+    void BuildNativeLayout();
 
     FText CachedInteractionPrompt;
     float PromptRefreshAccumulator = 0.f;
