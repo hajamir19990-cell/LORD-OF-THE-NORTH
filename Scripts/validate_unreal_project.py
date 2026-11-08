@@ -208,6 +208,11 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
     require(bool(vertices) and faces > 0 and not malformed,
             mesh_path.name + ": OBJ vertices and face indices are valid")
     require(bool(used_materials), mesh_path.name + ": at least one material slot is assigned")
+    if mesh_path.name == "Northern_Pine_Tree.obj":
+        require(len(vertices) >= 400 and faces >= 300,
+                "northern pine uses layered bough geometry")
+        require({"wood", "pine", "snow"}.issubset(used_materials),
+                "northern pine separates trunk, evergreen boughs and snow caps")
     if mesh_path.name == "Northern_Rolling_Terrain.obj" and vertices:
         heights = [vertex[2] for vertex in vertices]
         require(max(heights) - min(heights) >= 400.0,
