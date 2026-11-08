@@ -57,7 +57,7 @@ Eleven starter OBJ source meshes are committed, including the layered pine updat
 
 
 ## Northern supply crate
-- `Content/SourceMeshes/Northern_Supply_Crate.obj` — 216 vertices / 162 quad faces; separate timber planks, dark corner posts and iron straps. Uses the shared northern environment MTL. Imported and assigned to the native quest objective marker in the Winterfell assembly script.
+- `Content/SourceMeshes/Northern_Supply_Crate.obj` — 216 vertices / 162 quad faces; separate timber planks, dark corner posts and iron straps. Uses the shared northern environment MTL. The Winterfell assembly script imports it and assigns it to the native quest objective marker when run inside Unreal Editor.
 - This is a greybox prop mesh; verify normals, material slots, collision-off objective visual and mobile rendering in Unreal Editor.
 
 
