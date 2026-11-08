@@ -2,6 +2,7 @@
 #include "LOTNCharacter.h"
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
+#include "LOTNInteractionComponent.h"
 #include "LOTNSaveSubsystem.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
@@ -82,6 +83,18 @@ void ULOTNHUDWidget::BindPlayerEvents(bool bBind)
             Player->QuestComponent->OnQuestStateChanged.RemoveDynamic(this, &ULOTNHUDWidget::HandleQuestChanged);
         }
     }
+
+    if (Player->InteractionComponent)
+    {
+        if (bBind)
+        {
+            Player->InteractionComponent->OnInteractionMessage.AddDynamic(this, &ULOTNHUDWidget::HandleInteractionMessage);
+        }
+        else
+        {
+            Player->InteractionComponent->OnInteractionMessage.RemoveDynamic(this, &ULOTNHUDWidget::HandleInteractionMessage);
+        }
+    }
 }
 
 void ULOTNHUDWidget::RefreshHUD()
@@ -149,6 +162,12 @@ void ULOTNHUDWidget::HandleStatsChanged()
 
 void ULOTNHUDWidget::HandleQuestChanged()
 {
+    RefreshHUD();
+}
+
+void ULOTNHUDWidget::HandleInteractionMessage(const FText& Message)
+{
+    ShowDialogue(Message);
     RefreshHUD();
 }
 
