@@ -14,8 +14,9 @@ Steps performed by the repository owner:
 4. Select branch migration/unity-urp.
 5. Set Project subfolder path to UnityProject.
 6. Select Unity 6000.3.27f1 (or a compatible Unity 6.3 LTS patch) and Android as the target.
-7. Configure Android output as APK for device testing. Keep signing credentials private; a debug APK is sufficient for initial QA.
-8. Start a build and inspect the cloud build log and downloadable artifact.
+7. In Advanced Settings, set the **Pre-export method name** to LOTN.Editor.LOTNProjectBootstrap.PreExport. This runs the checked-in Editor scene generator after Unity compiles the Editor scripts and before the cloud export.
+8. Configure Android output as APK for device testing. Keep signing credentials private; a debug APK is sufficient for initial QA.
+9. Start a build and inspect the cloud build log and downloadable artifact.
 
 Unity's documentation explains that the project subfolder must contain Assets, Packages and ProjectSettings, and that the build target and Unity version are selected in the cloud configuration.
 
