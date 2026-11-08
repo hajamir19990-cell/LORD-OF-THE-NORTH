@@ -7,6 +7,7 @@ distinct landmark composition, PlayerStart, navigation bounds and mobile-safe
 baseline lighting. These are greybox maps; art, collision, nav and lighting QA
 remain required before release.
 """
+import os
 import unreal
 
 SOURCE = "/Game/Environment/North/SourceMeshes"
@@ -159,12 +160,41 @@ for region in REGIONS:
     spawn_mesh(editor_actors, "Northern_Rolling_Terrain", (0, 0, -8),
                label="ENV_" + region["id"] + "_Terrain")
 
+    terrain_file_path = os.path.join(
+        unreal.Paths.project_dir(), "Content", "SourceMeshes", "Northern_Rolling_Terrain.obj")
+    terrain_vertices = []
+    with open(terrain_file_path, "r", encoding="utf-8") as terrain_file:
+        for line in terrain_file:
+            parts = line.strip().split()
+            if len(parts) >= 4 and parts[0] == "v":
+                terrain_vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+    if len(terrain_vertices) != 49 * 49:
+        fail("terrain grid is not the expected 49 x 49 vertex layout")
+
+    def terrain_world_z(x, y):
+        gx = max(0.0, min(48.0, (float(x) + 4200.0) / 175.0))
+        gy = max(0.0, min(48.0, (float(y) + 4200.0) / 175.0))
+        ix = min(47, int(gx))
+        iy = min(47, int(gy))
+        fx = gx - ix
+        fy = gy - iy
+
+        def sample(column, row):
+            return terrain_vertices[row * 49 + column][2]
+
+        z00, z10 = sample(ix, iy), sample(ix + 1, iy)
+        z01, z11 = sample(ix, iy + 1), sample(ix + 1, iy + 1)
+        return (z00 * (1.0 - fx) * (1.0 - fy)
+                + z10 * fx * (1.0 - fy)
+                + z01 * (1.0 - fx) * fy
+                + z11 * fx * fy) - 8.0
+
     for index, (name, xy, yaw, scale) in enumerate(region["landmarks"]):
-        spawn_mesh(editor_actors, name, (xy[0], xy[1], 0),
+        spawn_mesh(editor_actors, name, (xy[0], xy[1], terrain_world_z(xy[0], xy[1])),
                    yaw, scale, "LANDMARK_{:02d}_{}".format(index + 1, name))
 
     for index, (name, xy) in enumerate(region["props"]):
-        spawn_mesh(editor_actors, name, (xy[0], xy[1], 0),
+        spawn_mesh(editor_actors, name, (xy[0], xy[1], terrain_world_z(xy[0], xy[1])),
                    (index * 43) % 360, 0.9 + (index % 3) * 0.12,
                    "PROP_{:02d}_{}".format(index + 1, name))
 
@@ -177,14 +207,14 @@ for region in REGIONS:
     forest.configure_tree_mesh(tree_mesh)
     for index, (x, y) in enumerate(region["trees"]):
         forest.add_tree_instance(
-            unreal.Vector(float(x), float(y), 0.0),
+            unreal.Vector(float(x), float(y), float(terrain_world_z(x, y))),
             float((index * 47) % 360),
             float(0.88 + (index % 4) * 0.12),
         )
 
     spawn_class(editor_actors, unreal.PlayerStart,
                 "PlayerStart_" + region["id"],
-                (region["start"][0], region["start"][1], 116),
+                (region["start"][0], region["start"][1], terrain_world_z(region["start"][0], region["start"][1]) + 116.0),
                 unreal.Rotator(0.0, 90.0, 0.0))
     spawn_class(editor_actors, unreal.NavMeshBoundsVolume,
                 "NAV_" + region["id"], (0, 0, 250),
