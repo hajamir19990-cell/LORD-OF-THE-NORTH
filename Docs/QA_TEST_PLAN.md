@@ -81,3 +81,9 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Rock clusters sit on the outer terrain margins without floating or blocking movement.
 - [ ] Stone firepit is placed beside the east settlement building and does not obstruct the road.
 - [ ] PlayerStart, NPC capsules and the quest crate rest at the intended road surface height.
+
+
+## Player visual placeholder
+- [ ] Confirm torso, head, both arms and both legs render on the player at the expected scale.
+- [ ] Confirm all placeholder parts have collision disabled and do not interfere with the Character capsule, camera or movement.
+- [ ] Replace the primitive greybox with a licensed skeletal mesh and animation blueprint before release.
