@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
 
 void ULOTNHUDWidget::NativeConstruct()
 {
@@ -161,23 +162,29 @@ void ULOTNHUDWidget::HandleInteractClicked()
 
 void ULOTNHUDWidget::HandleSaveClicked()
 {
-    if (UGameInstance* Instance = GetGameInstance())
+    if (UWorld* World = GetWorld())
     {
-        if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
+        if (UGameInstance* Instance = World->GetGameInstance())
         {
-            SaveSystem->SaveCurrentGame();
+            if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
+            {
+                SaveSystem->SaveCurrentGame();
+            }
         }
     }
 }
 
 void ULOTNHUDWidget::HandleLoadClicked()
 {
-    if (UGameInstance* Instance = GetGameInstance())
+    if (UWorld* World = GetWorld())
     {
-        if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
+        if (UGameInstance* Instance = World->GetGameInstance())
         {
-            SaveSystem->LoadCurrentGame();
-            RefreshHUD();
+            if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
+            {
+                SaveSystem->LoadCurrentGame();
+                RefreshHUD();
+            }
         }
     }
 }
