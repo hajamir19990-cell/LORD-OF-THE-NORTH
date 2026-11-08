@@ -1,4 +1,5 @@
 #include "LOTNCharacter.h"
+#include "LOTNPlayerStatsComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -7,6 +8,7 @@
 ALOTNCharacter::ALOTNCharacter()
 {
     PrimaryActorTick.bCanEverTick = false;
+    PlayerStats = CreateDefaultSubobject<ULOTNPlayerStatsComponent>(TEXT("PlayerStats"));
 
     bUseControllerRotationPitch = false;
     bUseControllerRotationYaw = false;
