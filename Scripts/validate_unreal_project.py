@@ -58,6 +58,7 @@ for source in sources:
 engine_config = ROOT / "Config/DefaultEngine.ini"
 config_text = engine_config.read_text(encoding="utf-8") if engine_config.exists() else ""
 require("Orientation=Portrait" in config_text, "Android orientation is portrait")
+require("PackageName=com.lotn.game" in config_text, "Android package identifier is set")
 require("r.MobileHDR=False" in config_text, "mobile HDR is disabled in baseline config")
 
 input_config = ROOT / "Config/DefaultInput.ini"
@@ -69,6 +70,8 @@ require((private_dir / "LOTNInventoryComponent.cpp").is_file(), "inventory compo
 require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
 require((private_dir / "Tests/LOTNGameplayTests.cpp").is_file(), "gameplay automation tests exist")
+require((ROOT / ".github/workflows/build-unreal-android.yml").is_file(), "manual Unreal Android workflow exists")
+require((ROOT / "Content/MAPS_README.md").is_file(), "first map assembly guide exists")
 
 for item in checks:
     print("PASS: " + item)
