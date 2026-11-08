@@ -141,6 +141,12 @@ if assembly_script.is_file():
     require("for name in MESH_NAMES:" in assembly_text and
             "imported_object_paths" in assembly_text,
             "all source meshes are imported and import failures are detected")
+    mesh_match = re.search(r"MESH_NAMES\s*=\s*\((.*?)\n\)", assembly_text, re.S)
+    mesh_names = re.findall(r'"([^"]+)"', mesh_match.group(1)) if mesh_match else []
+    require(len(mesh_names) == 15 and len(set(mesh_names)) == 15,
+            "assembly imports fifteen unique environment source meshes")
+    require(all((source_meshes / (name + ".obj")).is_file() for name in mesh_names),
+            "every assembly mesh name has a matching OBJ source file")
     require("COLLISION_MESHES" in assembly_text and
             "CTF_USE_COMPLEX_AS_SIMPLE" in assembly_text and
             "Northern_Rolling_Terrain" in assembly_text,
@@ -221,6 +227,24 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
     require(bool(vertices) and faces > 0 and not malformed,
             mesh_path.name + ": OBJ vertices and face indices are valid")
     require(bool(used_materials), mesh_path.name + ": at least one material slot is assigned")
+    geometry_targets = {
+        "Northern_Curtain_Wall.obj": (1000, 700),
+        "Northern_Watchtower.obj": (450, 350),
+        "Northern_Longhouse.obj": (450, 300),
+        "Northern_Handcart.obj": (700, 600),
+        "Northern_Woodpile.obj": (350, 200),
+        "Northern_Wolf_Banner.obj": (120, 150),
+    }
+    if mesh_path.name in geometry_targets:
+        min_vertices, min_faces = geometry_targets[mesh_path.name]
+        require(len(vertices) >= min_vertices and faces >= min_faces,
+                mesh_path.name + ": detailed environment geometry is present")
+    if mesh_path.name == "Northern_Wolf_Banner.obj":
+        require({"banner_red", "banner_gold", "iron"}.issubset(used_materials),
+                "wolf banner has cloth, heraldic crest and iron crossbar material slots")
+    if mesh_path.name == "Northern_Handcart.obj":
+        require({"wood", "wood_dark", "iron"}.issubset(used_materials),
+                "handcart has timber, dark timber and metal detail materials")
     if mesh_path.name == "Northern_Pine_Tree.obj":
         require(len(vertices) >= 400 and faces >= 300,
                 "northern pine uses layered bough geometry")
