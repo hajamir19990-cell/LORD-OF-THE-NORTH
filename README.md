@@ -8,6 +8,7 @@ The current development target is a landscape 3D mobile RPG built with **Unity 6
 
 - Unity project: [UnityProject/](UnityProject/)
 - Migration implementation: [Docs/UNITY_MIGRATION.md](Docs/UNITY_MIGRATION.md)
+- Current verification status: [Docs/UNITY_PROJECT_STATUS.md](Docs/UNITY_PROJECT_STATUS.md)
 - Cloud build setup: [Docs/CLOUD_BUILD_SETUP.md](Docs/CLOUD_BUILD_SETUP.md)
 - Static validation: `python3 Scripts/validate_unity_project.py`
 
