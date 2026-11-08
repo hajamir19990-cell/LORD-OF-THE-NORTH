@@ -8,8 +8,12 @@ on:
       - "LORD_OF_THE_NORTH.uproject"
       - "Config/**"
       - "Source/**"
-      - "Scripts/validate_unreal_project.py"
-      - ".github/workflows/validate-unreal-source.yml"
+      - "Content/SourceMeshes/**"
+      - "Content/MAPS_README.md"
+      - "Content/LANDSCAPE_ASSEMBLY.md"
+      - "Scripts/**"
+      - "Docs/**"
+      - ".github/workflows/**"
   pull_request:
     branches:
       - main
@@ -18,8 +22,12 @@ on:
       - "LORD_OF_THE_NORTH.uproject"
       - "Config/**"
       - "Source/**"
-      - "Scripts/validate_unreal_project.py"
-      - ".github/workflows/validate-unreal-source.yml"
+      - "Content/SourceMeshes/**"
+      - "Content/MAPS_README.md"
+      - "Content/LANDSCAPE_ASSEMBLY.md"
+      - "Scripts/**"
+      - "Docs/**"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
