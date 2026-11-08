@@ -7,7 +7,7 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Source file | Intended use | Status |
 |---|---|---|
 | Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Source OBJ committed; needs Unreal import and art polish |
-| Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Source OBJ committed; needs Unreal import, collision and LOD review |
+| Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Layered source OBJ committed: tapered trunk, six overlapping bough tiers and snow caps; needs Unreal import, collision and LOD review |
 | Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Source OBJ committed; needs Unreal import and art polish |
 | Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |
 | Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |
@@ -53,7 +53,7 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 
 ## Current import status
 
-The eight starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
+Eleven starter OBJ source meshes are committed, including the layered pine update, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
 
 
 ## Northern supply crate
