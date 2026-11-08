@@ -1,6 +1,16 @@
 name: Build Unreal Android package
 
 on:
+  push:
+    branches:
+      - rebuild/unreal-5-mobile
+    paths:
+      - "Source/**"
+      - "Scripts/**"
+      - "Config/**"
+      - "Content/SourceMeshes/**"
+      - "LORD_OF_THE_NORTH.uproject"
+      - ".github/workflows/build-unreal-android.yml"
   workflow_dispatch:
 
 permissions:
@@ -28,23 +38,7 @@ jobs:
           test -n "${ANDROID_HOME:-}" || { echo "ANDROID_HOME is not configured"; exit 1; }
           test -n "${JAVA_HOME:-}" || { echo "JAVA_HOME is not configured"; exit 1; }
           test -n "${NDKROOT:-${ANDROID_NDK_ROOT:-}}" || { echo "NDKROOT or ANDROID_NDK_ROOT is not configured"; exit 1; }
-          required_maps=(
-            WinterfellApproach
-            LOTN_TheDreadfort
-            LOTN_WhiteHarbor
-            LOTN_BearIsland
-            LOTN_Karhold
-            LOTN_LastHearth
-            LOTN_DeepwoodMotte
-            LOTN_GreywaterWatch
-            LOTN_TheWall
-          )
-          for map_name in "${required_maps[@]}"; do
-            test -f "$GITHUB_WORKSPACE/Content/Maps/${map_name}.umap" || {
-              echo "Missing Content/Maps/${map_name}.umap. Run the Unreal Editor map assembly scripts and commit every saved map."
-              exit 1
-            }
-          done
+          echo "Map assets are generated and validated in the next Unreal Editor commandlet step."
 
       - name: Validate repository and OBJ source assets
         shell: bash
@@ -52,6 +46,7 @@ jobs:
           set -euo pipefail
           python3 Scripts/validate_unreal_project.py
           python3 -m py_compile Scripts/create_winterfell_landscape.py
+          python3 -m py_compile Scripts/build_all_maps.py
           python3 -m py_compile Scripts/create_northern_region_levels.py
           python3 -m py_compile Scripts/validate_winterfell_level.py
           python3 -m py_compile Scripts/validate_northern_region_levels.py
@@ -61,6 +56,36 @@ jobs:
         run: |
           set -euo pipefail
           "$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" LordOfTheNorthEditor Linux Development "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" -WaitMutex -NoHotReloadFromIDE
+
+      - name: Assemble and validate all nine Unreal maps
+        shell: bash
+        run: |
+          set -euo pipefail
+          EDITOR_CMD="$UE_ROOT/Engine/Binaries/Linux/UnrealEditor-Cmd"
+          test -x "$EDITOR_CMD" || { echo "UnrealEditor-Cmd not found"; exit 1; }
+          "$EDITOR_CMD" "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" \
+            -unattended -nop4 -NullRHI -nosplash -nosound \
+            -run=pythonscript -script="$GITHUB_WORKSPACE/Scripts/build_all_maps.py" \
+            -log="$GITHUB_WORKSPACE/LOTN-Map-Assembly.log"
+          required_maps=(
+            WinterfellApproach LOTN_TheDreadfort LOTN_WhiteHarbor
+            LOTN_BearIsland LOTN_Karhold LOTN_LastHearth
+            LOTN_DeepwoodMotte LOTN_GreywaterWatch LOTN_TheWall
+          )
+          for map_name in "${required_maps[@]}"; do
+            test -f "$GITHUB_WORKSPACE/Content/Maps/${map_name}.umap" || {
+              echo "Editor pipeline did not save Content/Maps/${map_name}.umap"
+              exit 1
+            }
+          done
+
+      - name: Upload map assembly log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LOTN-Unreal-Map-Assembly-Log
+          path: LOTN-Map-Assembly.log
+          if-no-files-found: ignore
 
       - name: Run gameplay automation tests
         shell: bash
