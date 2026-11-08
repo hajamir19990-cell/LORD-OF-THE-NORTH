@@ -36,7 +36,9 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 
 - [ ] AddItem creates and stacks item records up to their stack limits.
 - [ ] RemoveItem refuses removal when quantity is insufficient.
+- [ ] Inventory panel opens, lists items and shows equipped state.
 - [ ] Apparel/trinket items require a valid equipment slot.
+- [ ] Equip/unequip buttons update the correct slot and refresh the list.
 - [ ] Only one item per equipment slot remains equipped.
 - [ ] Save persists transform, current location, stats, quests, inventory and equipment.
 - [ ] Load restores the saved state in the same level.
