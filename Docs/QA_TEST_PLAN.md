@@ -56,7 +56,8 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm the temporary fog does not obscure NPC interaction range or exceed the mobile performance budget.
 - [ ] Confirm NavMeshBoundsVolume covers the walkable approach and Recast navigation generates successfully.
 - [ ] Confirm the rolling terrain mesh has valid complex-as-simple collision and the player can traverse the full approach without falling through or snagging.
-- [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.\n- [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
+- [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.
+- [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
 - [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
 - [ ] Check scale, pivots, normals, UVs, materials, collisions and LODs for every imported asset.
@@ -96,3 +97,11 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Northern Guard and Winterfell Scout render as six-part humanoid greyboxes, not invisible capsules or floating pillars.
 - [ ] NPC primitive visuals do not block Visibility traces; the Character capsule remains the interaction collision shape.
 - [ ] Replace NPC greyboxes with licensed skeletal meshes, clothing materials and idle/talk animations before release.
+
+
+## Terrain relief and atmosphere
+- [ ] Outer terrain has readable rolling hills while the castle foundation, road/player corridor and longhouse pads remain level.
+- [ ] Snow remains dominant on gentle terrain; stone-light/dark slots appear only on steeper slopes and do not create noisy patches.
+- [ ] Twenty-four pine trees frame the approach without obscuring the gate, guard or supply marker.
+- [ ] Directional sun is static and the scene's static lighting is built successfully.
+- [ ] Fog is non-volumetric, does not obscure the quest loop and stays within the mobile frame-time budget.
