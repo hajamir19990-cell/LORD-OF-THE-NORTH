@@ -169,6 +169,7 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
                     malformed = True
     require(bool(vertices) and faces > 0 and not malformed,
             mesh_path.name + ": OBJ vertices and face indices are valid")
+    require(bool(used_materials), mesh_path.name + ": at least one material slot is assigned")
     if material_library:
         mtl_path = mesh_path.parent / material_library
         require(mtl_path.is_file(), mesh_path.name + ": referenced MTL file exists")
