@@ -58,7 +58,9 @@ bool FLOTNEquipmentSlotTest::RunTest(const FString& Parameters)
     TestTrue(TEXT("Second item replaces the same equipment slot"), Inventory->EquipItem(TEXT("FurHood")));
     TestEqual(TEXT("Only one item remains equipped in the slot"), Inventory->EquippedItemIds.Num(), 1);
     TestTrue(TEXT("New slot item is equipped"), Inventory->EquippedItemIds.Contains(TEXT("FurHood")));
-    TestFalse(TEXT("Materials cannot be equipped"), Inventory->EquipItem(TEXT("UnlistedMaterial")));
+    Inventory->AddItem(TEXT("Stone"), FText::FromString(TEXT("Stone")), FText::GetEmpty(),
+        ELOTNItemCategory::Material, 1, 10);
+    TestFalse(TEXT("Materials cannot be equipped"), Inventory->EquipItem(TEXT("Stone")));
     return true;
 }
 
