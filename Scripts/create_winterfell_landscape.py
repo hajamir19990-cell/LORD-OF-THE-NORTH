@@ -30,7 +30,11 @@ for folder in ("/Game/Maps", "/Game/Environment",
                "/Game/Environment/North", DEST):
     unreal.EditorAssetLibrary.make_directory(folder)
 
-if unreal.EditorLevelLibrary.new_level(LEVEL) is False:
+level_editor = unreal.get_editor_subsystem(unreal.LevelEditorSubsystem)
+editor_actors = unreal.get_editor_subsystem(unreal.EditorActorSubsystem)
+if not level_editor or not editor_actors:
+    raise RuntimeError("Unreal level/actor editor subsystems are unavailable")
+if not level_editor.new_level(LEVEL):
     raise RuntimeError("Could not create level: " + LEVEL)
 
 asset_tools = unreal.AssetToolsHelpers.get_asset_tools()
@@ -70,7 +74,7 @@ def mesh_actor(name, location, yaw=0.0, scale=1.0):
     asset = unreal.load_asset(DEST + "/" + name + "." + name)
     if not asset:
         raise RuntimeError("Imported mesh not found: " + name)
-    actor = unreal.EditorLevelLibrary.spawn_actor_from_object(
+    actor = editor_actors.spawn_actor_from_object(
         asset,
         unreal.Vector(float(location[0]), float(location[1]), float(location[2])),
         unreal.Rotator(0.0, float(yaw), 0.0),
@@ -82,7 +86,7 @@ def mesh_actor(name, location, yaw=0.0, scale=1.0):
     return actor
 
 def actor_of(actor_class, label, location, rotation, scale=None):
-    actor = unreal.EditorLevelLibrary.spawn_actor_from_class(
+    actor = editor_actors.spawn_actor_from_class(
         actor_class,
         unreal.Vector(float(location[0]), float(location[1]), float(location[2])),
         rotation,
@@ -293,7 +297,7 @@ sun = actor_of(unreal.DirectionalLight, "TEMP_Northern_Directional_Light",
 fog = actor_of(unreal.ExponentialHeightFog, "TEMP_Northern_Atmospheric_Fog",
                (0, 0, 0), unreal.Rotator(0.0, 0.0, 0.0))
 
-if not unreal.EditorLevelLibrary.save_current_level():
+if not level_editor.save_current_level():
     raise RuntimeError("Level was created but could not be saved")
 
 unreal.log(
