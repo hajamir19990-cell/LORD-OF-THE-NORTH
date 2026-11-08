@@ -1,12 +1,24 @@
-# Visual asset register — Winterfell vertical slice
+# Visual asset register — Winterfell landscape vertical slice
 
-The art target is a grounded, weathered northern-fantasy environment. Avoid primitive cube blockouts as final art. Asset use is conditional on importing, inspecting and profiling the actual files in Unreal Engine 5.
+The art target is a grounded, weathered northern-fantasy environment in a wide landscape composition. Avoid primitive cube blockouts as final art. Asset use is conditional on importing, inspecting and profiling the actual files in Unreal Engine 5.
+
+## Project-authored source meshes
+
+| Source file | Intended use | Status |
+|---|---|---|
+| Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Source OBJ committed; needs Unreal import and art polish |
+| Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Source OBJ committed; needs Unreal import, collision and LOD review |
+| Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Source OBJ committed; needs Unreal import and art polish |
+| Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |
+| Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
+
+These are editable interchange source meshes, not Unreal .uasset files and not yet integrated into a playable map. They are first-pass geometry, not final production art.
 
 ## Approved source library
 
 | Source | Intended use | License | Import notes |
 |---|---|---|---|
-| Poly Haven | PBR stone, timber, snow/ground materials, environmental models and lighting references | CC0 | Verify each asset's maps, resolution and file size. Use mobile-appropriate texture sizes and baked/static lighting. |
+| Poly Haven | PBR stone, timber, snow/ground materials, environmental models and lighting references | CC0 | Verify each asset's maps, resolution and file size |
 
 ## Source page and license evidence
 
@@ -15,12 +27,13 @@ The art target is a grounded, weathered northern-fantasy environment. Avoid prim
 
 CC0 means the publisher permits broad reuse, including commercial projects, without mandatory attribution. Re-check the individual source page before shipping.
 
-## Visual production plan
+## Landscape visual production plan
 
-- Create an original northern stone-and-timber landmark with a readable silhouette and believable scale.
-- Build the playable settlement edge from separately verified architectural pieces and custom meshes.
-- Use high-quality PBR stone, timber, snow and ground materials from CC0 sources.
-- Source a licensed player character and animation set separately; do not treat an unimported source URL as an integrated asset.
+- Use the gatehouse as the focal landmark and frame it with the two settlement edges and pine groves.
+- Keep the approach road clear and wide enough for the player camera and NPC interactions.
+- Upgrade starter meshes with bevels, stone block variation, roof details, timber grain and proper UVs.
+- Use verified PBR stone, timber, snow and ground materials from CC0 sources.
+- Source a licensed player character and animation set separately; an unimported source URL is not an integrated asset.
 
 ## Acceptance gate before adding an asset to the playable map
 
@@ -29,8 +42,8 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 3. Create or verify simple collision; avoid expensive per-poly collision on mobile.
 4. Create appropriate LODs and test screen-space transitions.
 5. Check texture memory, material count and draw calls.
-6. Test on the target Android device before marking the asset mobile-ready.
+6. Test on the target Android device before marking it mobile-ready.
 
 ## Current import status
 
-No binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source URL alone is not evidence that the asset is integrated.
+The four starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
