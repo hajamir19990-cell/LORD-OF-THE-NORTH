@@ -34,7 +34,7 @@ Keep the central approach readable from the player start. The gate should occupy
 - PlayerStart at (0, -1700, 116), yaw +90 degrees, facing the gate; the road source mesh rises to approximately 16 cm.
 - Walkable rolling terrain source mesh with a flattened castle foundation platform; the assembly script samples terrain heights for prop placement. Verify imported collision and walkability in Unreal Editor before treating it as production-ready.
 - Imported environment meshes from Content/SourceMeshes: gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower, rolling terrain, supply crate, palisade fence, snow-capped rock cluster and stone firepit.
-- Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary pillar visual must be replaced with a skeletal character asset.
+- Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary six-part humanoid primitive visual must be replaced with a skeletal character asset.
 - Exponential height fog and a directional daylight baseline; tune conservatively for mobile.
 - NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
 - Native LOTNQuestObjective supply marker using the same QuestId; timber-and-iron crate source mesh is assigned as a greybox prop; replace it with a final art asset after import.
