@@ -6,12 +6,12 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 
 | Source file | Intended use | Status |
 |---|---|---|
-| Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Source OBJ committed; needs Unreal import and art polish |
+| Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Detailed source OBJ with open oak gate leaves, iron bands and layered masonry accents; needs Unreal import and visual review |
 | Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Layered source OBJ committed: tapered trunk, six overlapping bough tiers and snow caps; needs Unreal import, collision and LOD review |
-| Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Source OBJ committed; needs Unreal import and art polish |
+| Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Detailed source OBJ with timber framing, layered roof shingles and chimney; needs Unreal import and visual review |
 | Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |
-| Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |
-| Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Greybox OBJ committed; needs detail pass, UV/material and collision review |
+| Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Detailed source OBJ with ashlar courses, projecting buttresses and stone coping; needs Unreal import, UV/material and collision review |
+| Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Detailed source OBJ with corner quoins, stone parapet and architectural accents; needs Unreal import, UV/material and collision review |
 | Content/SourceMeshes/Northern_Rolling_Terrain.obj | Gently rolling northern approach terrain | Source OBJ committed; needs Unreal import, collision and snow/rock material pass |
 | Content/SourceMeshes/Northern_Supply_Crate.obj | Quest supply marker prop | Greybox OBJ committed; needs Unreal import and art polish |
 | Content/SourceMeshes/Northern_Palisade_Fence.obj | Modular timber settlement boundary | Greybox OBJ committed; needs Unreal import, collision and art polish |
@@ -77,3 +77,8 @@ Fifteen starter OBJ source meshes are committed, including the layered pine, woo
 - `Content/SourceMeshes/Northern_Rock_Cluster.obj` — five low-poly stones with snow caps; placed along the outer terrain margins.
 - `Content/SourceMeshes/Northern_Stone_Firepit.obj` — stone ring and crossed charred logs; settlement landmark near the east longhouse.
 - These are greybox source meshes using the shared MTL palette. Verify normals, collision settings and mobile material appearance after import.
+
+
+## Architecture detail pass
+
+The gatehouse, curtain wall, watchtower and longhouse source meshes have received a geometry detail pass. The gatehouse includes modeled gate leaves and masonry accents; the wall and tower have additional stone-course and corner detailing; the longhouse includes timber framing, roof shingle geometry and a chimney. These remain source OBJ meshes: verify shading, pivots, UVs, material assignment, and silhouette in Unreal Editor before approving them as final production art.
