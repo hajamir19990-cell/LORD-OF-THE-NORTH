@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/InputComponent.h"
+#include "Math/RotationMatrix.h"
 
 ALOTNCharacter::ALOTNCharacter()
 {
