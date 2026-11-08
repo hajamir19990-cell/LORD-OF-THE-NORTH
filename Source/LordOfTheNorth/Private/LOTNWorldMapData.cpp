@@ -24,3 +24,32 @@ ULOTNWorldMapData::ULOTNWorldMapData()
     AddLocation(TEXT("GreywaterWatch"), TEXT("Greywater Watch"), TEXT("A hidden stronghold among the shifting waters of the Neck."), 60, false);
     AddLocation(TEXT("TheWall"), TEXT("The Wall"), TEXT("The immense frontier of ice at the edge of the known world."), 80, false);
 }
+
+bool ULOTNWorldMapData::GetLocationById(FName LocationId, FLOTNWorldLocation& OutLocation) const
+{
+    const FLOTNWorldLocation* Found = Locations.FindByPredicate(
+        [LocationId](const FLOTNWorldLocation& Entry) { return Entry.LocationId == LocationId; });
+
+    if (!Found)
+    {
+        return false;
+    }
+
+    OutLocation = *Found;
+    return true;
+}
+
+bool ULOTNWorldMapData::IsLocationUnlocked(FName LocationId, int32 CurrentRenown) const
+{
+    FLOTNWorldLocation Location;
+    return GetLocationById(LocationId, Location) &&
+        (Location.bUnlockedByDefault || CurrentRenown >= Location.RequiredRenown);
+}
+
+bool ULOTNWorldMapData::IsLocationReadyToTravel(FName LocationId, int32 CurrentRenown) const
+{
+    FLOTNWorldLocation Location;
+    return GetLocationById(LocationId, Location) &&
+        IsLocationUnlocked(LocationId, CurrentRenown) &&
+        !Location.LevelName.IsNone();
+}
