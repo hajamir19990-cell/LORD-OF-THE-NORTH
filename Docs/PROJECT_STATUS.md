@@ -39,6 +39,9 @@ Last updated: 2026-11-08
 2. Run the manual `.github/workflows/compile-unreal-editor.yml` workflow on the configured self-hosted Unreal runner to bootstrap-compile the Editor target. This first compile is required because the map assembly scripts instantiate native C++ NPC, quest and foliage classes.
 3. Run the Winterfell and eight-region assembly scripts inside Unreal Editor, then run both map validators and inspect/save all nine maps.
 4. Run the final `.github/workflows/build-unreal-android.yml` workflow. It recompiles the Editor target after map integration, executes LOTN automation tests, then cooks and packages all nine maps for Android.
+5. Replace temporary NPC/player/environment greyboxes with approved final assets, then verify collisions, generated lightmap UVs, static lighting and Recast navigation in the Editor.
+6. Run the manual QA checklist and profile all regional maps on a physical Android device for frame pacing, memory and touch controls.
+7. Install the resulting APK on a physical Android device and verify the full region travel flow.
 
 
 The repository deliberately blocks the manual APK workflow while no .umap exists. Do not mark the project complete until the compile, map, assets, automation tests, package and device QA gates all pass.
