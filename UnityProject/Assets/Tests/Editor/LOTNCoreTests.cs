@@ -40,6 +40,33 @@ namespace LOTN.Tests
         }
 
         [Test]
+        public void InventoryStacksItemsAndEquipsApparel()
+        {
+            PlayerPrefs.DeleteKey("LOTN.Inventory");
+            GameObject go = new GameObject("Inventory Test");
+            try
+            {
+                LOTNInventory inventory = go.AddComponent<LOTNInventory>();
+                Assert.IsTrue(inventory.AddItem("test_token", "Test Token", 1));
+                Assert.IsTrue(inventory.AddItem("test_token", "Test Token", 2));
+                LOTNInventoryEntry token = null;
+                foreach (LOTNInventoryEntry entry in inventory.Entries)
+                    if (entry.id == "test_token") token = entry;
+                Assert.IsNotNull(token);
+                Assert.AreEqual(3, token.quantity);
+                Assert.IsTrue(inventory.RemoveItem("test_token", 1));
+                Assert.AreEqual(2, token.quantity);
+                Assert.IsTrue(inventory.Equip("northern_cloak"));
+                Assert.AreEqual("northern_cloak", inventory.EquippedCloak);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                PlayerPrefs.DeleteKey("LOTN.Inventory");
+            }
+        }
+
+        [Test]
         public void QuestRequiresSupplyCrateBeforeCompletion()
         {
             GameObject sessionObject = new GameObject("Session Test");
