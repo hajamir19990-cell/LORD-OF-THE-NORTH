@@ -91,7 +91,8 @@ require((public_dir / "LOTNFoliageCluster.h").is_file(), "hierarchical foliage c
 require((private_dir / "LOTNFoliageCluster.cpp").is_file(), "hierarchical foliage cluster source exists")
 foliage_source = (private_dir / "LOTNFoliageCluster.cpp").read_text(encoding="utf-8")
 require("UHierarchicalInstancedStaticMeshComponent" in foliage_source and
-        "AddInstance" in foliage_source and "NoCollision" in foliage_source,
+        "AddInstance" in foliage_source and "NoCollision" in foliage_source and
+        "InstanceEndCullDistance = 280000" in foliage_source,
         "pine forest uses non-blocking hierarchical instanced meshes")
 world_map_header = (public_dir / "LOTNWorldMapData.h").read_text(encoding="utf-8")
 world_map_source = (private_dir / "LOTNWorldMapData.cpp").read_text(encoding="utf-8")
@@ -105,6 +106,9 @@ require(all(name in world_map_source for name in
 require("BuildWorldMapPanel" in hud_source and "WorldMapNodeButtons" in hud_source and
         "SetRenderTransformAngle" in hud_source and "HandleWorldMapToggleClicked" in hud_source,
         "landscape HUD builds an interactive map with route lines and region buttons")
+    require("RenownInfo" in hud_source and "TravelStatus" in hud_source and
+            "WorldMapCloseButton" in hud_source,
+            "regional map details show renown, travel readiness and close controls")
 character_header = (public_dir / "LOTNCharacter.h").read_text(encoding="utf-8")
 character_source = (private_dir / "LOTNCharacter.cpp").read_text(encoding="utf-8")
 for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
