@@ -13,7 +13,7 @@ concurrency:
 jobs:
   package-android:
     name: Unreal Engine Android package (self-hosted)
-    runs-on: [self-hosted, unreal-engine, android]
+    runs-on: [self-hosted, linux, unreal-engine, android]
     timeout-minutes: 120
     steps:
       - name: Checkout
@@ -27,6 +27,7 @@ jobs:
           test -x "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" || { echo "RunUAT.sh not found under UE_ROOT"; exit 1; }
           test -n "${ANDROID_HOME:-}" || { echo "ANDROID_HOME is not configured"; exit 1; }
           test -n "${JAVA_HOME:-}" || { echo "JAVA_HOME is not configured"; exit 1; }
+          test -n "${NDKROOT:-${ANDROID_NDK_ROOT:-}}" || { echo "NDKROOT or ANDROID_NDK_ROOT is not configured"; exit 1; }
           find Content -type f -name '*.umap' -print -quit | grep -q . || {
             echo "No Unreal map asset exists yet. Create Content/Maps/VerticalPrototype.umap before packaging."
             exit 1
