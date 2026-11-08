@@ -4,6 +4,7 @@ from __future__ import annotations
 import ast
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -156,8 +157,11 @@ if assembly_script.is_file():
             "decorative environment meshes avoid unnecessary blocking collision")
     require("imported_object_paths" in assembly_text,
             "landscape import tasks fail fast when a source mesh does not import")
-    require("tree_positions" in assembly_text and "(-900, 2600)" in assembly_text,
-            "outer northern pine tree line is included")
+    tree_match = re.search(r"tree_positions\\s*=\\s*\\((.*?)\\n\\)", assembly_text, re.S)
+    tree_count = len(re.findall(r"\\(\\s*-?\\d+\\s*,\\s*-?\\d+\\s*\\)",
+                                tree_match.group(1))) if tree_match else 0
+    require(tree_count == 24,
+            "landscape assembly includes 24 outer and settlement pine trees")
     require("ComponentMobility.STATIC" in assembly_text and
             '"intensity", 72000.0' in assembly_text,
             "mobile directional light uses a static-lighting baseline")
