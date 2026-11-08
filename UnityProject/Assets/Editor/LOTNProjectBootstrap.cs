@@ -89,6 +89,7 @@ namespace LOTN.Editor
             pipeline.shadowDistance = 65f;
             pipeline.msaaSampleCount = 2;
             pipeline.useSRPBatcher = true;
+            pipeline.EnsureGlobalSettings();
             GraphicsSettings.defaultRenderPipeline = pipeline;
             QualitySettings.renderPipeline = pipeline;
             EditorUtility.SetDirty(rendererData);
