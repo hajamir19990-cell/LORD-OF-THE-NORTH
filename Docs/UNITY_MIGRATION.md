@@ -23,6 +23,9 @@ The Unreal branch contains C++ gameplay source and fifteen OBJ interchange meshe
 - Android build pipeline configures landscape orientation, ARM64 and IL2CPP.
 - C# player controller, camera follow, touch input, stats HUD, stackable inventory, cloak/trinket equipment, quest interactions, region map and persistent player/quest state.
 - Editor-generated mobile URP pipeline/renderer assets and procedural snow terrain layer.
+- OBJ import settings convert centimeter-scale, Z-up source meshes into Unity meter/Y-up space and generate secondary lightmap UVs.
+- Terrain-sampled placement and simple blocking colliders for major structures, road segments and settlement boundaries.
+- Per-region player-position checkpoints in addition to persistent stats, quest progress and inventory.
 - Static repository and OBJ geometry validator.
 - Manual Android cloud-build workflow using GameCI.
 
