@@ -21,6 +21,15 @@ struct FLOTNWorldLocation
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
     FName LevelName = NAME_None;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location", meta=(ClampMin="0.0", ClampMax="1.0"))
+    FVector2D MapPosition = FVector2D(0.5f, 0.5f);
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
+    FName RegionType = TEXT("Wilderness");
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
+    TArray<FName> ConnectedLocationIds;
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
     bool bUnlockedByDefault = false;
 
