@@ -1,6 +1,12 @@
 name: Build LORD OF THE NORTH — Unity Android
 
 on:
+  push:
+    branches: [migration/unity-urp]
+    paths:
+      - "UnityProject/**"
+      - "Scripts/validate_unity_project.py"
+      - ".github/workflows/unity-android.yml"
   workflow_dispatch:
 
 permissions:
@@ -18,9 +24,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: migration/unity-urp
           lfs: true
 
-      - name: Verify Unity license is configured
+      - name: Validate source project
+        run: python3 Scripts/validate_unity_project.py
+
+      - name: Check Unity cloud license configuration
+        id: license
         shell: bash
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -28,15 +39,16 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         run: |
-          if [[ -z "$UNITY_LICENSE" && ( -z "$UNITY_EMAIL" || -z "$UNITY_PASSWORD" || -z "$UNITY_SERIAL" ) ]]; then
-            echo "::error::Unity license is not configured. Add a valid UNITY_LICENSE secret (preferred) or the credentials required by GameCI before starting a cloud build."
-            exit 1
+          if [[ -n "$UNITY_LICENSE" || ( -n "$UNITY_EMAIL" && -n "$UNITY_PASSWORD" && -n "$UNITY_SERIAL" ) ]]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+            echo "Unity license configuration detected; Editor tests and Android build will run."
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Unity license is not configured. Static validation passed; Unity Editor tests and APK build are skipped until the repository owner configures a valid Unity license."
           fi
 
-      - name: Validate source project
-        run: python3 Scripts/validate_unity_project.py
-
       - name: Run Unity EditMode tests
+        if: steps.license.outputs.ready == 'true'
         uses: game-ci/unity-test-runner@v4
         id: tests
         env:
@@ -52,7 +64,7 @@ jobs:
           coverageEnabled: false
 
       - name: Upload Unity test results
-        if: always()
+        if: always() && steps.license.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: LORD-OF-THE-NORTH-Unity-EditMode-Tests
@@ -61,6 +73,7 @@ jobs:
           retention-days: 14
 
       - name: Build Android APK in Unity 6.3 LTS
+        if: steps.license.outputs.ready == 'true'
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -76,6 +89,7 @@ jobs:
           buildsPath: UnityProject/Builds
 
       - name: Upload APK
+        if: steps.license.outputs.ready == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: LORD-OF-THE-NORTH-Unity-Android
