@@ -57,7 +57,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm NavMeshBoundsVolume covers the walkable approach and Recast navigation generates successfully.
 - [ ] Confirm the rolling terrain mesh has valid complex-as-simple collision and the player can traverse the full approach without falling through or snagging.
 - [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.
-- [ ] Confirm all eleven imported static meshes have a valid generated lightmap UV channel before the static-lighting build.
+- [ ] Confirm all fifteen imported static meshes have a valid generated lightmap UV channel before the static-lighting build.
 - [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
 - [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
@@ -106,3 +106,12 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Twenty-four layered pine trees frame the approach without obscuring the gate, guard or supply marker; inspect the six bough tiers and snow caps for shading artifacts.
 - [ ] Directional sun is static and the scene's static lighting is built successfully.
 - [ ] Fog is non-volumetric, does not obscure the quest loop and stays within the mobile frame-time budget.
+
+
+## Expanded settlement art pass
+- [ ] Two firewood stacks sit beside the longhouses and do not overlap doorways or movement paths.
+- [ ] Handcart wheels, axle, spokes, barrel hoops and timber bed render correctly; cart remains non-blocking.
+- [ ] Six snow berms frame the approach without intruding into the road or blocking NPC/objective visibility.
+- [ ] Two gatehouse wolf banners face the approach, show red cloth and gold crest, and do not intersect the stone facade.
+- [ ] All four new OBJ assets import successfully, expose intended material slots and have generated lightmap UVs.
+- [ ] All new decorative props have collision disabled and no actor duplicates after map assembly.
