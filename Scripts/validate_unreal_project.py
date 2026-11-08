@@ -138,6 +138,10 @@ if assembly_script.is_file():
     require("for name in MESH_NAMES:" in assembly_text and
             "CTF_USE_COMPLEX_AS_SIMPLE" in assembly_text,
             "all imported environment meshes receive prototype collision")
+    require("LevelEditorSubsystem" in assembly_text and
+            "EditorActorSubsystem" in assembly_text and
+            "EditorLevelLibrary" not in assembly_text,
+            "landscape assembly uses current Unreal editor subsystems")
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
 for mesh_path in sorted(source_meshes.glob("*.obj")):
