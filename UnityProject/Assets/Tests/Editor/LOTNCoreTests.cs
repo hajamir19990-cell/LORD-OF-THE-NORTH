@@ -40,6 +40,29 @@ namespace LOTN.Tests
         }
 
         [Test]
+        public void PlayerPositionIsStoredPerRegion()
+        {
+            GameObject go = new GameObject("Position Session Test");
+            try
+            {
+                LOTNGameSession session = go.AddComponent<LOTNGameSession>();
+                Vector3 expected = new Vector3(12f, 4f, -38f);
+                session.SavePlayerPosition("WinterfellApproach", expected);
+                Assert.IsTrue(session.TryGetPlayerPosition("WinterfellApproach", out Vector3 restored));
+                Assert.AreEqual(expected, restored);
+                Assert.IsFalse(session.TryGetPlayerPosition("LOTN_TheWall", out _));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.Saved");
+                PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.X");
+                PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.Y");
+                PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.Z");
+            }
+        }
+
+        [Test]
         public void InventoryStacksItemsAndEquipsApparel()
         {
             PlayerPrefs.DeleteKey("LOTN.Inventory");
