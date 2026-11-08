@@ -2,19 +2,38 @@ name: Validate Unreal source structure
 
 on:
   push:
-    branches: [rebuild/unreal-5-mobile]
+    branches:
+      - rebuild/unreal-5-mobile
+    paths:
+      - "LORD_OF_THE_NORTH.uproject"
+      - "Config/**"
+      - "Source/**"
+      - "Scripts/validate_unreal_project.py"
+      - ".github/workflows/validate-unreal-source.yml"
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - rebuild/unreal-5-mobile
+    paths:
+      - "LORD_OF_THE_NORTH.uproject"
+      - "Config/**"
+      - "Source/**"
+      - "Scripts/validate_unreal_project.py"
+      - ".github/workflows/validate-unreal-source.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: unreal-source-validation-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   static-validation:
     name: Static project structure checks (not a UE build)
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,6 +42,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: false
 
       - name: Validate Unreal project structure
         run: python Scripts/validate_unreal_project.py
