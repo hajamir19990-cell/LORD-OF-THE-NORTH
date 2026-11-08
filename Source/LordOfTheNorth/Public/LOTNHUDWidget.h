@@ -7,6 +7,7 @@
 class UProgressBar;
 class UTextBlock;
 class UButton;
+class UBorder;
 
 UCLASS()
 class LORDOFTHENORTH_API ULOTNHUDWidget : public UUserWidget
@@ -52,6 +53,12 @@ protected:
 
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UTextBlock> DialogueText;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UBorder> DialoguePanel;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UBorder> InteractionPromptPanel;
 
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UTextBlock> InteractionPromptText;
