@@ -12,14 +12,8 @@ namespace LOTN.Editor
         {
             try
             {
+                LOTNProjectBootstrap.ConfigurePlayerSettings();
                 LOTNProjectBootstrap.BuildPrototypeScenes();
-                PlayerSettings.companyName = "LORD OF THE NORTH";
-                PlayerSettings.productName = "LORD OF THE NORTH";
-                PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, "com.lotn.northerngame");
-                PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
-                PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
-                PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
-                PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
                 EditorUserBuildSettings.buildAppBundle = false;
 
                 string[] scenes = EditorBuildSettings.scenes
