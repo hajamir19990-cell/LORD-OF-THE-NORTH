@@ -166,5 +166,5 @@ private:
     TObjectPtr<ULOTNWorldMapData> WorldMapData;
 
     TMap<FName, TObjectPtr<UButton>> WorldMapNodeButtons;
-    FName SelectedWorldMapLocation = TEXT("Winterfell");
+    FName SelectedWorldMapLocation = FName(TEXT("Winterfell"));
 };
