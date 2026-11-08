@@ -8,6 +8,7 @@ class UProgressBar;
 class UTextBlock;
 class UButton;
 class UBorder;
+class UScrollBox;
 class ALOTNCharacter;
 
 UCLASS()
@@ -71,6 +72,18 @@ protected:
     TObjectPtr<UButton> SprintButton;
 
     UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UButton> InventoryButton;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UButton> InventoryCloseButton;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UBorder> InventoryPanel;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UScrollBox> InventoryList;
+
+    UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UButton> SaveButton;
 
     UPROPERTY(meta=(BindWidgetOptional))
@@ -85,6 +98,12 @@ private:
 
     UFUNCTION()
     void HandleInventoryChanged();
+
+    UFUNCTION()
+    void HandleInventoryToggleClicked();
+
+    UFUNCTION()
+    void HandleInventoryCloseClicked();
 
     UFUNCTION()
     void HandleInteractionMessage(const FText& Message);
@@ -106,6 +125,8 @@ private:
 
     void BindPlayerEvents(bool bBind);
     void BuildNativeLayout();
+    void RefreshInventoryPanel();
+    void ToggleInventoryPanel(bool bShow);
 
     FText CachedInteractionPrompt;
     float PromptRefreshAccumulator = 0.f;
