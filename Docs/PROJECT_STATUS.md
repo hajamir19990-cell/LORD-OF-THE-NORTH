@@ -16,7 +16,7 @@ Last updated: 2026-11-08
 - Quest objective progress and one-time rewards.
 - Stackable inventory and apparel/trinket equipment slots.
 - Save/load of transform, location ID, stats, inventory, equipment and quest state.
-- Nine-region world-map data with renown unlock checks.
+- Nine-region northern world map with normalized regional coordinates, connected route graph, renown-gated unlocks, and a native landscape HUD overlay showing routes, region descriptions and travel readiness. WinterfellApproach is the only travel-ready region so far.
 - Unreal automation tests for inventory stacking/removal, equipment slots, invalid inventory inputs and per-call limits, quest progress/restore, map unlock rules, player health/stamina bounds, and rejection of negative gold/renown adjustments.
 
 ## Build and test status
@@ -24,7 +24,7 @@ Last updated: 2026-11-08
 - Mobile HUD input routing has been corrected to GameAndUI and added to the QA checklist/static validator. Currency and renown now reject negative adjustments, with regression coverage committed. All new automation tests still require execution inside Unreal Editor.
 - GitHub Actions passed 66 static structure checks with 0 failures on commit 6a949632. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
-- No Unreal C++ compile has been verified.
+- No Unreal C++ compile has been verified. The native regional map overlay and expanded environment meshes still require Editor compilation and visual QA.
 - No Android APK has been produced.
 
 ## Missing editor assets
