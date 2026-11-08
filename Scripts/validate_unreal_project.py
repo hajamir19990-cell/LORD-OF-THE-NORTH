@@ -122,9 +122,9 @@ require("WorldMapTravelButton" in hud_source and "HandleWorldMapTravelClicked" i
 require('FString::Printf(TEXT("LOTN_%s")' in world_map_source and
         "Id.ToString()" in world_map_source,
         "all eight secondary regions resolve to dedicated LOTN_* level names")
-    require("RenownInfo" in hud_source and "TravelStatus" in hud_source and
-            "WorldMapCloseButton" in hud_source,
-            "regional map details show renown, travel readiness and close controls")
+require("RenownInfo" in hud_source and "TravelStatus" in hud_source and
+        "WorldMapCloseButton" in hud_source,
+        "regional map details show renown, travel readiness and close controls")
 character_header = (public_dir / "LOTNCharacter.h").read_text(encoding="utf-8")
 character_source = (private_dir / "LOTNCharacter.cpp").read_text(encoding="utf-8")
 for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
