@@ -1,4 +1,5 @@
 #include "LOTNWorldMapData.h"
+#include <initializer_list>
 
 ULOTNWorldMapData::ULOTNWorldMapData()
 {
