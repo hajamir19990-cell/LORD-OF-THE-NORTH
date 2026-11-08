@@ -1,7 +1,7 @@
 {
   "FileVersion": 3,
   "Category": "Games",
-  "Description": "LORD OF THE NORTH - portrait mobile third-person fantasy RPG",
+  "Description": "LORD OF THE NORTH - landscape mobile third-person fantasy RPG",
   "Modules": [
     { "Name": "LordOfTheNorth", "Type": "Runtime", "LoadingPhase": "Default" }
   ],
