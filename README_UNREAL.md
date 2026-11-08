@@ -14,7 +14,7 @@ This is the isolated Unreal Engine development branch. The original Android/Open
 - Quest objective actors with progress tracking and reward handling.
 - Save Game object and Game Instance save subsystem for player transform, stats, inventory, equipment and active/completed quest records.
 - World map data asset seeded with the nine northern locations and renown unlock checks.
-- Native portrait HUD fallback with health/stamina bars, progression labels, inventory count, quest objective/progress, interaction, hold-to-sprint and save/load controls.
+- Native portrait HUD fallback with health/stamina bars, progression labels, inventory overlay with apparel/trinket equip controls, quest objective/progress, interaction, hold-to-sprint and save/load controls.
 - Player controller that creates the native HUD by default; a Widget Blueprint can override it for visual customization.
 - GitHub Actions static source-structure validation.
 
