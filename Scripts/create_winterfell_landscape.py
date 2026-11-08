@@ -111,6 +111,42 @@ terrain_asset.post_edit_change()
 unreal.EditorAssetLibrary.save_loaded_asset(terrain_asset)
 mesh_actor("Northern_Rolling_Terrain", (0, 0, -8))
 
+# Sample the imported source grid so props and characters sit on the actual
+# terrain surface. The castle wall/tower footprint is flattened in the source
+# mesh to create a stable foundation platform.
+terrain_vertices = []
+with open(os.path.join(SOURCE_DIR, "Northern_Rolling_Terrain.obj"),
+          "r", encoding="utf-8") as terrain_file:
+    for line in terrain_file:
+        parts = line.strip().split()
+        if len(parts) >= 4 and parts[0] == "v":
+            terrain_vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+if len(terrain_vertices) != 49 * 49:
+    raise RuntimeError("Unexpected terrain grid size; expected 49 x 49 vertices")
+
+def terrain_world_z(x, y):
+    gx = max(0.0, min(48.0, (float(x) + 4200.0) / 175.0))
+    gy = max(0.0, min(48.0, (float(y) + 4200.0) / 175.0))
+    ix = min(47, int(gx))
+    iy = min(47, int(gy))
+    fx = gx - ix
+    fy = gy - iy
+
+    def sample(column, row):
+        return terrain_vertices[row * 49 + column][2]
+
+    z00 = sample(ix, iy)
+    z10 = sample(ix + 1, iy)
+    z01 = sample(ix, iy + 1)
+    z11 = sample(ix + 1, iy + 1)
+    local_z = (
+        z00 * (1.0 - fx) * (1.0 - fy)
+        + z10 * fx * (1.0 - fy)
+        + z01 * (1.0 - fx) * fy
+        + z11 * fx * fy
+    )
+    return local_z - 8.0
+
 # Landmark and flanking defensive wall: wall segments meet the gatehouse edges.
 mesh_actor("Winterfell_Gatehouse", (0, 0, 0))
 mesh_actor("Northern_Curtain_Wall", (-1775, 0, 0))
@@ -120,13 +156,14 @@ mesh_actor("Northern_Watchtower", (3100, 0, 0))
 
 # Three adjoining road tiles lead from the player start to the gate.
 for index, y in enumerate((-1400, -750, -100)):
-    mesh_actor("Northern_Cobblestone_Road", (0, y, 0),
+    road_base_z = terrain_world_z(0, y)
+    mesh_actor("Northern_Cobblestone_Road", (0, y, road_base_z),
                scale=1.0 if index else 1.03)
 
 # Timber palisades define the settlement edge without closing the main road.
 for x in (-850, 850):
     for y in (-1200, -600):
-        mesh_actor("Northern_Palisade_Fence", (x, y, 16),
+        mesh_actor("Northern_Palisade_Fence", (x, y, terrain_world_z(x, y)),
                    yaw=0.0 if x < 0 else 180.0)
 
 # Snow-capped rock clusters frame the outer terrain and break up empty margins.
@@ -135,7 +172,7 @@ rock_positions = (
     (3300, -1700), (2850, -600), (3400, 700), (2900, 1900),
 )
 for index, (x, y) in enumerate(rock_positions):
-    mesh_actor("Northern_Rock_Cluster", (x, y, -5),
+    mesh_actor("Northern_Rock_Cluster", (x, y, terrain_world_z(x, y) - 6.0),
                yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
 
 # Timber palisades define the settlement edge without closing the main road.
@@ -154,12 +191,12 @@ for index, (x, y) in enumerate(rock_positions):
                yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
 
 # Settlement buildings sit off the central camera and movement corridor.
-mesh_actor("Northern_Longhouse", (-1250, -800, 0), yaw=8.0, scale=1.0)
-mesh_actor("Northern_Longhouse", (1250, -650, 0), yaw=172.0, scale=0.82)
-mesh_actor("Northern_Longhouse", (1850, -1150, 0), yaw=195.0, scale=0.68)
+mesh_actor("Northern_Longhouse", (-1250, -800, terrain_world_z(-1250, -800)), yaw=8.0, scale=1.0)
+mesh_actor("Northern_Longhouse", (1250, -650, terrain_world_z(1250, -650)), yaw=172.0, scale=0.82)
+mesh_actor("Northern_Longhouse", (1850, -1150, terrain_world_z(1850, -1150)), yaw=195.0, scale=0.68)
 
 # A small stone firepit adds a readable settlement landmark away from the road.
-mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
+mesh_actor("Northern_Stone_Firepit", (1600, -1000, terrain_world_z(1600, -1000)), yaw=12.0)
 
 # A small stone firepit adds a readable settlement landmark away from the road.
 mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
@@ -172,7 +209,7 @@ tree_positions = (
 )
 for index, (x, y) in enumerate(tree_positions):
     size = 1.05 + (index % 4) * 0.13
-    mesh_actor("Northern_Pine_Tree", (x, y, 0),
+    mesh_actor("Northern_Pine_Tree", (x, y, terrain_world_z(x, y)),
                yaw=float((index * 37) % 360), scale=size)
 
 # Native C++ NPCs and quest objective make the first slice playable without
@@ -221,14 +258,14 @@ def spawn_npc(label, display_name, location, dialogue, offers_quest=False):
 spawn_npc(
     "NPC_Northern_Guard_QuestGiver",
     "Northern Guard",
-    (0, -1320, 16),
+    (0, -1320, terrain_world_z(0, -1320) + 16.0),
     "The supply marker on the road must be checked. Return to me when you have inspected it.",
     True,
 )
 spawn_npc(
     "NPC_Winterfell_Scout",
     "Winterfell Scout",
-    (520, -420, 16),
+    (520, -420, terrain_world_z(520, -420)),
     "Keep to the road. The pines hide old tracks, and the gate is closer than it looks.",
     False,
 )
@@ -236,7 +273,7 @@ spawn_npc(
 objective = actor_of(
     objective_class,
     "OBJ_Winterfell_Supply_Marker",
-    (0, -430, 16),
+    (0, -430, terrain_world_z(0, -430) + 16.0),
     unreal.Rotator(0.0, 0.0, 0.0),
 )
 objective.set_editor_property("quest_id", "Winterfell_Delivery")
@@ -253,7 +290,7 @@ if objective_mesh:
 
 # Player start and navigation coverage for the first walkable slice.
 actor_of(unreal.PlayerStart, "PlayerStart_Landscape_Approach",
-         (0, -1700, 116), unreal.Rotator(0.0, 90.0, 0.0))
+         (0, -1700, terrain_world_z(0, -1700) + 116.0), unreal.Rotator(0.0, 90.0, 0.0))
 actor_of(unreal.NavMeshBoundsVolume, "NAV_WinterfellApproach",
          (0, -350, 250), unreal.Rotator(0.0, 0.0, 0.0),
          (38.0, 24.0, 5.0))
