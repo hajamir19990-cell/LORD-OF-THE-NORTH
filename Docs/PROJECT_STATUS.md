@@ -36,11 +36,9 @@ Last updated: 2026-11-08
 
 ## What is required to finish the first APK
 1. Open the project in a compatible Unreal Engine 5.x installation.
-2. Compile the Editor target and resolve any Unreal Header Tool/compiler errors.
-3. Run Scripts/create_winterfell_landscape.py and Scripts/create_northern_region_levels.py inside Unreal Editor to create /Game/Maps/WinterfellApproach and the eight LOTN_* regional levels. Run both Editor validators, then inspect collision/materials, build lighting, validate navigation and profile every map on device. Replace NPC humanoid greyboxes and quest crate with final assets; a sculpted Landscape can replace the terrain mesh if layered landscape materials are needed.
-4. Import and profile licensed character/environment assets; assign the character mesh and animation blueprint.
-5. Run the LOTN automation tests and the manual QA checklist.
-6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package. The workflow compiles the Editor target and runs the LOTN automation tests before packaging.
-7. Install and test the resulting APK on a physical Android device.
+2. Run the manual `.github/workflows/compile-unreal-editor.yml` workflow on the configured self-hosted Unreal runner to bootstrap-compile the Editor target. This first compile is required because the map assembly scripts instantiate native C++ NPC, quest and foliage classes.
+3. Run the Winterfell and eight-region assembly scripts inside Unreal Editor, then run both map validators and inspect/save all nine maps.
+4. Run the final `.github/workflows/build-unreal-android.yml` workflow. It recompiles the Editor target after map integration, executes LOTN automation tests, then cooks and packages all nine maps for Android.
+
 
 The repository deliberately blocks the manual APK workflow while no .umap exists. Do not mark the project complete until the compile, map, assets, automation tests, package and device QA gates all pass.
