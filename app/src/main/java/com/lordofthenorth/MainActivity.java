@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
         @Override public boolean onTouchEvent(android.view.MotionEvent e){
             int a=e.getActionMasked(); float x=e.getX(),y=e.getY();
             if(a==MotionEvent.ACTION_DOWN){downX=x;downY=y;if(leftJoy.contains(x,y)){joyDown=true;updateJoy(x,y);}else if(action.contains(x,y)){interact();} game.renderer.touchDown(x,y); return true;}
-            if(a==MotionEvent.ACTION_MOVE){if(joyDown)updateJoy(x,y); else if(downX>getWidth()*0.45f)game.renderer.touchLook(x-downX,y-downY);return true;}
+            if(a==MotionEvent.ACTION_MOVE){if(joyDown){updateJoy(x,y);} else if(downX>getWidth()*0.45f){game.renderer.touchLook(x-downX,y-downY);downX=x;downY=y;}return true;}
             if(a==MotionEvent.ACTION_UP||a==MotionEvent.ACTION_CANCEL){if(joyDown){joyDown=false;joyX=joyY=0;game.renderer.setJoystick(0,0);invalidate();}game.renderer.touchUp();return true;} return true;
         }
         void updateJoy(float x,float y){float cx=89,cy=getHeight()-101;float dx=x-cx,dy=y-cy;float l=(float)Math.hypot(dx,dy);if(l>48){dx*=48/l;dy*=48/l;}joyX=dx/48f;joyY=dy/48f;game.renderer.setJoystick(joyX,joyY);invalidate();}
