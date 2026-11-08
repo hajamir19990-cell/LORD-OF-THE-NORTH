@@ -33,6 +33,7 @@ namespace LOTN
             Vector3 move = forward * input.y + right * input.x;
 
             bool sprinting = (LOTNTouchInput.Sprint || Input.GetKey(KeyCode.LeftShift)) && input.sqrMagnitude > 0.05f;
+            if (stats != null && stats.stamina <= 0) sprinting = false;
             float speed = walkSpeed;
             if (sprinting && stats != null)
             {
