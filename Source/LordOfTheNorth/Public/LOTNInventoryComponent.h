@@ -14,6 +14,17 @@ enum class ELOTNItemCategory : uint8
     Trinket
 };
 
+UENUM(BlueprintType)
+enum class ELOTNEquipmentSlot : uint8
+{
+    None,
+    Head,
+    Body,
+    Hands,
+    Feet,
+    Accessory
+};
+
 USTRUCT(BlueprintType)
 struct FLOTNInventoryItem
 {
@@ -30,6 +41,9 @@ struct FLOTNInventoryItem
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Inventory")
     ELOTNItemCategory Category = ELOTNItemCategory::Material;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Equipment")
+    ELOTNEquipmentSlot EquipmentSlot = ELOTNEquipmentSlot::None;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Inventory")
     int32 Quantity = 0;
@@ -58,7 +72,7 @@ public:
     TArray<FName> EquippedItemIds;
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Inventory")
-    int32 AddItem(FName ItemId, FText DisplayName, FText Description, ELOTNItemCategory Category, int32 Quantity, int32 MaxStack = 99);
+    int32 AddItem(FName ItemId, FText DisplayName, FText Description, ELOTNItemCategory Category, int32 Quantity, int32 MaxStack = 99, ELOTNEquipmentSlot EquipmentSlot = ELOTNEquipmentSlot::None);
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Inventory")
     bool RemoveItem(FName ItemId, int32 Quantity = 1);
