@@ -67,3 +67,10 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 ## Release gate
 
 An APK is not release-ready until the Editor compile, Android package, install, launch, touch controls, quest loop, save/load and device performance checks all pass. GitHub static validation alone does not satisfy this gate.
+
+
+## Additional environment dressing
+- [ ] Four palisade segments frame the approach without blocking the central road or camera.
+- [ ] Rock clusters sit on the outer terrain margins without floating or blocking movement.
+- [ ] Stone firepit is placed beside the east settlement building and does not obstruct the road.
+- [ ] PlayerStart, NPC capsules and the quest crate rest at the intended road surface height.
