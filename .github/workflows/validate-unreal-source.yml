@@ -53,3 +53,6 @@ jobs:
 
       - name: Validate Unreal project structure
         run: python Scripts/validate_unreal_project.py
+
+      - name: Compile-check every Python editor pipeline script
+        run: python -m compileall -q Scripts
