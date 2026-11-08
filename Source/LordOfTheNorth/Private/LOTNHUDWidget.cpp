@@ -14,6 +14,7 @@
 #include "Components/HorizontalBox.h"
 #include "Components/Border.h"
 #include "Components/SizeBox.h"
+#include "Components/ScrollBox.h"
 #include "Blueprint/WidgetTree.h"
 #include "Styling/CoreStyle.h"
 #include "Kismet/GameplayStatics.h"
@@ -146,6 +147,42 @@ void ULOTNHUDWidget::BuildNativeLayout()
         }
         return Button;
     };
+
+    InventoryButton = AddButton(TEXT("InventoryButton"), TEXT("BAG"),
+        FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-14.f, 14.f), FVector2D(70.f, 40.f));
+
+    InventoryPanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("InventoryPanel"));
+    InventoryPanel->SetBrushColor(FLinearColor(0.018f, 0.028f, 0.04f, 0.97f));
+    InventoryPanel->SetPadding(FMargin(12.f, 10.f, 12.f, 10.f));
+    UVerticalBox* InventoryRoot = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
+    UHorizontalBox* InventoryHeader = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass());
+    UTextBlock* InventoryTitle = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+    InventoryTitle->SetText(NSLOCTEXT("LOTN", "InventoryTitle", "INVENTORY"));
+    InventoryTitle->SetColorAndOpacity(FSlateColor(FLinearColor(0.82f, 0.75f, 0.55f, 1.f)));
+    InventoryTitle->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 16));
+    InventoryHeader->AddChildToHorizontalBox(InventoryTitle);
+
+    InventoryCloseButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("InventoryCloseButton"));
+    InventoryCloseButton->SetBackgroundColor(FLinearColor(0.18f, 0.12f, 0.12f, 1.f));
+    UTextBlock* CloseLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+    CloseLabel->SetText(NSLOCTEXT("LOTN", "CloseInventory", "CLOSE"));
+    CloseLabel->SetColorAndOpacity(FSlateColor(TextColor));
+    CloseLabel->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 11));
+    InventoryCloseButton->AddChild(CloseLabel);
+    InventoryHeader->AddChildToHorizontalBox(InventoryCloseButton);
+    InventoryRoot->AddChildToVerticalBox(InventoryHeader);
+
+    InventoryList = WidgetTree->ConstructWidget<UScrollBox>(UScrollBox::StaticClass(), TEXT("InventoryList"));
+    InventoryRoot->AddChildToVerticalBox(InventoryList);
+    InventoryPanel->SetContent(InventoryRoot);
+    if (UCanvasPanelSlot* Slot = Canvas->AddChildToCanvas(InventoryPanel))
+    {
+        Slot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
+        Slot->SetAlignment(FVector2D(0.5f, 0.5f));
+        Slot->SetPosition(FVector2D(0.f, 0.f));
+        Slot->SetSize(FVector2D(292.f, 360.f));
+    }
+    InventoryPanel->SetVisibility(ESlateVisibility::Collapsed);
 
     InteractButton = AddButton(TEXT("InteractButton"), TEXT("INTERACT"),
         FAnchors(0.5f, 1.f, 0.5f, 1.f), FVector2D(0.5f, 1.f), FVector2D(-38.f, -112.f), FVector2D(76.f, 64.f));
