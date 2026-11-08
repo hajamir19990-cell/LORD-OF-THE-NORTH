@@ -238,6 +238,12 @@ bool FLOTNPlayerStatsBoundsTest::RunTest(const FString& Parameters)
 
     Stats->ApplyDamage(-10.f);
     TestEqual(TEXT("Negative damage is ignored"), Stats->Health, 100.f);
+    Stats->AddGold(50);
+    Stats->AddRenown(12);
+    Stats->AddGold(-100);
+    Stats->AddRenown(-100);
+    TestEqual(TEXT("Negative gold adjustment is rejected"), Stats->Gold, 50);
+    TestEqual(TEXT("Negative renown adjustment is rejected"), Stats->Renown, 12);
     Stats->ApplyDamage(150.f);
     TestEqual(TEXT("Damage cannot reduce health below zero"), Stats->Health, 0.f);
     Stats->RestoreHealth(150.f);
