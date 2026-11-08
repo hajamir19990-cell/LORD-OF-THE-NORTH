@@ -1,23 +1,27 @@
 # LORD OF THE NORTH — Native Android Edition
 
-A standalone 3D Android game foundation built as a native Android/OpenGL ES application. It does **not** use a WebView and does not require an internet connection at runtime.
+A native Android game foundation using Java and OpenGL ES 2.0. The runtime does not use a WebView or require an internet connection.
 
-## Included gameplay systems
-- Third-person 3D exploration
-- Large northern terrain with procedural hills
-- Winterfell, Dreadfort, White Harbor, Bear Island, Karhold, Last Hearth, Deepwood Motte, Greywater Watch and The Wall
-- Named northern NPCs and houses
-- Dialogue / interaction system
-- Quest progression and renown
-- Touch joystick + touch look controls
-- Landscape-only immersive presentation
-- Day/night lighting cycle
-- Local terrain, stone, bark and forest textures
-- Local looping northern ambience
-- Save/load of position, gold and renown
+## Current implementation
+- Third-person northern terrain exploration
+- Nine named locations: Winterfell, the Dreadfort, White Harbor, Bear Island, Karhold, Last Hearth, Deepwood Motte, Greywater Watch and the Wall
+- Named northern NPCs, basic dialogue and proximity interaction
+- Basic quest text and renown progression
+- Landscape presentation with touch joystick and touch-look controls
+- Day/night ambient color cycle
+- Local terrain, stone, bark, rock and forest textures
+- Local save/load for player position, gold and renown
 
-## Build
-Open the project in a current Android Studio installation and run the `app` configuration. The project is configured for AGP 9.3.0 / Gradle 9.5 / JDK 17 compatibility.
+## Build toolchain
+The checked-in project currently uses:
+- Android Gradle Plugin: 8.7.3
+- Gradle wrapper: 8.9
+- JDK: 17
+- Android compile SDK / target SDK: 35
+- Minimum Android SDK: 26
+
+Use a compatible Android Studio installation, allow Gradle sync, then run `./gradlew :app:assembleDebug`.
 
 ## APK output
-`app/build/outputs/apk/release/` after a release build.
+Debug APK: `app/build/outputs/apk/debug/app-debug.apk`
+Release APK: `app/build/outputs/apk/release/app-release.apk` (requires release signing configuration before distribution).
