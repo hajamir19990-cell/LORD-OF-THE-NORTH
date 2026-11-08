@@ -13,9 +13,13 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |
 | Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Greybox OBJ committed; needs detail pass, UV/material and collision review |
 | Content/SourceMeshes/Northern_Rolling_Terrain.obj | Gently rolling northern approach terrain | Source OBJ committed; needs Unreal import, collision and snow/rock material pass |
+| Content/SourceMeshes/Northern_Supply_Crate.obj | Quest supply marker prop | Greybox OBJ committed; needs Unreal import and art polish |
+| Content/SourceMeshes/Northern_Palisade_Fence.obj | Modular timber settlement boundary | Greybox OBJ committed; needs Unreal import, collision and art polish |
+| Content/SourceMeshes/Northern_Rock_Cluster.obj | Snow-capped outer-terrain rock dressing | Greybox OBJ committed; needs Unreal import and collision review |
+| Content/SourceMeshes/Northern_Stone_Firepit.obj | Settlement landmark prop | Greybox OBJ committed; needs Unreal import and collision review |
 | Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
 
-These are editable interchange source meshes, not Unreal .uasset files and not yet integrated into a playable map. They are first-pass geometry, not final production art.
+These are eleven editable interchange source meshes (plus the shared MTL library), not Unreal .uasset files and not yet integrated into a playable map. They are first-pass geometry, not final production art.
 
 ## Approved source library
 
@@ -36,7 +40,7 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 - Keep the approach road clear and wide enough for the player camera and NPC interactions.
 - Upgrade starter meshes with bevels, stone block variation, roof details, timber grain and proper UVs.
 - Use verified PBR stone, timber, snow and ground materials from CC0 sources.
-- Source a licensed player character and animation set separately; an unimported source URL is not an integrated asset.
+- The player currently uses a six-part engine-primitive humanoid greybox; source and integrate a licensed skeletal character and animation set before release.
 
 ## Acceptance gate before adding an asset to the playable map
 
