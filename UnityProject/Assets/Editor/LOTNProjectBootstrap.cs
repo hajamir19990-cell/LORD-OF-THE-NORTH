@@ -19,7 +19,6 @@ namespace LOTN.Editor
 
         public static void PreExport()
         {
-            ConfigurePlayerSettings();
             BuildPrototypeScenes();
         }
 
@@ -43,6 +42,7 @@ namespace LOTN.Editor
         [MenuItem("Tools/LORD OF THE NORTH/Generate all nine regional scenes")]
         public static void BuildPrototypeScenes()
         {
+            ConfigurePlayerSettings();
             EnsureFolder("Assets/Generated");
             EnsureFolder("Assets/Settings");
             EnsureURPAssets();
