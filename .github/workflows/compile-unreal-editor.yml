@@ -1,0 +1,46 @@
+name: Compile Unreal Editor C++
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lotn-unreal-editor-compile
+  cancel-in-progress: false
+
+jobs:
+  compile-editor:
+    name: Bootstrap Unreal Editor C++ compile
+    runs-on: [self-hosted, linux, unreal-engine, android]
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Unreal toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UE_ROOT:-}" || { echo "UE_ROOT is not configured on this runner"; exit 1; }
+          test -x "$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" || {
+            echo "Unreal Build.sh is missing under UE_ROOT"; exit 1;
+          }
+
+      - name: Validate source and editor scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 Scripts/validate_unreal_project.py
+          python3 -m py_compile Scripts/create_winterfell_landscape.py
+          python3 -m py_compile Scripts/create_northern_region_levels.py
+          python3 -m py_compile Scripts/validate_winterfell_level.py
+          python3 -m py_compile Scripts/validate_northern_region_levels.py
+
+      - name: Compile Unreal Editor C++
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" LordOfTheNorthEditor Linux Development "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" -WaitMutex -NoHotReloadFromIDE
+
