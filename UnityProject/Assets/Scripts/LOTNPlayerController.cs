@@ -12,6 +12,7 @@ namespace LOTN
         private CharacterController controller;
         private LOTNPlayerStats stats;
         private Vector3 verticalVelocity;
+        private float staminaTick;
 
         private void Awake()
         {
@@ -32,8 +33,26 @@ namespace LOTN
             Vector3 move = forward * input.y + right * input.x;
 
             bool sprinting = (LOTNTouchInput.Sprint || Input.GetKey(KeyCode.LeftShift)) && input.sqrMagnitude > 0.05f;
-            float speed = sprinting && (stats == null || stats.SpendStamina(1)) ? sprintSpeed : walkSpeed;
-            if (!sprinting && stats != null && Time.frameCount % 6 == 0) stats.RestoreStamina(1);
+            float speed = walkSpeed;
+            if (sprinting && stats != null)
+            {
+                staminaTick -= Time.deltaTime;
+                if (staminaTick <= 0f)
+                {
+                    if (stats.SpendStamina(1)) staminaTick = 0.15f;
+                    else sprinting = false;
+                }
+            }
+            else if (stats != null)
+            {
+                staminaTick -= Time.deltaTime;
+                if (staminaTick <= 0f)
+                {
+                    stats.RestoreStamina(1);
+                    staminaTick = 0.18f;
+                }
+            }
+            if (sprinting) speed = sprintSpeed;
 
             if (move.sqrMagnitude > 0.01f)
             {
