@@ -39,6 +39,6 @@ void ALOTNFoliageCluster::AddTreeInstance(FVector Location, float Yaw, float Uni
     const FTransform InstanceTransform(
         FRotator(0.0f, Yaw, 0.0f),
         Location,
-        FVector(SafeScale));
+        FVector(SafeScale, SafeScale, SafeScale));
     TreeInstances->AddInstance(InstanceTransform, true);
 }
