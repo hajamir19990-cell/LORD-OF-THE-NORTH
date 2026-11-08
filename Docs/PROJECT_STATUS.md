@@ -20,7 +20,7 @@ Last updated: 2026-11-08
 - Unreal automation tests for inventory stacking/removal, equipment slots, invalid inventory inputs and per-call limits, quest progress/restore, map unlock rules, player health/stamina bounds, and rejection of negative gold/renown adjustments.
 
 ## Build and test status
-- GitHub Actions static source-structure validation exists and now runs on relevant project/config/source changes and pull requests.
+- GitHub Actions static source-structure validation now watches project/config/C++ source, environment OBJ assets, assembly scripts, map guides, docs and workflow changes. The validator checks Python syntax and OBJ vertex/face index integrity; it is not an Unreal import or build.
 - Mobile HUD input routing has been corrected to GameAndUI and added to the QA checklist/static validator. Currency and renown now reject negative adjustments, with regression coverage committed. All new automation tests still require execution inside Unreal Editor.
 - GitHub Actions passed 66 static structure checks with 0 failures on commit 6a949632. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
@@ -29,7 +29,7 @@ Last updated: 2026-11-08
 
 ## Missing editor assets
 - No .umap level has been created yet. The Unreal Editor Python assembly script imports seven committed OBJ source meshes and lays out a landscape greybox with rolling terrain, curtain walls, watchtowers, adjoining road tiles, settlement buildings, pine groves, navigation bounds and temporary atmosphere; it must still be run and inspected in Unreal Editor.
-- The seven starter OBJ source meshes (gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower and rolling terrain) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets.
+- The seven starter OBJ source meshes (gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower and rolling terrain) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets. Static validation now parses every OBJ and checks finite vertices and in-range face indices.
 - No binary .uasset/.ubulk character, animation or final environment assets have been imported.
 - Candidate CC0 environment sources and mobile import checks are recorded in Docs/ASSET_REGISTER.md.
 - Landscape layout dimensions are in Content/MAPS_README.md; editor assembly steps are in Content/LANDSCAPE_ASSEMBLY.md and Scripts/create_winterfell_landscape.py.
