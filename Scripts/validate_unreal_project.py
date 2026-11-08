@@ -106,6 +106,13 @@ require(all(name in world_map_source for name in
 require("BuildWorldMapPanel" in hud_source and "WorldMapNodeButtons" in hud_source and
         "SetRenderTransformAngle" in hud_source and "HandleWorldMapToggleClicked" in hud_source,
         "landscape HUD builds an interactive map with route lines and region buttons")
+require("WorldMapTravelButton" in hud_source and "HandleWorldMapTravelClicked" in hud_source and
+        "UGameplayStatics::OpenLevel" in hud_source,
+        "regional map exposes an unlock-checked travel action")
+require(all(name in world_map_source for name in (
+    "LOTN_TheDreadfort", "LOTN_WhiteHarbor", "LOTN_BearIsland", "LOTN_Karhold",
+    "LOTN_LastHearth", "LOTN_DeepwoodMotte", "LOTN_GreywaterWatch", "LOTN_TheWall")),
+    "all eight secondary regions resolve to dedicated level names")
     require("RenownInfo" in hud_source and "TravelStatus" in hud_source and
             "WorldMapCloseButton" in hud_source,
             "regional map details show renown, travel readiness and close controls")
@@ -227,6 +234,40 @@ if assembly_script.is_file():
     require('"enable_volumetric_fog", False' in assembly_text and
             '"fog_density", 0.0025' in assembly_text,
             "atmospheric fog is non-volumetric and mobile-conscious")
+
+regional_assembly = ROOT / "Scripts/create_northern_region_levels.py"
+regional_validation = ROOT / "Scripts/validate_northern_region_levels.py"
+require(regional_assembly.is_file(), "eight-region Unreal assembly script exists")
+require(regional_validation.is_file(), "eight-region Unreal validation script exists")
+if regional_assembly.is_file():
+    regional_text = regional_assembly.read_text(encoding="utf-8")
+    try:
+        ast.parse(regional_text, filename=str(regional_assembly))
+        require(True, "eight-region Editor assembly script has valid Python syntax")
+    except SyntaxError as exc:
+        require(False, "eight-region Editor assembly syntax: " + str(exc))
+    expected_regions = (
+        "TheDreadfort", "WhiteHarbor", "BearIsland", "Karhold",
+        "LastHearth", "DeepwoodMotte", "GreywaterWatch", "TheWall")
+    require(all(('"id": "' + name + '"') in regional_text for name in expected_regions),
+            "regional assembly defines all eight additional northern regions")
+    require(all(name in regional_text for name in (
+        "Winterfell_Gatehouse", "Northern_Longhouse", "Northern_Watchtower",
+        "Northern_Cobblestone_Road", "Northern_Rolling_Terrain",
+        "LOTNFoliageCluster", "PlayerStart", "NavMeshBoundsVolume",
+        "DirectionalLight", "ExponentialHeightFog", "save_current_level")),
+        "regional assembly creates terrain, landmarks, HISM forest, starts, navigation and atmosphere")
+if regional_validation.is_file():
+    regional_validation_text = regional_validation.read_text(encoding="utf-8")
+    try:
+        ast.parse(regional_validation_text, filename=str(regional_validation))
+        require(True, "eight-region Editor validation script has valid Python syntax")
+    except SyntaxError as exc:
+        require(False, "eight-region Editor validation syntax: " + str(exc))
+    require("REGIONS" in regional_validation_text and
+            "get_instance_count()" in regional_validation_text and
+            "CollisionEnabled.NO_COLLISION" in regional_validation_text,
+            "regional Editor validation checks all maps and HISM forest instances")
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
 for mesh_path in sorted(source_meshes.glob("*.obj")):
