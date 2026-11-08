@@ -21,7 +21,8 @@ The Unreal branch contains C++ gameplay source and fifteen OBJ interchange meshe
 - Fifteen OBJ source meshes copied into UnityProject/Assets/Art/SourceOBJ.
 - Editor scene generator for nine landscape scenes with rolling terrain, imported architecture, pine groves, props, player start, NPC, quest object, lighting and fog.
 - Android build pipeline configures landscape orientation, ARM64 and IL2CPP.
-- C# player controller, camera follow, touch input, stats, quest interactions, region map and persistent player/quest state.
+- C# player controller, camera follow, touch input, stats HUD, stackable inventory, cloak/trinket equipment, quest interactions, region map and persistent player/quest state.
+- Editor-generated mobile URP pipeline/renderer assets and procedural snow terrain layer.
 - Static repository and OBJ geometry validator.
 - Manual Android cloud-build workflow using GameCI.
 
