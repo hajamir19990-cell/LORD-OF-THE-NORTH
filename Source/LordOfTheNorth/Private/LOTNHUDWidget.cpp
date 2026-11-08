@@ -239,8 +239,8 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
     MapRoot->AddChildToVerticalBox(MapHeader);
 
     USizeBox* MapArea = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass());
-    MapArea->SetWidthOverride(640.f);
-    MapArea->SetHeightOverride(292.f);
+    MapArea->SetWidthOverride(600.f);
+    MapArea->SetHeightOverride(220.f);
 
     UBorder* MapFrame = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
     MapFrame->SetBrushColor(FLinearColor(0.075f, 0.095f, 0.105f, 1.f));
@@ -262,19 +262,28 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
         Slot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
         Slot->SetAlignment(FVector2D(0.5f, 0.5f));
         Slot->SetPosition(FVector2D(0.f, 0.f));
-        Slot->SetSize(FVector2D(690.f, 430.f));
+        Slot->SetSize(FVector2D(640.f, 350.f));
     }
     WorldMapPanel->SetVisibility(ESlateVisibility::Collapsed);
 
-    // Draw each road once, then place all nine regional nodes over the route graph.
+    // Draw each undirected road once, then place all nine regional nodes over the route graph.
+    TSet<FString> DrawnRoutes;
     for (const FLOTNWorldLocation& Location : WorldMapData->Locations)
     {
         for (const FName ConnectedId : Location.ConnectedLocationIds)
         {
-            if (Location.LocationId.ToString() >= ConnectedId.ToString())
+            FString RouteA = Location.LocationId.ToString();
+            FString RouteB = ConnectedId.ToString();
+            if (RouteA > RouteB)
+            {
+                Swap(RouteA, RouteB);
+            }
+            const FString RouteKey = RouteA + TEXT("|") + RouteB;
+            if (DrawnRoutes.Contains(RouteKey))
             {
                 continue;
             }
+            DrawnRoutes.Add(RouteKey);
 
             const FLOTNWorldLocation* Connected = WorldMapData->Locations.FindByPredicate(
                 [ConnectedId](const FLOTNWorldLocation& Candidate)
@@ -286,10 +295,10 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
                 continue;
             }
 
-            const FVector2D A(20.f + Location.MapPosition.X * 590.f,
-                              14.f + Location.MapPosition.Y * 250.f);
-            const FVector2D B(20.f + Connected->MapPosition.X * 590.f,
-                              14.f + Connected->MapPosition.Y * 250.f);
+            const FVector2D A(10.f + Location.MapPosition.X * 560.f,
+                              8.f + Location.MapPosition.Y * 195.f);
+            const FVector2D B(10.f + Connected->MapPosition.X * 560.f,
+                              8.f + Connected->MapPosition.Y * 195.f);
             const FVector2D Delta = B - A;
             UBorder* RouteLine = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
             RouteLine->SetBrushColor(FLinearColor(0.48f, 0.50f, 0.47f, 0.62f));
@@ -322,9 +331,9 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
         {
             NodeSlot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
             NodeSlot->SetAlignment(FVector2D(0.5f, 0.5f));
-            NodeSlot->SetPosition(FVector2D(20.f + Location.MapPosition.X * 590.f,
-                                            14.f + Location.MapPosition.Y * 250.f));
-            NodeSlot->SetSize(FVector2D(112.f, 34.f));
+            NodeSlot->SetPosition(FVector2D(10.f + Location.MapPosition.X * 560.f,
+                                            8.f + Location.MapPosition.Y * 195.f));
+            NodeSlot->SetSize(FVector2D(96.f, 30.f));
         }
 
         const FName LocationId = Location.LocationId;
@@ -418,13 +427,13 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
     }
 
     WorldMapDetailsText->SetText(FText::FromString(FString::Printf(
-        TEXT("%s  |  %s  |  %s\n%s\nRoutes: %s"),
+        TEXT("%s  |  %s  |  %s\n%s\n%s\nRoutes: %s"),
         *Location.DisplayName.ToString(),
         *Location.RegionType.ToString(),
         *Status,
         *Location.Description.ToString(),
+        *TravelStatus,
         *Routes)));
-    (void)TravelStatus;
 }
 
 void ULOTNHUDWidget::ToggleWorldMapPanel(bool bShow)
@@ -482,6 +491,14 @@ void ULOTNHUDWidget::NativeConstruct()
     if (InventoryButton)
     {
         InventoryButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleInventoryToggleClicked);
+    }
+    if (MapButton)
+    {
+        MapButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleWorldMapToggleClicked);
+    }
+    if (WorldMapCloseButton)
+    {
+        WorldMapCloseButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleWorldMapCloseClicked);
     }
     if (InventoryCloseButton)
     {
@@ -568,6 +585,14 @@ void ULOTNHUDWidget::NativeDestruct()
     if (InventoryButton)
     {
         InventoryButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleInventoryToggleClicked);
+    }
+    if (MapButton)
+    {
+        MapButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleWorldMapToggleClicked);
+    }
+    if (WorldMapCloseButton)
+    {
+        WorldMapCloseButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleWorldMapCloseClicked);
     }
     if (InventoryCloseButton)
     {
@@ -736,6 +761,7 @@ void ULOTNHUDWidget::ShowDialogue(const FText& Message)
 void ULOTNHUDWidget::HandleStatsChanged()
 {
     RefreshHUD();
+    RefreshWorldMapPanel();
 }
 
 void ULOTNHUDWidget::HandleQuestChanged()
