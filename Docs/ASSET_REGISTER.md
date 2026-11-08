@@ -10,6 +10,7 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Source OBJ committed; needs Unreal import, collision and LOD review |
 | Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Source OBJ committed; needs Unreal import and art polish |
 | Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |\n| Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Greybox OBJ committed; needs detail pass, UV/material and collision review |\n| Content/SourceMeshes/Northern_Watchtower.obj | Outer defensive tower | Greybox OBJ committed; needs detail pass, UV/material and collision review |
+| Content/SourceMeshes/Northern_Rolling_Terrain.obj | Gently rolling northern approach terrain | Source OBJ committed; needs Unreal import, collision and snow/rock material pass |
 | Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
 
 These are editable interchange source meshes, not Unreal .uasset files and not yet integrated into a playable map. They are first-pass geometry, not final production art.
@@ -46,4 +47,4 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 
 ## Current import status
 
-The six starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
+The seven starter OBJ source meshes are committed, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
