@@ -82,6 +82,14 @@ require((public_dir / "LOTNInventoryItemRowWidget.h").is_file(), "inventory row 
 require((private_dir / "LOTNInventoryItemRowWidget.cpp").is_file(), "inventory row widget source exists")
 require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
+character_header = (public_dir / "LOTNCharacter.h").read_text(encoding="utf-8")
+character_source = (private_dir / "LOTNCharacter.cpp").read_text(encoding="utf-8")
+for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
+             "PlaceholderRightArm", "PlaceholderLeftLeg", "PlaceholderRightLeg"):
+    require(part in character_header and part in character_source,
+            "player greybox includes " + part)
+require("NoCollision" in character_source and "BasicShapes/Capsule.Capsule" in character_source,
+        "player greybox uses non-blocking engine primitive meshes")
 require((private_dir / "Tests/LOTNGameplayTests.cpp").is_file(), "gameplay automation tests exist")
 require((ROOT / ".github/workflows/build-unreal-android.yml").is_file(), "manual Unreal Android workflow exists")
 player_controller = private_dir / "LOTNPlayerController.cpp"
@@ -120,11 +128,17 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
     vertices = []
     faces = 0
     malformed = False
+    material_library = None
+    used_materials = set()
     for line_number, line in enumerate(mesh_path.read_text(encoding="utf-8").splitlines(), 1):
         parts = line.strip().split()
         if not parts or parts[0].startswith("#"):
             continue
-        if parts[0] == "v":
+        if parts[0] == "mtllib" and len(parts) >= 2:
+            material_library = parts[1]
+        elif parts[0] == "usemtl" and len(parts) >= 2:
+            used_materials.add(parts[1])
+        elif parts[0] == "v":
             try:
                 xyz = tuple(float(value) for value in parts[1:4])
                 if len(xyz) != 3 or not all(math.isfinite(value) for value in xyz):
@@ -147,6 +161,18 @@ for mesh_path in sorted(source_meshes.glob("*.obj")):
                     malformed = True
     require(bool(vertices) and faces > 0 and not malformed,
             mesh_path.name + ": OBJ vertices and face indices are valid")
+    if material_library:
+        mtl_path = mesh_path.parent / material_library
+        require(mtl_path.is_file(), mesh_path.name + ": referenced MTL file exists")
+        if mtl_path.is_file():
+            declared = {
+                parts[1] for line in mtl_path.read_text(encoding="utf-8").splitlines()
+                if len(parts := line.strip().split()) >= 2 and parts[0] == "newmtl"
+            }
+            require(used_materials.issubset(declared),
+                    mesh_path.name + ": all used MTL material names are declared")
+    else:
+        require(not used_materials, mesh_path.name + ": material usage has an MTL library")
 
 for item in checks:
     print("PASS: " + item)
