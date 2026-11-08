@@ -25,11 +25,11 @@ FText ALOTNQuestObjective::GetInteractionText_Implementation(AActor* Interacting
     return InteractionLabel;
 }
 
-void ALOTNQuestObjective::Interact_Implementation(AActor* InteractingActor)
+FText ALOTNQuestObjective::Interact_Implementation(AActor* InteractingActor)
 {
     if (!InteractingActor)
     {
-        return;
+        return FText::GetEmpty();
     }
 
     if (ULOTNQuestComponent* Quests = InteractingActor->FindComponentByClass<ULOTNQuestComponent>())
@@ -37,6 +37,9 @@ void ALOTNQuestObjective::Interact_Implementation(AActor* InteractingActor)
         if (Quests->AdvanceQuestProgress(QuestId, ProgressAmount))
         {
             OnObjectiveActivated.Broadcast();
+            return NSLOCTEXT("LOTN", "ObjectiveInspected", "The supply marker has been checked. Return to the guard.");
         }
     }
+
+    return NSLOCTEXT("LOTN", "NoActiveObjective", "There is nothing to inspect here right now.");
 }
