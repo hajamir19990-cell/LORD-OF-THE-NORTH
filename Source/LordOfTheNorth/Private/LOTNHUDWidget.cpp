@@ -187,7 +187,10 @@ void ULOTNHUDWidget::HandleSaveClicked()
         {
             if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
             {
-                SaveSystem->SaveCurrentGame();
+                const bool bSaved = SaveSystem->SaveCurrentGame();
+                ShowDialogue(bSaved
+                    ? NSLOCTEXT("LOTN", "SaveSuccess", "Progress saved.")
+                    : NSLOCTEXT("LOTN", "SaveFailed", "Could not save progress."));
             }
         }
     }
@@ -201,7 +204,10 @@ void ULOTNHUDWidget::HandleLoadClicked()
         {
             if (ULOTNSaveSubsystem* SaveSystem = Instance->GetSubsystem<ULOTNSaveSubsystem>())
             {
-                SaveSystem->LoadCurrentGame();
+                const bool bLoaded = SaveSystem->LoadCurrentGame();
+                ShowDialogue(bLoaded
+                    ? NSLOCTEXT("LOTN", "LoadSuccess", "Progress loaded.")
+                    : NSLOCTEXT("LOTN", "LoadFailed", "No compatible save was found in this location."));
                 RefreshHUD();
             }
         }
