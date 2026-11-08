@@ -83,7 +83,7 @@ require((ROOT / "Content/MAPS_README.md").is_file(), "first map assembly guide e
 source_meshes = ROOT / "Content/SourceMeshes"
 for mesh_name in ("Winterfell_Gatehouse.obj", "Northern_Pine_Tree.obj",
                   "Northern_Longhouse.obj", "Northern_Cobblestone_Road.obj",
-                  "Northern_Curtain_Wall.obj", "Northern_Watchtower.obj"):
+                  "Northern_Curtain_Wall.obj", "Northern_Watchtower.obj",\n                  "Northern_Rolling_Terrain.obj"):
     require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")
 
 assembly_script = ROOT / "Scripts/create_winterfell_landscape.py"
@@ -91,7 +91,7 @@ require(assembly_script.is_file(), "Winterfell landscape assembly script exists"
 if assembly_script.is_file():
     assembly_text = assembly_script.read_text(encoding="utf-8")
     for required in ("Northern_Curtain_Wall", "Northern_Watchtower",
-                     "NavMeshBoundsVolume", "ExponentialHeightFog"):
+                     "NavMeshBoundsVolume", "ExponentialHeightFog",\n                     "Northern_Rolling_Terrain"):
         require(required in assembly_text, "landscape assembly includes " + required)
 
 for item in checks:
