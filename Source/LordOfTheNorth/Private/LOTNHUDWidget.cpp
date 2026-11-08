@@ -394,7 +394,7 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
     const bool bUnlocked = WorldMapData->IsLocationUnlocked(LocationId, CurrentRenown);
 
     FString Status;
-    if (LocationId == TEXT("Winterfell"))
+    if (LocationId == FName(TEXT("Winterfell")))
     {
         Status = TEXT("CURRENT REGION");
     }
@@ -572,6 +572,7 @@ void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
             BindPlayerEvents(true);
         }
         RefreshHUD();
+        RefreshWorldMapPanel();
     }
 
     if (!InteractionPromptText)
