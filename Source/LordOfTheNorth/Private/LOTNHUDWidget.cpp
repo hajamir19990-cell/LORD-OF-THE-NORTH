@@ -3,6 +3,7 @@
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
 #include "LOTNInventoryComponent.h"
+#include "LOTNInventoryItemRowWidget.h"
 #include "LOTNInteractionComponent.h"
 #include "LOTNSaveSubsystem.h"
 #include "Components/ProgressBar.h"
@@ -524,29 +525,43 @@ void ULOTNHUDWidget::RefreshInventoryPanel()
     for (const FLOTNInventoryItem& Item : Player->InventoryComponent->Items)
     {
         const bool bEquipped = Player->InventoryComponent->EquippedItemIds.Contains(Item.ItemId);
-        const TCHAR* CategoryLabel = TEXT("MATERIAL");
-        switch (Item.Category)
+        const bool bCanEquip = Item.EquipmentSlot != ELOTNEquipmentSlot::None &&
+            (Item.Category == ELOTNItemCategory::Apparel || Item.Category == ELOTNItemCategory::Trinket);
+
+        if (bCanEquip)
         {
-        case ELOTNItemCategory::Consumable: CategoryLabel = TEXT("CONSUMABLE"); break;
-        case ELOTNItemCategory::Material: CategoryLabel = TEXT("MATERIAL"); break;
-        case ELOTNItemCategory::Quest: CategoryLabel = TEXT("QUEST"); break;
-        case ELOTNItemCategory::Apparel: CategoryLabel = TEXT("APPAREL"); break;
-        case ELOTNItemCategory::Trinket: CategoryLabel = TEXT("TRINKET"); break;
-        default: break;
+            if (ULOTNInventoryItemRowWidget* RowWidget = CreateWidget<ULOTNInventoryItemRowWidget>(
+                GetOwningPlayer(), ULOTNInventoryItemRowWidget::StaticClass()))
+            {
+                RowWidget->SetupRow(Item, bEquipped);
+                RowWidget->OnEquipRequested.AddDynamic(this, &ULOTNHUDWidget::HandleEquipItemRequested);
+                InventoryList->AddChild(RowWidget);
+            }
         }
+        else
+        {
+            const TCHAR* CategoryLabel = TEXT("MATERIAL");
+            switch (Item.Category)
+            {
+            case ELOTNItemCategory::Consumable: CategoryLabel = TEXT("CONSUMABLE"); break;
+            case ELOTNItemCategory::Material: CategoryLabel = TEXT("MATERIAL"); break;
+            case ELOTNItemCategory::Quest: CategoryLabel = TEXT("QUEST"); break;
+            case ELOTNItemCategory::Apparel: CategoryLabel = TEXT("APPAREL"); break;
+            case ELOTNItemCategory::Trinket: CategoryLabel = TEXT("TRINKET"); break;
+            default: break;
+            }
 
-        FString RowText = FString::Printf(TEXT("%s  x%d  [%s]%s"),
-            *Item.DisplayName.ToString(),
-            Item.Quantity,
-            CategoryLabel,
-            bEquipped ? TEXT("  EQUIPPED") : TEXT(""));
-
-        UTextBlock* Row = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
-        Row->SetText(FText::FromString(RowText));
-        Row->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f, 0.91f, 0.92f, 1.f)));
-        Row->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 13));
-        Row->SetAutoWrapText(true);
-        InventoryList->AddChild(Row);
+            UTextBlock* Row = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+            Row->SetText(FText::Format(
+                NSLOCTEXT("LOTN", "InventoryItemFormat", "{0}  x{1}  [{2}]"),
+                Item.DisplayName,
+                FText::AsNumber(Item.Quantity),
+                FText::FromString(CategoryLabel)));
+            Row->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f, 0.91f, 0.92f, 1.f)));
+            Row->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 13));
+            Row->SetAutoWrapText(true);
+            InventoryList->AddChild(Row);
+        }
 
         if (!Item.Description.IsEmpty())
         {
@@ -571,6 +586,26 @@ void ULOTNHUDWidget::HandleInventoryToggleClicked()
 void ULOTNHUDWidget::HandleInventoryCloseClicked()
 {
     ToggleInventoryPanel(false);
+}
+
+void ULOTNHUDWidget::HandleEquipItemRequested(FName ItemId)
+{
+    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    if (!Player || !Player->InventoryComponent)
+    {
+        return;
+    }
+
+    const bool bCurrentlyEquipped = Player->InventoryComponent->EquippedItemIds.Contains(ItemId);
+    const bool bChanged = bCurrentlyEquipped
+        ? Player->InventoryComponent->UnequipItem(ItemId)
+        : Player->InventoryComponent->EquipItem(ItemId);
+
+    ShowDialogue(bChanged
+        ? (bCurrentlyEquipped
+            ? NSLOCTEXT("LOTN", "ItemUnequipped", "Item unequipped.")
+            : NSLOCTEXT("LOTN", "ItemEquipped", "Item equipped."))
+        : NSLOCTEXT("LOTN", "ItemEquipFailed", "This item cannot be equipped."));
 }
 
 void ULOTNHUDWidget::HandleInteractionMessage(const FText& Message)
