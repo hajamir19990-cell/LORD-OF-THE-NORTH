@@ -82,13 +82,22 @@ require(player_controller.is_file() and "FInputModeGameAndUI" in player_controll
 require((ROOT / "Content/MAPS_README.md").is_file(), "first map assembly guide exists")
 source_meshes = ROOT / "Content/SourceMeshes"
 for mesh_name in ("Winterfell_Gatehouse.obj", "Northern_Pine_Tree.obj",
-                  "Northern_Longhouse.obj", "Northern_Cobblestone_Road.obj",\n                  "Northern_Curtain_Wall.obj", "Northern_Watchtower.obj"):
-    require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")\n\nassembly_script = ROOT / "Scripts/create_winterfell_landscape.py"\nrequire(assembly_script.is_file(), "Winterfell landscape assembly script exists")\nif assembly_script.is_file():\n    assembly_text = assembly_script.read_text(encoding="utf-8")\n    for required in ("Northern_Curtain_Wall", "Northern_Watchtower", "NavMeshBoundsVolume", "ExponentialHeightFog"):\n        require(required in assembly_text, "landscape assembly includes " + required)
+                  "Northern_Longhouse.obj", "Northern_Cobblestone_Road.obj",
+                  "Northern_Curtain_Wall.obj", "Northern_Watchtower.obj"):
+    require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")
+
+assembly_script = ROOT / "Scripts/create_winterfell_landscape.py"
+require(assembly_script.is_file(), "Winterfell landscape assembly script exists")
+if assembly_script.is_file():
+    assembly_text = assembly_script.read_text(encoding="utf-8")
+    for required in ("Northern_Curtain_Wall", "Northern_Watchtower",
+                     "NavMeshBoundsVolume", "ExponentialHeightFog"):
+        require(required in assembly_text, "landscape assembly includes " + required)
 
 for item in checks:
     print("PASS: " + item)
 for item in errors:
     print("FAIL: " + item, file=sys.stderr)
-print("\nStatic structure checks: " + str(len(checks)) + " passed, " + str(len(errors)) + " failed.")
+print("\\nStatic structure checks: " + str(len(checks)) + " passed, " + str(len(errors)) + " failed.")
 print("NOTE: This is not an Unreal C++ compile, editor validation, Android package, or device test.")
 sys.exit(1 if errors else 0)
