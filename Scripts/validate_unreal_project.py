@@ -124,8 +124,12 @@ if assembly_script.is_file():
                      "LOTNNPC", "LOTNQuestObjective", "Winterfell_Delivery",
                      "CTF_USE_COMPLEX_AS_SIMPLE", "NPC_Northern_Guard_QuestGiver",
                      "Northern_Supply_Crate", "Northern_Palisade_Fence",
-                     "Northern_Rock_Cluster", "Northern_Stone_Firepit"):
+                     "Northern_Rock_Cluster", "Northern_Stone_Firepit", "terrain_world_z",
+                     "terrain_vertices", "49 * 49"):
         require(required in assembly_text, "landscape assembly includes " + required)
+    require("for name in MESH_NAMES:" in assembly_text and
+            "CTF_USE_COMPLEX_AS_SIMPLE" in assembly_text,
+            "all imported environment meshes receive prototype collision")
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
 for mesh_path in sorted(source_meshes.glob("*.obj")):
