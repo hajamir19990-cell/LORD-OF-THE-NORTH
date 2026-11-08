@@ -64,23 +64,9 @@ bool ULOTNQuestComponent::IsQuestCompleted(FName QuestId) const
     return CompletedQuestIds.Contains(QuestId);
 }
 
-void ULOTNQuestComponent::RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FName>& InActiveQuestIds)
+void ULOTNQuestComponent::RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FLOTNQuestEntry>& InActiveQuests)
 {
     CompletedQuestIds = InCompletedQuestIds;
-    ActiveQuests.RemoveAll([this](const FLOTNQuestEntry& Entry)
-    {
-        return !InActiveQuestIds.Contains(Entry.QuestId);
-    });
+    ActiveQuests = InActiveQuests;
     OnQuestStateChanged.Broadcast();
-}
-
-TArray<FName> ULOTNQuestComponent::GetActiveQuestIds() const
-{
-    TArray<FName> Result;
-    Result.Reserve(ActiveQuests.Num());
-    for (const FLOTNQuestEntry& Entry : ActiveQuests)
-    {
-        Result.Add(Entry.QuestId);
-    }
-    return Result;
 }
