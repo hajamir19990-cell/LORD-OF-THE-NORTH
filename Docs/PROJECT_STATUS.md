@@ -11,7 +11,7 @@ Last updated: 2026-11-08
 - Portrait-oriented Android configuration and package identifier.
 - Third-person character movement, camera, mobile joystick axes and stamina-based sprint.
 - Player stats: health, stamina, gold and renown.
-- Native portrait HUD fallback with contextual interaction prompt, dialogue, quest display, inventory count, touch interaction/sprint and save/load controls.
+- Native portrait HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls.
 - Interactable interface, camera-view line trace, NPC dialogue and quest offer/turn-in.
 - Quest objective progress and one-time rewards.
 - Stackable inventory and apparel/trinket equipment slots.
@@ -21,7 +21,7 @@ Last updated: 2026-11-08
 
 ## Build and test status
 - GitHub Actions static source-structure validation exists.
-- GitHub Actions passed 61 static structure checks with 0 failures on commit 3dcbdbc1. The following commit only tightened the asset register. These checks validate repository structure only; they are explicitly not an Unreal compile.
+- GitHub Actions passed 66 static structure checks with 0 failures on commit 6a949632. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
 - No Unreal C++ compile has been verified.
 - No Android APK has been produced.
