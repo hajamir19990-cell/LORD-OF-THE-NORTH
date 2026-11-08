@@ -15,7 +15,7 @@ The script imports the seven OBJ sources into `/Game/Environment/North/SourceMes
 ## Important limitations
 
 - This is a greybox assembly script. The OBJ meshes are first-pass geometry and need art polish.
-- The rolling terrain is a first-pass static mesh surface, not a sculpted Unreal Landscape. Verify its collision and replace it with a Landscape if terrain sculpting or landscape-layer materials are required.
+- The rolling terrain is a first-pass static mesh surface, not a sculpted Unreal Landscape. The assembly script configures complex-as-simple collision for continuous traversal; verify collision cooking and profile its cost on target phones. Replace it with a sculpted Landscape if terrain sculpting or layered materials are required.
 - Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.
 - The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
 - The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
