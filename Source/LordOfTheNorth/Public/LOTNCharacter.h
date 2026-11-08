@@ -21,6 +21,9 @@ public:
     UFUNCTION(BlueprintCallable, Category="LOTN|Interaction")
     void InteractPressed();
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|World")
+    FName CurrentLocationId = TEXT("Winterfell");
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Stats")
     TObjectPtr<ULOTNPlayerStatsComponent> PlayerStats;
 
