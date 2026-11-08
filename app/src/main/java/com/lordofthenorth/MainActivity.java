@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
             GLES20.glUseProgram(program); GLES20.glUniform3f(lightH,-.35f,.9f,.45f);
             drawGround(daylight); drawWorld(); drawPlayer(); drawSnow();
         }
-        void drawGround(float d){drawMesh(ground,0,0,0,440,1,900,texSnow,new float[]{.75f+.15f*d,.82f+.12f*d,.82f+.12f*d,1});}
+        void drawGround(float d){drawMesh(ground,0,0,0,1,1,2.04545f,texSnow,new float[]{.75f+.15f*d,.82f+.12f*d,.82f+.12f*d,1});}
         void drawWorld(){
             // roads
             for(int i=0;i<siteData.size();i++){Site s=siteData.get(i); drawBuilding(s.x,0,s.z,10,12,10,texStone); for(int k=0;k<7;k++){float ax=s.x+(k-3)*3.5f, az=s.z+15; drawMesh(cube,ax,.08f,az,3.1f,.16f,3.1f,texRock,new float[]{.7f,.72f,.71f,1});}}
