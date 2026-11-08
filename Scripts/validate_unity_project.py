@@ -45,8 +45,20 @@ REQUIRED_FILES = [
 
 def validate_obj(path: Path) -> tuple[int, int]:
     vertices = 0
+    texcoords = 0
+    normals = 0
     faces = 0
     errors = []
+
+    def check_index(raw: str, count: int, kind: str, line_no: int) -> None:
+        try:
+            value = int(raw)
+            index = value if value > 0 else count + value + 1
+            if index < 1 or index > count:
+                errors.append(f"line {line_no}: {kind} index {value} out of range")
+        except ValueError:
+            errors.append(f"line {line_no}: invalid {kind} index {raw}")
+
     for line_no, line in enumerate(path.read_text(encoding="utf-8", errors="strict").splitlines(), 1):
         parts = line.strip().split()
         if not parts or parts[0].startswith("#"):
@@ -62,19 +74,48 @@ def validate_obj(path: Path) -> tuple[int, int]:
                 vertices += 1
             except ValueError:
                 errors.append(f"line {line_no}: invalid vertex number")
+        elif parts[0] == "vt":
+            if len(parts) < 3:
+                errors.append(f"line {line_no}: malformed texture coordinate")
+                continue
+            try:
+                values = [float(v) for v in parts[1:3]]
+                if not all(math.isfinite(v) for v in values):
+                    errors.append(f"line {line_no}: non-finite texture coordinate")
+                texcoords += 1
+            except ValueError:
+                errors.append(f"line {line_no}: invalid texture coordinate")
+        elif parts[0] == "vn":
+            if len(parts) < 4:
+                errors.append(f"line {line_no}: malformed normal")
+                continue
+            try:
+                values = [float(v) for v in parts[1:4]]
+                if not all(math.isfinite(v) for v in values):
+                    errors.append(f"line {line_no}: non-finite normal")
+                normals += 1
+            except ValueError:
+                errors.append(f"line {line_no}: invalid normal")
+        elif parts[0] == "mtllib":
+            for library in parts[1:]:
+                if not (path.parent / library).is_file():
+                    errors.append(f"line {line_no}: missing material library {library}")
         elif parts[0] == "f":
             if len(parts) < 4:
                 errors.append(f"line {line_no}: face has fewer than 3 vertices")
                 continue
             for token in parts[1:]:
-                try:
-                    raw_index = int(token.split("/")[0])
-                    index = raw_index if raw_index > 0 else vertices + raw_index + 1
-                    if index < 1 or index > vertices:
-                        errors.append(f"line {line_no}: vertex index {raw_index} out of range")
-                except (ValueError, IndexError):
-                    errors.append(f"line {line_no}: invalid face index {token}")
+                indices = token.split("/")
+                if not indices[0]:
+                    errors.append(f"line {line_no}: face has no vertex index")
+                    continue
+                check_index(indices[0], vertices, "vertex", line_no)
+                if len(indices) > 1 and indices[1]:
+                    check_index(indices[1], texcoords, "texture", line_no)
+                if len(indices) > 2 and indices[2]:
+                    check_index(indices[2], normals, "normal", line_no)
             faces += 1
+
     if vertices == 0 or faces == 0:
         errors.append("mesh contains no vertices or faces")
     if errors:
