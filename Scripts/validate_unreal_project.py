@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Repository structure checks; this is not an Unreal compile or Android package."""
 from __future__ import annotations
+import ast
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -91,10 +93,48 @@ assembly_script = ROOT / "Scripts/create_winterfell_landscape.py"
 require(assembly_script.is_file(), "Winterfell landscape assembly script exists")
 if assembly_script.is_file():
     assembly_text = assembly_script.read_text(encoding="utf-8")
+    try:
+        ast.parse(assembly_text, filename=str(assembly_script))
+        require(True, "Winterfell editor assembly script has valid Python syntax")
+    except SyntaxError as exc:
+        require(False, "Winterfell editor assembly script syntax: " + str(exc))
     for required in ("Northern_Curtain_Wall", "Northern_Watchtower",
                      "NavMeshBoundsVolume", "ExponentialHeightFog",
-                     "Northern_Rolling_Terrain"):
+                     "Northern_Rolling_Terrain", "WinterfellApproach"):
         require(required in assembly_text, "landscape assembly includes " + required)
+
+# Validate OBJ source integrity without pretending to import Unreal assets.
+for mesh_path in sorted(source_meshes.glob("*.obj")):
+    vertices = []
+    faces = 0
+    malformed = False
+    for line_number, line in enumerate(mesh_path.read_text(encoding="utf-8").splitlines(), 1):
+        parts = line.strip().split()
+        if not parts or parts[0].startswith("#"):
+            continue
+        if parts[0] == "v":
+            try:
+                xyz = tuple(float(value) for value in parts[1:4])
+                if len(xyz) != 3 or not all(math.isfinite(value) for value in xyz):
+                    malformed = True
+                vertices.append(xyz)
+            except (ValueError, IndexError):
+                malformed = True
+        elif parts[0] == "f":
+            faces += 1
+            if len(parts) < 4:
+                malformed = True
+                continue
+            for token in parts[1:]:
+                try:
+                    raw_index = int(token.split("/")[0])
+                    resolved = raw_index - 1 if raw_index > 0 else len(vertices) + raw_index
+                    if resolved < 0 or resolved >= len(vertices):
+                        malformed = True
+                except (ValueError, IndexError):
+                    malformed = True
+    require(bool(vertices) and faces > 0 and not malformed,
+            mesh_path.name + ": OBJ vertices and face indices are valid")
 
 for item in checks:
     print("PASS: " + item)
