@@ -21,6 +21,8 @@ try:
                 for m in project.get("Modules", [])), "runtime module is declared")
     require("landscape" in project.get("Description", "").lower(),
             "project description identifies landscape orientation")
+    game_maps = project.get("EngineAssociation", "")
+    require(bool(game_maps is not None), "project EngineAssociation field is readable")
     enabled_plugins = {plugin.get("Name") for plugin in project.get("Plugins", [])
                        if plugin.get("Enabled") is True}
     require("PythonScriptPlugin" in enabled_plugins,
@@ -69,6 +71,10 @@ engine_config = ROOT / "Config/DefaultEngine.ini"
 config_text = engine_config.read_text(encoding="utf-8") if engine_config.exists() else ""
 require("Orientation=Landscape" in config_text, "Android orientation is landscape")
 require("PackageName=com.lotn.game" in config_text, "Android package identifier is set")
+require("EditorStartupMap=/Game/Maps/WinterfellApproach" in config_text,
+        "WinterfellApproach is configured as the editor startup map")
+require("GameDefaultMap=/Game/Maps/WinterfellApproach" in config_text,
+        "WinterfellApproach is configured as the packaged game default map")
 require("r.MobileHDR=False" in config_text, "mobile HDR is disabled in baseline config")
 
 input_config = ROOT / "Config/DefaultInput.ini"
