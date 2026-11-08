@@ -49,5 +49,5 @@ public:
     FLOTNDialogueRequested OnDialogueRequested;
 
     virtual FText GetInteractionText_Implementation(AActor* InteractingActor) const override;
-    virtual void Interact_Implementation(AActor* InteractingActor) override;
+    virtual FText Interact_Implementation(AActor* InteractingActor) override;
 };
