@@ -47,6 +47,25 @@ for name in MESH_NAMES:
     task.set_editor_property("save", True)
     asset_tools.import_asset_tasks([task])
 
+# Prototype collision: use each low-poly environment mesh as static-world
+# collision so the player cannot pass through walls, buildings, trees or rocks.
+# Replace with simplified UCX collision before release and profile on device.
+for name in MESH_NAMES:
+    if name == "Northern_Supply_Crate":
+        continue  # objective component explicitly disables visual-mesh collision
+    asset = unreal.load_asset(DEST + "/" + name + "." + name)
+    if not asset:
+        raise RuntimeError("Imported environment mesh missing during collision setup: " + name)
+    body = asset.get_editor_property("body_setup")
+    if not body:
+        raise RuntimeError("No BodySetup available for environment mesh: " + name)
+    body.set_editor_property(
+        "collision_trace_flag",
+        unreal.CollisionTraceFlag.CTF_USE_COMPLEX_AS_SIMPLE,
+    )
+    asset.post_edit_change()
+    unreal.EditorAssetLibrary.save_loaded_asset(asset)
+
 def mesh_actor(name, location, yaw=0.0, scale=1.0):
     asset = unreal.load_asset(DEST + "/" + name + "." + name)
     if not asset:
