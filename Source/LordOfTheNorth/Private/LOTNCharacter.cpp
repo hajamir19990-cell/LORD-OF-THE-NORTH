@@ -41,8 +41,9 @@ void ALOTNCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    const float SafeUpdateInterval = FMath::Max(0.05f, StaminaUpdateInterval);
     StaminaUpdateAccumulator += DeltaSeconds;
-    if (StaminaUpdateAccumulator < StaminaUpdateInterval)
+    if (StaminaUpdateAccumulator < SafeUpdateInterval)
     {
         return;
     }
@@ -52,7 +53,7 @@ void ALOTNCharacter::Tick(float DeltaSeconds)
 
     if (PlayerStats && bSprintRequested)
     {
-        const float StaminaCost = SprintStaminaDrainPerSecond * UpdateDelta;
+        const float StaminaCost = FMath::Max(0.f, SprintStaminaDrainPerSecond) * UpdateDelta;
         bIsSprinting = PlayerStats->Stamina >= StaminaCost && PlayerStats->ConsumeStamina(StaminaCost);
         if (!bIsSprinting)
         {
@@ -66,7 +67,7 @@ void ALOTNCharacter::Tick(float DeltaSeconds)
 
     if (!bIsSprinting && PlayerStats && PlayerStats->Stamina < PlayerStats->MaxStamina)
     {
-        PlayerStats->RestoreStamina(StaminaRegenPerSecond * UpdateDelta);
+        PlayerStats->RestoreStamina(FMath::Max(0.f, StaminaRegenPerSecond) * UpdateDelta);
     }
 
     const float DesiredSpeed = bIsSprinting ? SprintSpeed : WalkSpeed;
