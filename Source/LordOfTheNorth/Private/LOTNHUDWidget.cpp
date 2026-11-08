@@ -216,7 +216,18 @@ void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
     }
     PromptRefreshAccumulator = 0.f;
 
-    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    ALOTNCharacter* CurrentPlayer = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    if (CurrentPlayer != BoundPlayer.Get())
+    {
+        BindPlayerEvents(false);
+        if (CurrentPlayer)
+        {
+            BindPlayerEvents(true);
+        }
+        RefreshHUD();
+    }
+
+    ALOTNCharacter* Player = CurrentPlayer;
     const FText Prompt = Player && Player->InteractionComponent
         ? Player->InteractionComponent->GetCurrentPrompt()
         : FText::GetEmpty();
@@ -264,9 +275,15 @@ void ULOTNHUDWidget::NativeDestruct()
 
 void ULOTNHUDWidget::BindPlayerEvents(bool bBind)
 {
-    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    ALOTNCharacter* Player = bBind
+        ? Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0))
+        : BoundPlayer.Get();
     if (!Player)
     {
+        if (!bBind)
+        {
+            BoundPlayer.Reset();
+        }
         return;
     }
 
@@ -316,6 +333,15 @@ void ULOTNHUDWidget::BindPlayerEvents(bool bBind)
         {
             Player->InteractionComponent->OnInteractionMessage.RemoveDynamic(this, &ULOTNHUDWidget::HandleInteractionMessage);
         }
+    }
+
+    if (bBind)
+    {
+        BoundPlayer = Player;
+    }
+    else
+    {
+        BoundPlayer.Reset();
     }
 }
 
