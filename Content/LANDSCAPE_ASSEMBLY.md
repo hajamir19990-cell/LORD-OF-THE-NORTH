@@ -20,7 +20,8 @@ The script imports the fifteen OBJ sources into `/Game/Environment/North/SourceM
 - The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
 - The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
 - The script must run after the C++ Editor target is compiled because it loads the native LOTNNPC and LOTNQuestObjective classes. It does not generate a .umap outside Unreal Editor.
-- The assembly enables Unreal's generated lightmap UV setting on all fifteen imported static meshes before placement. Verify that the generated channel is valid and non-overlapping in the Static Mesh Editor; this setting is not proof that a lighting build has succeeded.\n- Verify imported mesh pivots, material assignments, collision, normals and scale in the editor.
+- The assembly enables Unreal's generated lightmap UV setting on all fifteen imported static meshes before placement. Verify that the generated channel is valid and non-overlapping in the Static Mesh Editor; this setting is not proof that a lighting build has succeeded.
+- Verify imported mesh pivots, material assignments, collision, normals and scale in the editor.
 - No compile, Android package or device performance result is implied by running the script.
 
 
