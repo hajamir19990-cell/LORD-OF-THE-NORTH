@@ -28,7 +28,7 @@ Last updated: 2026-11-08
 - No Android APK has been produced.
 
 ## Missing editor assets
-- No .umap level has been created yet. The Unreal Editor Python assembly script imports eleven committed OBJ source meshes and lays out a landscape greybox with rolling terrain, curtain walls, watchtowers, adjoining road tiles, settlement buildings, palisade segments, snow-capped rocks, a stone firepit, pine groves, native C++ quest-giver/scout/objective actors, navigation bounds and temporary atmosphere; it must still be run and inspected in Unreal Editor.
+- No .umap level has been created yet. The Unreal Editor Python assembly script imports eleven committed OBJ source meshes and lays out a landscape greybox with rolling terrain, curtain walls, watchtowers, adjoining road tiles, settlement buildings, palisade segments, snow-capped rocks, a stone firepit, pine groves, native C++ quest-giver/scout/objective actors with visible humanoid primitive greyboxes, navigation bounds and temporary atmosphere; it must still be run and inspected in Unreal Editor.
 - The eleven starter OBJ source meshes (gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower, rolling terrain, timber/iron supply crate, palisade fence, snow-capped rock clusters and stone firepit) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets. Static validation now parses every OBJ and checks finite vertices and in-range face indices.
 - No binary .uasset/.ubulk character, animation or final environment assets have been imported.
 - Candidate CC0 environment sources and mobile import checks are recorded in Docs/ASSET_REGISTER.md.
@@ -37,7 +37,7 @@ Last updated: 2026-11-08
 ## What is required to finish the first APK
 1. Open the project in a compatible Unreal Engine 5.x installation.
 2. Compile the Editor target and resolve any Unreal Header Tool/compiler errors.
-3. Run Scripts/create_winterfell_landscape.py inside Unreal Editor to create /Game/Maps/WinterfellApproach, then inspect complex-as-simple environment collision/materials, profile it on device, and replace temporary NPC/quest markers with final assets; a sculpted Landscape can replace the terrain mesh if layered landscape materials are needed.
+3. Run Scripts/create_winterfell_landscape.py inside Unreal Editor to create /Game/Maps/WinterfellApproach, then inspect complex-as-simple environment collision/materials, profile it on device, and replace NPC humanoid greyboxes and quest crate with final assets; a sculpted Landscape can replace the terrain mesh if layered landscape materials are needed.
 4. Import and profile licensed character/environment assets; assign the character mesh and animation blueprint.
 5. Run the LOTN automation tests and the manual QA checklist.
 6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package. The workflow compiles the Editor target and runs the LOTN automation tests before packaging.
