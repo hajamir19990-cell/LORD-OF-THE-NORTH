@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "LOTNQuestComponent.h"
 #include "LOTNSaveGame.generated.h"
 
 UCLASS()
@@ -11,7 +12,7 @@ class LORDOFTHENORTH_API ULOTNSaveGame : public USaveGame
 
 public:
     UPROPERTY(VisibleAnywhere, Category="Save")
-    int32 SaveVersion = 1;
+    int32 SaveVersion = 2;
 
     UPROPERTY(VisibleAnywhere, Category="Player")
     FVector PlayerLocation = FVector::ZeroVector;
@@ -32,8 +33,14 @@ public:
     int32 Renown = 0;
 
     UPROPERTY(VisibleAnywhere, Category="World")
-    FName CurrentLocationId = TEXT("Winterfell");
+    FName CurrentLevelName = NAME_None;
 
     UPROPERTY(VisibleAnywhere, Category="World")
+    FName CurrentLocationId = TEXT("Winterfell");
+
+    UPROPERTY(VisibleAnywhere, Category="Quest")
     TArray<FName> CompletedQuestIds;
+
+    UPROPERTY(VisibleAnywhere, Category="Quest")
+    TArray<FLOTNQuestEntry> ActiveQuests;
 };
