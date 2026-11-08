@@ -75,6 +75,16 @@ require("EditorStartupMap=/Game/Maps/WinterfellApproach" in config_text,
 require("GameDefaultMap=/Game/Maps/WinterfellApproach" in config_text,
         "WinterfellApproach is configured as the packaged game default map")
 require("r.MobileHDR=False" in config_text, "mobile HDR is disabled in baseline config")
+packaging_config = ROOT / "Config/DefaultGame.ini"
+packaging_text = packaging_config.read_text(encoding="utf-8") if packaging_config.exists() else ""
+required_level_paths = (
+    "/Game/Maps/WinterfellApproach", "/Game/Maps/LOTN_TheDreadfort",
+    "/Game/Maps/LOTN_WhiteHarbor", "/Game/Maps/LOTN_BearIsland",
+    "/Game/Maps/LOTN_Karhold", "/Game/Maps/LOTN_LastHearth",
+    "/Game/Maps/LOTN_DeepwoodMotte", "/Game/Maps/LOTN_GreywaterWatch",
+    "/Game/Maps/LOTN_TheWall")
+require(all(path in packaging_text for path in required_level_paths),
+        "all nine northern maps are included in packaged build cooking")
 
 input_config = ROOT / "Config/DefaultInput.ini"
 input_text = input_config.read_text(encoding="utf-8") if input_config.exists() else ""
