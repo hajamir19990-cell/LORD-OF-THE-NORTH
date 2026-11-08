@@ -55,6 +55,9 @@ protected:
     TObjectPtr<UButton> InteractButton;
 
     UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UButton> SprintButton;
+
+    UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UButton> SaveButton;
 
     UPROPERTY(meta=(BindWidgetOptional))
@@ -75,6 +78,12 @@ private:
 
     UFUNCTION()
     void HandleInteractClicked();
+
+    UFUNCTION()
+    void HandleSprintPressed();
+
+    UFUNCTION()
+    void HandleSprintReleased();
 
     UFUNCTION()
     void HandleSaveClicked();
