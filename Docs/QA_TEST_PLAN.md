@@ -51,7 +51,10 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 
 ## Visual and performance acceptance
 
-- [ ] Confirm both gatehouse towers and the approach road read clearly in landscape.
+- [ ] Confirm both gatehouse towers, the two outer watchtowers, connecting curtain walls and the approach road read clearly in landscape.
+- [ ] Confirm the three road tiles meet without visible gaps and remain clear from PlayerStart to the gate.
+- [ ] Confirm the temporary fog does not obscure NPC interaction range or exceed the mobile performance budget.
+- [ ] Confirm NavMeshBoundsVolume covers the walkable approach and Recast navigation generates successfully.
 - [ ] Confirm the temporary ground plane has been replaced with a sculpted terrain Landscape.
 - [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
