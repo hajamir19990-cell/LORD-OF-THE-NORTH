@@ -25,7 +25,7 @@ struct FLOTNWorldLocation
     FVector2D MapPosition = FVector2D(0.5f, 0.5f);
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
-    FName RegionType = TEXT("Wilderness");
+    FName RegionType = FName(TEXT("Wilderness"));
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Location")
     TArray<FName> ConnectedLocationIds;
