@@ -21,6 +21,9 @@ MESH_NAMES = (
     "Northern_Watchtower",
     "Northern_Rolling_Terrain",
     "Northern_Supply_Crate",
+    "Northern_Palisade_Fence",
+    "Northern_Rock_Cluster",
+    "Northern_Stone_Firepit",
 )
 
 for folder in ("/Game/Maps", "/Game/Environment",
@@ -101,10 +104,28 @@ for index, y in enumerate((-1400, -750, -100)):
     mesh_actor("Northern_Cobblestone_Road", (0, y, 0),
                scale=1.0 if index else 1.03)
 
+# Timber palisades define the settlement edge without closing the main road.
+for x in (-850, 850):
+    for y in (-1200, -600):
+        mesh_actor("Northern_Palisade_Fence", (x, y, 16),
+                   yaw=0.0 if x < 0 else 180.0)
+
+# Snow-capped rock clusters frame the outer terrain and break up empty margins.
+rock_positions = (
+    (-3300, -1750), (-2850, -650), (-3400, 650), (-2850, 1850),
+    (3300, -1700), (2850, -600), (3400, 700), (2900, 1900),
+)
+for index, (x, y) in enumerate(rock_positions):
+    mesh_actor("Northern_Rock_Cluster", (x, y, -5),
+               yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
+
 # Settlement buildings sit off the central camera and movement corridor.
 mesh_actor("Northern_Longhouse", (-1250, -800, 0), yaw=8.0, scale=1.0)
 mesh_actor("Northern_Longhouse", (1250, -650, 0), yaw=172.0, scale=0.82)
 mesh_actor("Northern_Longhouse", (1850, -1150, 0), yaw=195.0, scale=0.68)
+
+# A small stone firepit adds a readable settlement landmark away from the road.
+mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
 
 # Side groves frame the approach; keep the central lane and NPC sightlines clear.
 tree_positions = (
@@ -163,14 +184,14 @@ def spawn_npc(label, display_name, location, dialogue, offers_quest=False):
 spawn_npc(
     "NPC_Northern_Guard_QuestGiver",
     "Northern Guard",
-    (0, -1320, 0),
+    (0, -1320, 16),
     "The supply marker on the road must be checked. Return to me when you have inspected it.",
     True,
 )
 spawn_npc(
     "NPC_Winterfell_Scout",
     "Winterfell Scout",
-    (520, -420, 0),
+    (520, -420, 16),
     "Keep to the road. The pines hide old tracks, and the gate is closer than it looks.",
     False,
 )
@@ -178,7 +199,7 @@ spawn_npc(
 objective = actor_of(
     objective_class,
     "OBJ_Winterfell_Supply_Marker",
-    (0, -430, 0),
+    (0, -430, 16),
     unreal.Rotator(0.0, 0.0, 0.0),
 )
 objective.set_editor_property("quest_id", "Winterfell_Delivery")
@@ -195,7 +216,7 @@ if objective_mesh:
 
 # Player start and navigation coverage for the first walkable slice.
 actor_of(unreal.PlayerStart, "PlayerStart_Landscape_Approach",
-         (0, -1700, 100), unreal.Rotator(0.0, 90.0, 0.0))
+         (0, -1700, 116), unreal.Rotator(0.0, 90.0, 0.0))
 actor_of(unreal.NavMeshBoundsVolume, "NAV_WinterfellApproach",
          (0, -350, 250), unreal.Rotator(0.0, 0.0, 0.0),
          (38.0, 24.0, 5.0))
