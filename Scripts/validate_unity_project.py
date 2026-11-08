@@ -35,6 +35,7 @@ REQUIRED_FILES = [
     PROJECT / "Assets" / "Scripts" / "LOTNCameraFollow.cs",
     PROJECT / "Assets" / "Scripts" / "LOTNPlayerStats.cs",
     PROJECT / "Assets" / "Scripts" / "LOTNGameSession.cs",
+    PROJECT / "Assets" / "Scripts" / "LOTNInventory.cs",
     PROJECT / "Assets" / "Scripts" / "LOTNQuestManager.cs",
     PROJECT / "Assets" / "Scripts" / "LOTNInteractable.cs",
     PROJECT / "Assets" / "Scripts" / "LOTNWorldMap.cs",
