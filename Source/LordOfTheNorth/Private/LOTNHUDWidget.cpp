@@ -245,6 +245,7 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
     UBorder* MapFrame = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
     MapFrame->SetBrushColor(FLinearColor(0.075f, 0.095f, 0.105f, 1.f));
     MapFrame->SetPadding(FMargin(4.f));
+    MapFrame->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
     WorldMapCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("WorldMapCanvas"));
     MapFrame->SetContent(WorldMapCanvas);
     MapArea->AddChild(MapFrame);
@@ -302,6 +303,7 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
             const FVector2D Delta = B - A;
             UBorder* RouteLine = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
             RouteLine->SetBrushColor(FLinearColor(0.48f, 0.50f, 0.47f, 0.62f));
+            RouteLine->SetVisibility(ESlateVisibility::HitTestInvisible);
             if (UCanvasPanelSlot* LineSlot = WorldMapCanvas->AddChildToCanvas(RouteLine))
             {
                 LineSlot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
