@@ -65,6 +65,9 @@ private:
     void HandleQuestChanged();
 
     UFUNCTION()
+    void HandleInteractionMessage(const FText& Message);
+
+    UFUNCTION()
     void HandleInteractClicked();
 
     UFUNCTION()
