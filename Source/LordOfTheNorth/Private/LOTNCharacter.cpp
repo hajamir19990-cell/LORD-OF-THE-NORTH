@@ -1,5 +1,7 @@
 #include "LOTNCharacter.h"
 #include "LOTNPlayerStatsComponent.h"
+#include "LOTNQuestComponent.h"
+#include "LOTNInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -9,6 +11,8 @@ ALOTNCharacter::ALOTNCharacter()
 {
     PrimaryActorTick.bCanEverTick = false;
     PlayerStats = CreateDefaultSubobject<ULOTNPlayerStatsComponent>(TEXT("PlayerStats"));
+    QuestComponent = CreateDefaultSubobject<ULOTNQuestComponent>(TEXT("QuestComponent"));
+    InteractionComponent = CreateDefaultSubobject<ULOTNInteractionComponent>(TEXT("InteractionComponent"));
 
     bUseControllerRotationPitch = false;
     bUseControllerRotationYaw = false;
@@ -38,6 +42,15 @@ void ALOTNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     PlayerInputComponent->BindAxis("MoveRight", this, &ALOTNCharacter::MoveRight);
     PlayerInputComponent->BindAxis("Turn", this, &ALOTNCharacter::TurnCamera);
     PlayerInputComponent->BindAxis("LookUp", this, &ALOTNCharacter::LookCamera);
+    PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ALOTNCharacter::InteractPressed);
+}
+
+void ALOTNCharacter::InteractPressed()
+{
+    if (InteractionComponent)
+    {
+        InteractionComponent->TryInteract();
+    }
 }
 
 void ALOTNCharacter::MoveForward(float Value)
