@@ -314,7 +314,7 @@ namespace LOTN.Editor
         {
             GameObject water = GameObject.CreatePrimitive(PrimitiveType.Plane);
             water.name = name;
-            water.transform.position = position;
+            water.transform.position = GroundedPosition(position, 0.05f);
             water.transform.localScale = scale;
             Collider collider = water.GetComponent<Collider>();
             if (collider != null) Object.DestroyImmediate(collider);
