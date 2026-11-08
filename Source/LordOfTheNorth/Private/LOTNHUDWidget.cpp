@@ -407,10 +407,34 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
         Status = FString::Printf(TEXT("LOCKED  /  %d RENOWN REQUIRED"), Location.RequiredRenown);
     }
 
-    FString TravelStatus = WorldMapData->IsLocationReadyToTravel(LocationId, CurrentRenown)
-        ? TEXT("Travel destination available.")
-        : (bUnlocked ? TEXT("Region map is not built yet; travel is unavailable.")
-                     : TEXT("Earn more renown to unlock this region."));
+    FString TravelStatus;
+    if (LocationId == FName(TEXT("Winterfell")))
+    {
+        TravelStatus = TEXT("You are already in this region.");
+    }
+    else if (WorldMapData->IsLocationReadyToTravel(LocationId, CurrentRenown))
+    {
+        TravelStatus = TEXT("Travel destination available.");
+    }
+    else
+    {
+        TravelStatus = bUnlocked
+            ? TEXT("Region map is not built yet; travel is unavailable.")
+            : TEXT("Earn more renown to unlock this region.");
+    }
+
+    for (const FLOTNWorldLocation& Entry : WorldMapData->Locations)
+    {
+        if (TObjectPtr<UButton>* Node = WorldMapNodeButtons.Find(Entry.LocationId))
+        {
+            const bool bEntryUnlocked = WorldMapData->IsLocationUnlocked(Entry.LocationId, CurrentRenown);
+            (*Node)->SetBackgroundColor(Entry.LocationId == LocationId
+                ? FLinearColor(0.48f, 0.36f, 0.17f, 1.f)
+                : (bEntryUnlocked
+                    ? FLinearColor(0.22f, 0.28f, 0.24f, 1.f)
+                    : FLinearColor(0.14f, 0.16f, 0.18f, 1.f)));
+        }
+    }
 
     FString Routes;
     for (const FName ConnectedId : Location.ConnectedLocationIds)
@@ -525,6 +549,7 @@ void ULOTNHUDWidget::NativeConstruct()
     }
 
     RefreshHUD();
+    RefreshWorldMapPanel();
 }
 
 void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
