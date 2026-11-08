@@ -34,7 +34,7 @@ bool ULOTNSaveSubsystem::SaveCurrentGame()
     if (const ULOTNQuestComponent* Quests = Player->FindComponentByClass<ULOTNQuestComponent>())
     {
         SaveObject->CompletedQuestIds = Quests->CompletedQuestIds;
-        SaveObject->ActiveQuestIds = Quests->GetActiveQuestIds();
+        SaveObject->ActiveQuests = Quests->ActiveQuests;
     }
 
     return UGameplayStatics::SaveGameToSlot(SaveObject, SaveSlotName, 0);
@@ -59,6 +59,12 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
         return false;
     }
 
+    const FName CurrentLevel(*UGameplayStatics::GetCurrentLevelName(this, true));
+    if (SaveObject->CurrentLevelName != NAME_None && SaveObject->CurrentLevelName != CurrentLevel)
+    {
+        return false;
+    }
+
     Player->SetActorLocationAndRotation(SaveObject->PlayerLocation, SaveObject->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
     if (ULOTNPlayerStatsComponent* Stats = Player->FindComponentByClass<ULOTNPlayerStatsComponent>())
@@ -72,7 +78,7 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
 
     if (ULOTNQuestComponent* Quests = Player->FindComponentByClass<ULOTNQuestComponent>())
     {
-        Quests->RestoreQuestState(SaveObject->CompletedQuestIds, SaveObject->ActiveQuestIds);
+        Quests->RestoreQuestState(SaveObject->CompletedQuestIds, SaveObject->ActiveQuests);
     }
 
     return true;
