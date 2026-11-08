@@ -16,10 +16,10 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Content/SourceMeshes/Northern_Supply_Crate.obj | Quest supply marker prop | Greybox OBJ committed; needs Unreal import and art polish |
 | Content/SourceMeshes/Northern_Palisade_Fence.obj | Modular timber settlement boundary | Greybox OBJ committed; needs Unreal import, collision and art polish |
 | Content/SourceMeshes/Northern_Rock_Cluster.obj | Snow-capped outer-terrain rock dressing | Greybox OBJ committed; needs Unreal import and collision review |
-| Content/SourceMeshes/Northern_Stone_Firepit.obj | Settlement landmark prop | Greybox OBJ committed; needs Unreal import and collision review |
+| Content/SourceMeshes/Northern_Stone_Firepit.obj | Settlement landmark prop | Greybox OBJ committed; needs Unreal import and collision review |\n| Content/SourceMeshes/Northern_Woodpile.obj | Stacked winter firewood | Detailed source OBJ; non-blocking decorative prop |\n| Content/SourceMeshes/Northern_Handcart.obj | Settlement supply cart | Detailed source OBJ with spoked wheels, axle, plank bed and barrel; non-blocking |\n| Content/SourceMeshes/Northern_Snowdrift.obj | Roadside snow berms | Procedural low-poly snow mound; non-blocking |\n| Content/SourceMeshes/Northern_Wolf_Banner.obj | Gatehouse heraldic standards | Wavy red cloth, gold wolf-head crest and iron crossbar; non-blocking |
 | Content/SourceMeshes/LOTN_Northern_Environment.mtl | Basic material definitions for source meshes | Starter material definitions; replace/upgrade with PBR textures |
 
-These are eleven editable interchange source meshes (plus the shared MTL library), not Unreal .uasset files and not yet integrated into a playable map. The assembly script enables Unreal-generated lightmap UVs for every imported static mesh; verify the generated channels in the editor. The meshes remain first-pass geometry, not final production art.
+These are fifteen editable interchange source meshes (plus the shared MTL library), not Unreal .uasset files and not yet integrated into a playable map. The assembly script enables Unreal-generated lightmap UVs for every imported static mesh; verify the generated channels in the editor. The meshes remain first-pass geometry, not final production art.
 
 ## Approved source library
 
@@ -53,7 +53,7 @@ CC0 means the publisher permits broad reuse, including commercial projects, with
 
 ## Current import status
 
-Eleven starter OBJ source meshes are committed, including the layered pine update, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
+Fifteen starter OBJ source meshes are committed, including the layered pine, woodpile, handcart, snowdrift and heraldic banner updates, but no Unreal binary environment, character, animation, snow or foliage assets have been imported yet. Import and device profiling must happen in Unreal Editor; a source file alone is not evidence that it is integrated.
 
 
 ## Northern supply crate
