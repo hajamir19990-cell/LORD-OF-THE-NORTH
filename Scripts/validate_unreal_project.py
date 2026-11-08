@@ -17,6 +17,8 @@ try:
     require(project.get("FileVersion") == 3, "uproject JSON parses and uses FileVersion 3")
     require(any(m.get("Name") == "LordOfTheNorth" and m.get("Type") == "Runtime"
                 for m in project.get("Modules", [])), "runtime module is declared")
+    require("landscape" in project.get("Description", "").lower(),
+            "project description identifies landscape orientation")
 except Exception as exc:
     errors.append("uproject JSON is invalid: " + str(exc))
 
@@ -57,7 +59,7 @@ for source in sources:
 
 engine_config = ROOT / "Config/DefaultEngine.ini"
 config_text = engine_config.read_text(encoding="utf-8") if engine_config.exists() else ""
-require("Orientation=Portrait" in config_text, "Android orientation is portrait")
+require("Orientation=Landscape" in config_text, "Android orientation is landscape")
 require("PackageName=com.lotn.game" in config_text, "Android package identifier is set")
 require("r.MobileHDR=False" in config_text, "mobile HDR is disabled in baseline config")
 
@@ -65,6 +67,7 @@ input_config = ROOT / "Config/DefaultInput.ini"
 input_text = input_config.read_text(encoding="utf-8") if input_config.exists() else ""
 require('ActionName="Interact"' in input_text, "interact action is mapped")
 require('ActionName="Sprint"' in input_text, "sprint action is mapped")
+require("DefaultVirtualJoysticks" in input_text, "default mobile virtual joysticks are configured")
 require((public_dir / "LOTNInventoryComponent.h").is_file(), "inventory component header exists")
 require((private_dir / "LOTNInventoryComponent.cpp").is_file(), "inventory component source exists")
 require((public_dir / "LOTNInventoryItemRowWidget.h").is_file(), "inventory row widget header exists")
@@ -77,6 +80,10 @@ player_controller = private_dir / "LOTNPlayerController.cpp"
 require(player_controller.is_file() and "FInputModeGameAndUI" in player_controller.read_text(encoding="utf-8"),
         "player controller allows HUD interaction alongside gameplay input")
 require((ROOT / "Content/MAPS_README.md").is_file(), "first map assembly guide exists")
+source_meshes = ROOT / "Content/SourceMeshes"
+for mesh_name in ("Winterfell_Gatehouse.obj", "Northern_Pine_Tree.obj",
+                  "Northern_Longhouse.obj", "Northern_Cobblestone_Road.obj"):
+    require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")
 
 for item in checks:
     print("PASS: " + item)
