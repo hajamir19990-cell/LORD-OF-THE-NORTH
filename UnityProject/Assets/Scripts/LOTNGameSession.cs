@@ -22,11 +22,15 @@ namespace LOTN
 
         public void SetPlayerState(int newHealth, int newStamina, int newGold, int newRenown)
         {
-            health = Mathf.Clamp(newHealth, 0, 100);
+            int safeHealth = Mathf.Clamp(newHealth, 0, 100);
+            int safeGold = Mathf.Max(0, newGold);
+            int safeRenown = Mathf.Max(0, newRenown);
+            bool persistentValueChanged = health != safeHealth || gold != safeGold || renown != safeRenown;
+            health = safeHealth;
             stamina = Mathf.Clamp(newStamina, 0, 100);
-            gold = Mathf.Max(0, newGold);
-            renown = Mathf.Max(0, newRenown);
-            Save();
+            gold = safeGold;
+            renown = safeRenown;
+            if (persistentValueChanged) Save();
         }
 
         public void SetQuestState(bool collected, bool completed)
