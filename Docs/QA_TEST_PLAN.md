@@ -9,6 +9,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm no missing modules, reflection errors or asset load errors.
 - [ ] Confirm the default GameMode spawns LOTNCharacter and LOTNPlayerController.
 - [ ] Confirm the native portrait HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
+- [ ] Confirm GameAndUI input mode lets HUD buttons receive touch/click input while character gameplay input remains available.
 - [ ] Run the Unreal automation tests under LOTN.Inventory, LOTN.Quests, LOTN.WorldMap and LOTN.PlayerStats.
 
 ## Movement and portrait controls
@@ -16,6 +17,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Android orientation remains portrait through launch, pause and resume.
 - [ ] Left virtual joystick moves the character in camera-relative directions.
 - [ ] Right virtual joystick controls camera yaw and pitch without rotating the movement input incorrectly.
+- [ ] Interact, inventory, save and load HUD buttons respond to touch; UI interaction does not permanently block movement input.
 - [ ] Sprint begins while the HUD SprintButton is held and ends on release.
 - [ ] Stamina decreases during sprint and regenerates while walking.
 - [ ] Sprint cannot continue indefinitely after stamina is exhausted.
