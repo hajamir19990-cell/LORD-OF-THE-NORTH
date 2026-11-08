@@ -5,6 +5,8 @@
 #include "LOTNInteractable.h"
 #include "LOTNNPC.generated.h"
 
+class UStaticMeshComponent;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLOTNDialogueRequested, const FText&, DialogueText);
 
 UCLASS()
@@ -44,6 +46,26 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|Quest", meta=(EditCondition="bOffersQuest", ClampMin="0"))
     int32 RenownReward = 5;
+
+    // Temporary visible humanoid built from engine primitives until the
+    // licensed NPC skeletal mesh and animation set are integrated.
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderTorso;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderHead;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderLeftArm;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderRightArm;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderLeftLeg;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderRightLeg;
 
     UPROPERTY(BlueprintAssignable, Category="LOTN|Dialogue")
     FLOTNDialogueRequested OnDialogueRequested;
