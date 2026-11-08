@@ -94,6 +94,14 @@ for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
             "player greybox includes " + part)
 require("NoCollision" in character_source and "BasicShapes/Capsule.Capsule" in character_source,
         "player greybox uses non-blocking engine primitive meshes")
+npc_header = (public_dir / "LOTNNPC.h").read_text(encoding="utf-8")
+npc_source = (private_dir / "LOTNNPC.cpp").read_text(encoding="utf-8")
+for part in ("PlaceholderTorso", "PlaceholderHead", "PlaceholderLeftArm",
+             "PlaceholderRightArm", "PlaceholderLeftLeg", "PlaceholderRightLeg"):
+    require(part in npc_header and part in npc_source,
+            "NPC greybox includes " + part)
+require("NoCollision" in npc_source and "BasicShapes/Capsule.Capsule" in npc_source,
+        "NPC greybox uses non-blocking engine primitive meshes")
 require((private_dir / "Tests/LOTNGameplayTests.cpp").is_file(), "gameplay automation tests exist")
 require((ROOT / ".github/workflows/build-unreal-android.yml").is_file(), "manual Unreal Android workflow exists")
 player_controller = private_dir / "LOTNPlayerController.cpp"
