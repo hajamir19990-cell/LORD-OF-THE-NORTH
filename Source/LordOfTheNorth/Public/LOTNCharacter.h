@@ -10,6 +10,7 @@ class ULOTNInteractionComponent;
 class ULOTNInventoryComponent;
 class UCameraComponent;
 class USpringArmComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class LORDOFTHENORTH_API ALOTNCharacter : public ACharacter
@@ -53,6 +54,26 @@ private:
     void MoveRight(float Value);
     void TurnCamera(float Value);
     void LookCamera(float Value);
+
+    // Temporary low-poly humanoid assembled from engine primitives. Replace
+    // with a licensed skeletal character and animation blueprint during art pass.
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderTorso;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderHead;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderLeftArm;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderRightArm;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderLeftLeg;
+
+    UPROPERTY(VisibleAnywhere, Category="LOTN|Placeholder")
+    TObjectPtr<UStaticMeshComponent> PlaceholderRightLeg;
 
     UPROPERTY(VisibleAnywhere, Category="Camera")
     TObjectPtr<USpringArmComponent> CameraBoom;
