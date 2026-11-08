@@ -31,6 +31,8 @@ namespace LOTN.Editor
             PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, "com.lotn.northerngame");
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
             PlayerSettings.colorSpace = ColorSpace.Linear;
+            // The current prototype uses UnityEngine.Input; select the legacy Input Manager backend.
+            PlayerSettings.SetPropertyInt("activeInputHandler", 0, BuildTargetGroup.Unknown);
             PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
             PlayerSettings.Android.bundleVersionCode = 1;
