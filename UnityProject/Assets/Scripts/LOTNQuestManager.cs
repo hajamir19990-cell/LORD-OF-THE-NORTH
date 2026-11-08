@@ -29,6 +29,8 @@ namespace LOTN
             if (interactionId == "SupplyCrate" && !crateCollected && !questCompleted)
             {
                 crateCollected = true;
+                if (LOTNInventory.Instance != null)
+                    LOTNInventory.Instance.AddItem("winterfell_supplies", "Winterfell Supply Pack", 1);
                 if (session != null) session.SetQuestState(crateCollected, questCompleted);
                 RefreshObjective();
                 return;
