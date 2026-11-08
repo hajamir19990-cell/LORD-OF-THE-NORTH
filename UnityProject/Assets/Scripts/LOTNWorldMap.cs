@@ -33,7 +33,7 @@ namespace LOTN
                 GUI.color = new Color(0.94f, 0.89f, 0.77f);
                 GUI.Label(new Rect(Screen.width - 156, 76, 132, 54),
                     "HP " + hudStats.health + "   STA " + hudStats.stamina +
-                    "\\nGOLD " + hudStats.gold + "   RENOWN " + hudStats.renown);
+                    "\nGOLD " + hudStats.gold + "   RENOWN " + hudStats.renown);
             }
             if (!open) { GUI.color = Color.white; return; }
 
