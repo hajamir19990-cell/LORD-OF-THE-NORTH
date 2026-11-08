@@ -39,6 +39,8 @@ namespace LOTN
             if (interactionId == "QuestGiver" && crateCollected && !questCompleted)
             {
                 questCompleted = true;
+                if (LOTNInventory.Instance != null)
+                    LOTNInventory.Instance.RemoveItem("winterfell_supplies", 1);
                 if (session != null) session.SetQuestState(crateCollected, questCompleted);
                 LOTNPlayerStats stats = FindFirstObjectByType<LOTNPlayerStats>();
                 if (stats != null) { stats.AddGold(30); stats.AddRenown(10); }
