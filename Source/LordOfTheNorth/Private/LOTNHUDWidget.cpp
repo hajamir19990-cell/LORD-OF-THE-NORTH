@@ -40,6 +40,7 @@ void ULOTNHUDWidget::NativeConstruct()
 
 void ULOTNHUDWidget::NativeDestruct()
 {
+    HandleSprintReleased();
     BindPlayerEvents(false);
 
     if (InteractButton)
