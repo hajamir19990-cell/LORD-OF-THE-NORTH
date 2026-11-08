@@ -109,7 +109,7 @@ void ULOTNQuestComponent::RestoreQuestState(const TArray<FName>& InCompletedQues
     for (FLOTNQuestEntry SavedQuest : InActiveQuests)
     {
         if (SavedQuest.QuestId.IsNone() || CompletedQuestIds.Contains(SavedQuest.QuestId) ||
-            ActiveQuests.ContainsByPredicate([&SavedQuest](const FLOTNQuestEntry& Entry) { return Entry.QuestId == SavedQuest.QuestId; }))
+            ActiveQuests.FindByPredicate([&SavedQuest](const FLOTNQuestEntry& Entry) { return Entry.QuestId == SavedQuest.QuestId; }) != nullptr)
         {
             continue;
         }
