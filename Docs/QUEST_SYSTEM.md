@@ -19,7 +19,7 @@
 2. Enable bOffersQuest, set QuestId to Winterfell_Delivery, configure the title, objective and rewards.
 3. Create a Blueprint based on ALOTNQuestObjective.
 4. Set the objective's QuestId to Winterfell_Delivery, assign a visible static mesh, and place it along the northern road.
-5. Create a Widget Blueprint based on LOTNHUDWidget. Add optional named widgets: HealthBar, StaminaBar, GoldText, RenownText, InventoryCountText, QuestTitleText, QuestObjectiveText, QuestProgressText, DialogueText, InteractButton, SprintButton, SaveButton and LoadButton. Use a portrait-safe layout with large touch targets.
+5. Create a Widget Blueprint based on LOTNHUDWidget. Add optional named widgets: HealthBar, StaminaBar, GoldText, RenownText, InventoryCountText, QuestTitleText, QuestObjectiveText, QuestProgressText, DialogueText, InteractionPromptText, InteractButton, SprintButton, SaveButton and LoadButton. Use a portrait-safe layout with large touch targets.
 6. Configure SprintButton as a press-and-hold control; the widget binds OnPressed and OnReleased to sprint start/stop.
 7. Create a Player Controller Blueprint based on LOTNPlayerController and set HUDWidgetClass to the HUD Widget Blueprint.
 8. Create a GameMode Blueprint based on LOTNGameMode only if you need to override defaults; otherwise the C++ GameMode already selects the C++ player and controller classes.
