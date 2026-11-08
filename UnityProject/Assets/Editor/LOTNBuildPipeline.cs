@@ -29,7 +29,8 @@ namespace LOTN.Editor
                 if (scenes.Length != 9)
                     throw new System.Exception("Expected nine enabled regional scenes; found " + scenes.Length);
 
-                string output = Path.GetFullPath("Builds/Android/LORD-OF-THE-NORTH.apk");
+                string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+                string output = Path.Combine(projectRoot, "Builds", "Android", "LORD-OF-THE-NORTH.apk");
                 Directory.CreateDirectory(Path.GetDirectoryName(output));
                 BuildPlayerOptions options = new BuildPlayerOptions
                 {
