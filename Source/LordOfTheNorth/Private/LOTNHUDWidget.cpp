@@ -21,6 +21,11 @@ void ULOTNHUDWidget::NativeConstruct()
     {
         InteractButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleInteractClicked);
     }
+    if (SprintButton)
+    {
+        SprintButton->OnPressed.AddDynamic(this, &ULOTNHUDWidget::HandleSprintPressed);
+        SprintButton->OnReleased.AddDynamic(this, &ULOTNHUDWidget::HandleSprintReleased);
+    }
     if (SaveButton)
     {
         SaveButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleSaveClicked);
@@ -40,6 +45,11 @@ void ULOTNHUDWidget::NativeDestruct()
     if (InteractButton)
     {
         InteractButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleInteractClicked);
+    }
+    if (SprintButton)
+    {
+        SprintButton->OnPressed.RemoveDynamic(this, &ULOTNHUDWidget::HandleSprintPressed);
+        SprintButton->OnReleased.RemoveDynamic(this, &ULOTNHUDWidget::HandleSprintReleased);
     }
     if (SaveButton)
     {
@@ -199,6 +209,22 @@ void ULOTNHUDWidget::HandleInteractClicked()
     if (ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
     {
         Player->InteractPressed();
+    }
+}
+
+void ULOTNHUDWidget::HandleSprintPressed()
+{
+    if (ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+    {
+        Player->StartSprint();
+    }
+}
+
+void ULOTNHUDWidget::HandleSprintReleased()
+{
+    if (ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0)))
+    {
+        Player->StopSprint();
     }
 }
 
