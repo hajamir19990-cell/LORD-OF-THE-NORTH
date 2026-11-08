@@ -18,7 +18,23 @@ namespace LOTN.Editor
 
         public static void PreExport()
         {
+            ConfigurePlayerSettings();
             BuildPrototypeScenes();
+        }
+
+        public static void ConfigurePlayerSettings()
+        {
+            PlayerSettings.companyName = "LORD OF THE NORTH";
+            PlayerSettings.productName = "LORD OF THE NORTH";
+            PlayerSettings.bundleVersion = "0.1.0";
+            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, "com.lotn.northerngame");
+            PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
+            PlayerSettings.colorSpace = ColorSpace.Linear;
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel26;
+            PlayerSettings.Android.bundleVersionCode = 1;
+            PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
+            PlayerSettings.SetManagedStrippingLevel(BuildTargetGroup.Android, ManagedStrippingLevel.Medium);
         }
 
         [MenuItem("Tools/LORD OF THE NORTH/Generate all nine regional scenes")]
