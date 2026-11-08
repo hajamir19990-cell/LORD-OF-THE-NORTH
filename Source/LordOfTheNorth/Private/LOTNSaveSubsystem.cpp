@@ -1,5 +1,6 @@
 #include "LOTNSaveSubsystem.h"
 #include "LOTNSaveGame.h"
+#include "LOTNCharacter.h"
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
 #include "GameFramework/Character.h"
@@ -7,7 +8,7 @@
 
 bool ULOTNSaveSubsystem::SaveCurrentGame()
 {
-    ACharacter* Player = UGameplayStatics::GetPlayerCharacter(this, 0);
+    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
     if (!Player)
     {
         return false;
@@ -22,8 +23,9 @@ bool ULOTNSaveSubsystem::SaveCurrentGame()
     SaveObject->PlayerLocation = Player->GetActorLocation();
     SaveObject->PlayerRotation = Player->GetActorRotation();
     SaveObject->CurrentLevelName = FName(*UGameplayStatics::GetCurrentLevelName(this, true));
+    SaveObject->CurrentLocationId = Player->CurrentLocationId;
 
-    if (const ULOTNPlayerStatsComponent* Stats = Player->FindComponentByClass<ULOTNPlayerStatsComponent>())
+    if (const ULOTNPlayerStatsComponent* Stats = Player->PlayerStats)
     {
         SaveObject->Health = Stats->Health;
         SaveObject->Stamina = Stats->Stamina;
@@ -31,7 +33,7 @@ bool ULOTNSaveSubsystem::SaveCurrentGame()
         SaveObject->Renown = Stats->Renown;
     }
 
-    if (const ULOTNQuestComponent* Quests = Player->FindComponentByClass<ULOTNQuestComponent>())
+    if (const ULOTNQuestComponent* Quests = Player->QuestComponent)
     {
         SaveObject->CompletedQuestIds = Quests->CompletedQuestIds;
         SaveObject->ActiveQuests = Quests->ActiveQuests;
@@ -47,7 +49,7 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
         return false;
     }
 
-    ACharacter* Player = UGameplayStatics::GetPlayerCharacter(this, 0);
+    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
     if (!Player)
     {
         return false;
@@ -66,8 +68,9 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
     }
 
     Player->SetActorLocationAndRotation(SaveObject->PlayerLocation, SaveObject->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
+    Player->CurrentLocationId = SaveObject->CurrentLocationId;
 
-    if (ULOTNPlayerStatsComponent* Stats = Player->FindComponentByClass<ULOTNPlayerStatsComponent>())
+    if (ULOTNPlayerStatsComponent* Stats = Player->PlayerStats)
     {
         Stats->Health = FMath::Clamp(SaveObject->Health, 0.f, Stats->MaxHealth);
         Stats->Stamina = FMath::Clamp(SaveObject->Stamina, 0.f, Stats->MaxStamina);
@@ -76,7 +79,7 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
         Stats->OnStatsChanged.Broadcast();
     }
 
-    if (ULOTNQuestComponent* Quests = Player->FindComponentByClass<ULOTNQuestComponent>())
+    if (ULOTNQuestComponent* Quests = Player->QuestComponent)
     {
         Quests->RestoreQuestState(SaveObject->CompletedQuestIds, SaveObject->ActiveQuests);
     }
