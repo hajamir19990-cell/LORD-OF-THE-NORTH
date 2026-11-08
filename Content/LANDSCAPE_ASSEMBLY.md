@@ -5,7 +5,7 @@
 1. Open the project in Unreal Engine 5; PythonScriptPlugin and EditorScriptingUtilities are enabled in the project file. Restart the editor if Unreal prompts you.
 2. Open the Python console or execute the script through the editor's Python execution command. The assembly uses LevelEditorSubsystem and EditorActorSubsystem rather than the deprecated EditorLevelLibrary.
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
-4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
+4. Open `/Game/Maps/WinterfellApproach`, then run `Scripts/validate_winterfell_level.py` from the Unreal Editor Python console to check imported assets, expected actor counts and the 24-instance HISM forest. Inspect mesh scale, wall alignment, road continuity, fog and actor placement.
 5. Inspect terrain collision, generated lightmap UV channels and imported MTL material slots; replace flat starter colors with optimized snow/rock PBR textures, add foliage and a mobile-appropriate sky, then bake/static-light the scene. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
 6. The assembly script places native LOTNNPC and LOTNQuestObjective actors for the first quest loop; replace their temporary humanoid primitive visuals and greybox crate with approved character and prop assets after import.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
