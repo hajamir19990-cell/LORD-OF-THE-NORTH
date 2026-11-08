@@ -30,12 +30,14 @@ void ULOTNPlayerStatsComponent::RestoreStamina(float Amount)
 
 void ULOTNPlayerStatsComponent::AddGold(int32 Amount)
 {
+    if (Amount <= 0) return;
     Gold = static_cast<int32>(FMath::Clamp<int64>(static_cast<int64>(Gold) + Amount, 0, MAX_int32));
     OnStatsChanged.Broadcast();
 }
 
 void ULOTNPlayerStatsComponent::AddRenown(int32 Amount)
 {
+    if (Amount <= 0) return;
     Renown = static_cast<int32>(FMath::Clamp<int64>(static_cast<int64>(Renown) + Amount, 0, MAX_int32));
     OnStatsChanged.Broadcast();
 }
