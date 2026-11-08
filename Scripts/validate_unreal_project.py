@@ -142,6 +142,20 @@ for mesh_name in ("Winterfell_Gatehouse.obj", "Northern_Pine_Tree.obj",
                   "Northern_Wolf_Banner.obj"):
     require((source_meshes / mesh_name).is_file(), mesh_name + " source mesh exists")
 
+level_validation_script = ROOT / "Scripts/validate_winterfell_level.py"
+require(level_validation_script.is_file(), "Winterfell editor-level validation script exists")
+if level_validation_script.is_file():
+    level_validation_text = level_validation_script.read_text(encoding="utf-8")
+    try:
+        ast.parse(level_validation_text, filename=str(level_validation_script))
+        require(True, "Winterfell editor-level validation script has valid Python syntax")
+    except SyntaxError as exc:
+        require(False, "Winterfell editor-level validation syntax: " + str(exc))
+    require("get_instance_count()" in level_validation_text and
+            "ENV_Northern_Forest_HISM" in level_validation_text and
+            "CollisionEnabled.NO_COLLISION" in level_validation_text,
+            "editor-level validation checks HISM instance count and collision")
+
 assembly_script = ROOT / "Scripts/create_winterfell_landscape.py"
 require(assembly_script.is_file(), "Winterfell landscape assembly script exists")
 if assembly_script.is_file():
