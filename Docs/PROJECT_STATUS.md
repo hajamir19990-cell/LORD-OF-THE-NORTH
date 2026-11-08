@@ -28,8 +28,8 @@ Last updated: 2026-11-08
 - No Android APK has been produced.
 
 ## Missing editor assets
-- No .umap level has been created yet. A new Unreal Editor Python assembly script now imports the four committed OBJ source meshes and lays out a landscape greybox map; it must still be run and inspected in Unreal Editor.
-- The four starter OBJ source meshes (gatehouse, pine, longhouse and cobblestone road) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets.
+- No .umap level has been created yet. The Unreal Editor Python assembly script imports six committed OBJ source meshes and lays out a landscape greybox with curtain walls, watchtowers, adjoining road tiles, settlement buildings, pine groves, navigation bounds and temporary atmosphere; it must still be run and inspected in Unreal Editor.
+- The six starter OBJ source meshes (gatehouse, pine, longhouse, cobblestone road, curtain wall and watchtower) are committed under Content/SourceMeshes; they are source interchange files, not integrated Unreal assets.
 - No binary .uasset/.ubulk character, animation or final environment assets have been imported.
 - Candidate CC0 environment sources and mobile import checks are recorded in Docs/ASSET_REGISTER.md.
 - Landscape layout dimensions are in Content/MAPS_README.md; editor assembly steps are in Content/LANDSCAPE_ASSEMBLY.md and Scripts/create_winterfell_landscape.py.
