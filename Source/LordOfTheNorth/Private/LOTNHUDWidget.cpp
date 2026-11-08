@@ -257,6 +257,17 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
     WorldMapDetailsText->SetAutoWrapText(true);
     MapRoot->AddChildToVerticalBox(WorldMapDetailsText);
 
+    WorldMapTravelButton = WidgetTree->ConstructWidget<UButton>(
+        UButton::StaticClass(), TEXT("WorldMapTravelButton"));
+    WorldMapTravelButton->SetBackgroundColor(FLinearColor(0.25f, 0.31f, 0.22f, 1.f));
+    UTextBlock* TravelLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+    TravelLabel->SetText(NSLOCTEXT("LOTN", "TravelToRegion", "TRAVEL TO REGION"));
+    TravelLabel->SetColorAndOpacity(FSlateColor(FLinearColor(0.92f, 0.93f, 0.88f, 1.f)));
+    TravelLabel->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 12));
+    WorldMapTravelButton->AddChild(TravelLabel);
+    MapRoot->AddChildToVerticalBox(WorldMapTravelButton);
+    WorldMapTravelButton->SetIsEnabled(false);
+
     WorldMapPanel->SetContent(MapRoot);
     if (UCanvasPanelSlot* Slot = ParentCanvas->AddChildToCanvas(WorldMapPanel))
     {
@@ -466,6 +477,13 @@ void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
         *TravelStatus,
         *RenownInfo,
         *Routes)));
+
+    if (WorldMapTravelButton)
+    {
+        WorldMapTravelButton->SetIsEnabled(
+            LocationId != FName(TEXT("Winterfell")) &&
+            WorldMapData->IsLocationReadyToTravel(LocationId, CurrentRenown));
+    }
 }
 
 void ULOTNHUDWidget::ToggleWorldMapPanel(bool bShow)
@@ -492,6 +510,34 @@ void ULOTNHUDWidget::HandleWorldMapToggleClicked()
 void ULOTNHUDWidget::HandleWorldMapCloseClicked()
 {
     ToggleWorldMapPanel(false);
+}
+
+void ULOTNHUDWidget::HandleWorldMapTravelClicked()
+{
+    if (!WorldMapData || SelectedWorldMapLocation.IsNone())
+    {
+        return;
+    }
+
+    FLOTNWorldLocation Destination;
+    if (!WorldMapData->GetLocationById(SelectedWorldMapLocation, Destination))
+    {
+        return;
+    }
+
+    const ALOTNCharacter* Player = Cast<ALOTNCharacter>(
+        UGameplayStatics::GetPlayerCharacter(this, 0));
+    const int32 CurrentRenown = Player && Player->PlayerStats
+        ? Player->PlayerStats->Renown : 0;
+
+    if (SelectedWorldMapLocation == FName(TEXT("Winterfell")) ||
+        !WorldMapData->IsLocationReadyToTravel(SelectedWorldMapLocation, CurrentRenown))
+    {
+        RefreshWorldMapPanel();
+        return;
+    }
+
+    UGameplayStatics::OpenLevel(this, Destination.LevelName);
 }
 
 void ULOTNHUDWidget::NativeOnInitialized()
@@ -531,6 +577,10 @@ void ULOTNHUDWidget::NativeConstruct()
     if (WorldMapCloseButton)
     {
         WorldMapCloseButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleWorldMapCloseClicked);
+    }
+    if (WorldMapTravelButton)
+    {
+        WorldMapTravelButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleWorldMapTravelClicked);
     }
     if (InventoryCloseButton)
     {
