@@ -55,7 +55,8 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm the three road tiles meet without visible gaps and remain clear from PlayerStart to the gate.
 - [ ] Confirm the temporary fog does not obscure NPC interaction range or exceed the mobile performance budget.
 - [ ] Confirm NavMeshBoundsVolume covers the walkable approach and Recast navigation generates successfully.
-- [ ] Confirm the rolling terrain mesh has valid complex-as-simple collision and the player can traverse the full approach without falling through or snagging.\n- [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.\n- [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
+- [ ] Confirm the rolling terrain mesh has valid complex-as-simple collision and the player can traverse the full approach without falling through or snagging.
+- [ ] Check the terrain mesh for visible seams, spikes, unexpected steep slopes and floating/embedded props.\n- [ ] Confirm snow/rock material assignment and mobile texture cost; the terrain mesh is a greybox, not a finished Landscape.
 - [ ] Confirm settlement buildings and pine groves frame, rather than obstruct, the central approach.
 - [ ] Replace all blockout geometry in the playable camera view with approved licensed environment assets.
 - [ ] Check scale, pivots, normals, UVs, materials, collisions and LODs for every imported asset.
@@ -75,7 +76,7 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Stone firepit is placed southeast of the east longhouse without intersecting its footprint or obstructing the road; it is non-blocking.
 - [ ] Pine trees, rock clusters and firepit have collision disabled; terrain, road, walls and buildings retain blocking collision.
 - [ ] Each palisade, rock-cluster and firepit dressing group is spawned exactly once; no duplicate actors appear after a fresh map assembly.
-- [ ] PlayerStart, NPC capsules and the quest crate rest at the sampled road surface height.
+- [ ] PlayerStart, NPC capsules and the quest crate rest at sampled terrain or road-surface height.
 - [ ] The flattened castle foundation keeps both towers and curtain walls seated without burying their lower sections.
 
 
