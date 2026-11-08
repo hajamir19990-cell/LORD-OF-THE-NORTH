@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          "$UE_ROOT/Engine/Build/BatchFiles/Build.sh" LordOfTheNorthEditor Linux Development "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" -WaitMutex -NoHotReloadFromIDE
+          "$UE_ROOT/Engine/Build/BatchFiles/Linux/Build.sh" LordOfTheNorthEditor Linux Development "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" -WaitMutex -NoHotReloadFromIDE
 
       - name: Run gameplay automation tests
         shell: bash
@@ -47,7 +47,7 @@ jobs:
           test -x "$EDITOR_CMD" || { echo "UnrealEditor-Cmd not found"; exit 1; }
           "$EDITOR_CMD" "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" \
             -unattended -nop4 -NullRHI -nosplash -nosound \
-            -ExecCmds="Automation RunTests LOTN; Quit" \
+            -ExecCmds="Automation RunTests LOTN" \
             -TestExit="Automation Test Queue Empty" \
             -log="$GITHUB_WORKSPACE/LOTN-Automation.log"
 
