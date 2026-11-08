@@ -19,6 +19,7 @@ MESH_NAMES = (
     "Northern_Cobblestone_Road",
     "Northern_Curtain_Wall",
     "Northern_Watchtower",
+    "Northern_Rolling_Terrain",
 )
 
 for folder in ("/Game/Maps", "/Game/Environment",
@@ -70,16 +71,9 @@ def actor_of(actor_class, label, location, rotation, scale=None):
         actor.set_actor_scale3d(unreal.Vector(scale[0], scale[1], scale[2]))
     return actor
 
-# Temporary collision ground for the first editor inspection. Replace with a
-# sculpted Landscape and layered snow/rock material before gameplay sign-off.
-plane = unreal.load_asset("/Engine/BasicShapes/Plane.Plane")
-if not plane:
-    raise RuntimeError("Unreal basic Plane mesh is unavailable")
-ground = unreal.EditorLevelLibrary.spawn_actor_from_object(
-    plane, unreal.Vector(0.0, 0.0, -18.0), unreal.Rotator(0.0, 0.0, 0.0)
-)
-ground.set_actor_scale3d(unreal.Vector(70.0, 70.0, 1.0))
-ground.set_actor_label("TEMP_Greybox_Ground_Replace_With_Landscape")
+# Rolling terrain source mesh replaces the featureless temporary plane.
+# It is a first-pass terrain surface; verify/import simple collision in Editor.
+mesh_actor("Northern_Rolling_Terrain", (0, 0, -8))
 
 # Landmark and flanking defensive wall: wall segments meet the gatehouse edges.
 mesh_actor("Winterfell_Gatehouse", (0, 0, 0))
