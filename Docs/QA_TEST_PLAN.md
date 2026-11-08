@@ -133,3 +133,10 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Watchtower corner detailing and parapet remain aligned with the wall foundations.
 - [ ] Longhouse timber frame, roof shingles and chimney do not intersect or float.
 - [ ] Architecture materials remain within the mobile material/draw-call budget and silhouettes read clearly at gameplay camera distance.
+
+
+## Instanced forest performance
+- [ ] All 24 terrain-snapped pine instances are owned by one ENV_Northern_Forest_HISM actor.
+- [ ] The HISM component has no collision and does not affect navigation.
+- [ ] Instance culling, LOD transitions, cluster bounds and shadows remain stable at gameplay camera distances.
+- [ ] Forest batching reduces actor/component overhead without visible popping or excessive overdraw on the target Android device.
