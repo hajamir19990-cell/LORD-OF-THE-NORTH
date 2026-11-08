@@ -7,7 +7,7 @@
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
 5. Inspect terrain collision and imported MTL material slots; replace flat starter colors with optimized snow/rock PBR textures, add foliage and a mobile-appropriate sky, then bake/static-light the scene. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
-6. The assembly script places native LOTNNPC and LOTNQuestObjective actors for the first quest loop; replace their temporary pillar marker and greybox crate with approved character and prop assets after import.
+6. The assembly script places native LOTNNPC and LOTNQuestObjective actors for the first quest loop; replace their temporary humanoid primitive visuals and greybox crate with approved character and prop assets after import.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
 The script imports the eleven OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, four palisade fence segments, eight snow-capped rock clusters, a stone firepit, twelve pine trees, a rolling terrain surface and PlayerStart. It also spawns a quest-giving northern guard, a scout, and a matching supply-marker objective using the native C++ gameplay classes. Temporary engine primitive markers stand in for final character/prop art. A navigation bounds volume, directional light and temporary exponential-height fog are added before the new level is saved.
