@@ -5,7 +5,8 @@
 #include "LOTNCharacter.generated.h"
 
 class ULOTNPlayerStatsComponent;
-
+class ULOTNQuestComponent;
+class ULOTNInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -16,6 +17,18 @@ class LORDOFTHENORTH_API ALOTNCharacter : public ACharacter
 
 public:
     ALOTNCharacter();
+
+    UFUNCTION(BlueprintCallable, Category="LOTN|Interaction")
+    void InteractPressed();
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Stats")
+    TObjectPtr<ULOTNPlayerStatsComponent> PlayerStats;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Quest")
+    TObjectPtr<ULOTNQuestComponent> QuestComponent;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Interaction")
+    TObjectPtr<ULOTNInteractionComponent> InteractionComponent;
 
 protected:
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -31,7 +44,4 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category="Camera")
     TObjectPtr<UCameraComponent> FollowCamera;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="LOTN|Stats", meta=(AllowPrivateAccess="true"))
-    TObjectPtr<ULOTNPlayerStatsComponent> PlayerStats;
 };
