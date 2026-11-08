@@ -89,7 +89,7 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 
 
 ## Material slot checks
-- [ ] All eleven imported OBJ meshes expose their intended MTL material slots.
+- [ ] All fifteen imported OBJ meshes expose their intended MTL material slots.
 - [ ] Rolling terrain uses the snow slot; curtain wall and watchtower use the stone slot.
 - [ ] Replace flat starter MTL colors with optimized PBR textures before final art sign-off.
 
