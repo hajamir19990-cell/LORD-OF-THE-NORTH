@@ -220,6 +220,20 @@ void ULOTNHUDWidget::NativeConstruct()
     {
         InteractButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleInteractClicked);
     }
+    if (InventoryButton)
+    {
+        InventoryButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleInventoryToggleClicked);
+    }
+    if (InventoryCloseButton)
+    {
+        InventoryCloseButton->OnClicked.AddDynamic(this, &ULOTNHUDWidget::HandleInventoryCloseClicked);
+    }
+    if (InventoryPanel)
+    {
+        InventoryPanel->SetVisibility(ESlateVisibility::Collapsed);
+    }
+    RefreshInventoryPanel();
+
     if (SprintButton)
     {
         SprintButton->OnPressed.AddDynamic(this, &ULOTNHUDWidget::HandleSprintPressed);
@@ -291,6 +305,14 @@ void ULOTNHUDWidget::NativeDestruct()
     if (InteractButton)
     {
         InteractButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleInteractClicked);
+    }
+    if (InventoryButton)
+    {
+        InventoryButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleInventoryToggleClicked);
+    }
+    if (InventoryCloseButton)
+    {
+        InventoryCloseButton->OnClicked.RemoveDynamic(this, &ULOTNHUDWidget::HandleInventoryCloseClicked);
     }
     if (SprintButton)
     {
@@ -465,6 +487,90 @@ void ULOTNHUDWidget::HandleQuestChanged()
 void ULOTNHUDWidget::HandleInventoryChanged()
 {
     RefreshHUD();
+    RefreshInventoryPanel();
+}
+
+void ULOTNHUDWidget::ToggleInventoryPanel(bool bShow)
+{
+    if (InventoryPanel)
+    {
+        InventoryPanel->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+        if (bShow)
+        {
+            RefreshInventoryPanel();
+        }
+    }
+}
+
+void ULOTNHUDWidget::RefreshInventoryPanel()
+{
+    if (!InventoryList)
+    {
+        return;
+    }
+
+    InventoryList->ClearChildren();
+    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    if (!Player || !Player->InventoryComponent || Player->InventoryComponent->Items.IsEmpty())
+    {
+        UTextBlock* EmptyText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+        EmptyText->SetText(NSLOCTEXT("LOTN", "InventoryEmpty", "Your pack is empty."));
+        EmptyText->SetColorAndOpacity(FSlateColor(FLinearColor(0.78f, 0.82f, 0.85f, 1.f)));
+        EmptyText->SetFont(FCoreStyle::GetDefaultFontStyle("Regular", 13));
+        InventoryList->AddChild(EmptyText);
+        return;
+    }
+
+    for (const FLOTNInventoryItem& Item : Player->InventoryComponent->Items)
+    {
+        const bool bEquipped = Player->InventoryComponent->EquippedItemIds.Contains(Item.ItemId);
+        const TCHAR* CategoryLabel = TEXT("MATERIAL");
+        switch (Item.Category)
+        {
+        case ELOTNItemCategory::Consumable: CategoryLabel = TEXT("CONSUMABLE"); break;
+        case ELOTNItemCategory::Material: CategoryLabel = TEXT("MATERIAL"); break;
+        case ELOTNItemCategory::Quest: CategoryLabel = TEXT("QUEST"); break;
+        case ELOTNItemCategory::Apparel: CategoryLabel = TEXT("APPAREL"); break;
+        case ELOTNItemCategory::Trinket: CategoryLabel = TEXT("TRINKET"); break;
+        default: break;
+        }
+
+        FString RowText = FString::Printf(TEXT("%s  x%d  [%s]%s"),
+            *Item.DisplayName.ToString(),
+            Item.Quantity,
+            CategoryLabel,
+            bEquipped ? TEXT("  EQUIPPED") : TEXT(""));
+
+        UTextBlock* Row = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+        Row->SetText(FText::FromString(RowText));
+        Row->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f, 0.91f, 0.92f, 1.f)));
+        Row->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 13));
+        Row->SetAutoWrapText(true);
+        InventoryList->AddChild(Row);
+
+        if (!Item.Description.IsEmpty())
+        {
+            UTextBlock* Description = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+            Description->SetText(Item.Description);
+            Description->SetColorAndOpacity(FSlateColor(FLinearColor(0.62f, 0.68f, 0.72f, 1.f)));
+            Description->SetFont(FCoreStyle::GetDefaultFontStyle("Regular", 11));
+            Description->SetAutoWrapText(true);
+            InventoryList->AddChild(Description);
+        }
+    }
+}
+
+void ULOTNHUDWidget::HandleInventoryToggleClicked()
+{
+    if (InventoryPanel)
+    {
+        ToggleInventoryPanel(InventoryPanel->GetVisibility() != ESlateVisibility::Visible);
+    }
+}
+
+void ULOTNHUDWidget::HandleInventoryCloseClicked()
+{
+    ToggleInventoryPanel(false);
 }
 
 void ULOTNHUDWidget::HandleInteractionMessage(const FText& Message)
