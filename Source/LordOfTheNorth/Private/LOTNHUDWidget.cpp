@@ -275,7 +275,7 @@ void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
         {
             FString RouteA = Location.LocationId.ToString();
             FString RouteB = ConnectedId.ToString();
-            if (RouteA > RouteB)
+            if (RouteA.Compare(RouteB, ESearchCase::CaseSensitive) > 0)
             {
                 Swap(RouteA, RouteB);
             }
