@@ -21,6 +21,12 @@ try:
                 for m in project.get("Modules", [])), "runtime module is declared")
     require("landscape" in project.get("Description", "").lower(),
             "project description identifies landscape orientation")
+    enabled_plugins = {plugin.get("Name") for plugin in project.get("Plugins", [])
+                       if plugin.get("Enabled") is True}
+    require("PythonScriptPlugin" in enabled_plugins,
+            "Python Editor scripting plugin is enabled")
+    require("EditorScriptingUtilities" in enabled_plugins,
+            "Editor scripting utilities plugin is enabled")
 except Exception as exc:
     errors.append("uproject JSON is invalid: " + str(exc))
 
@@ -100,7 +106,9 @@ if assembly_script.is_file():
         require(False, "Winterfell editor assembly script syntax: " + str(exc))
     for required in ("Northern_Curtain_Wall", "Northern_Watchtower",
                      "NavMeshBoundsVolume", "ExponentialHeightFog",
-                     "Northern_Rolling_Terrain", "WinterfellApproach"):
+                     "Northern_Rolling_Terrain", "WinterfellApproach",
+                     "LOTNNPC", "LOTNQuestObjective", "Winterfell_Delivery",
+                     "CTF_USE_COMPLEX_AS_SIMPLE", "NPC_Northern_Guard_QuestGiver"):
         require(required in assembly_text, "landscape assembly includes " + required)
 
 # Validate OBJ source integrity without pretending to import Unreal assets.
