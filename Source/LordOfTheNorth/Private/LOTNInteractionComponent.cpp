@@ -10,7 +10,7 @@ ULOTNInteractionComponent::ULOTNInteractionComponent()
 
 AActor* ULOTNInteractionComponent::FindInteractable() const
 {
-    const AActor* OwnerActor = GetOwner();
+    AActor* OwnerActor = GetOwner();
     if (!OwnerActor || !GetWorld())
     {
         return nullptr;
@@ -53,9 +53,9 @@ bool ULOTNInteractionComponent::TryInteract()
 
 FText ULOTNInteractionComponent::GetCurrentPrompt() const
 {
-    if (const AActor* Target = FindInteractable())
+    if (AActor* Target = FindInteractable())
     {
-        return ILOTNInteractable::Execute_GetInteractionText(const_cast<AActor*>(Target), GetOwner());
+        return ILOTNInteractable::Execute_GetInteractionText(Target, GetOwner());
     }
     return FText::GetEmpty();
 }
