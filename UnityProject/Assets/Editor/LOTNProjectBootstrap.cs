@@ -14,6 +14,7 @@ namespace LOTN.Editor
         private const string GeneratedFolder = "Assets/Generated/Terrain";
         private const string MeshFolder = "Assets/Art/SourceOBJ";
 
+        [MenuItem("Tools/LORD OF THE NORTH/Generate all nine regional scenes")]
         public static void BuildPrototypeScenes()
         {
             EnsureFolder("Assets/Generated");
