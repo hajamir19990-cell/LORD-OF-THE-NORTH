@@ -1,9 +1,11 @@
 #include "LOTNNPC.h"
 #include "LOTNQuestComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ALOTNNPC::ALOTNNPC()
 {
     PrimaryActorTick.bCanEverTick = false;
+    GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
     DisplayName = FText::FromString(TEXT("Northern Guard"));
     DialogueText = FText::FromString(TEXT("The road ahead is not safe. Keep your eyes on the tree line."));
     QuestDescription = FText::FromString(TEXT("A supply marker on the northern road needs to be checked. Return here when you have inspected it."));
