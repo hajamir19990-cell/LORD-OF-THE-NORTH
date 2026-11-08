@@ -66,6 +66,7 @@ namespace LOTN.Editor
                 heights[z, x] = Mathf.Lerp(0.018f, 0.07f + noise * 0.075f + ridge, centerFlatten);
             }
             data.SetHeights(0, 0, heights);
+            data.terrainLayers = new[] { CreateSnowLayer() };
             string assetPath = GeneratedFolder + "/" + sceneName + "_Terrain.asset";
             AssetDatabase.DeleteAsset(assetPath);
             AssetDatabase.CreateAsset(data, assetPath);
@@ -75,6 +76,42 @@ namespace LOTN.Editor
             terrain.basemapDistance = 450f;
             terrain.drawInstanced = true;
             terrain.gameObject.name = "Northern Rolling Snowfield";
+        }
+
+        private static TerrainLayer CreateSnowLayer()
+        {
+            const string texturePath = "Assets/Generated/Terrain/Northern_Snow_Albedo.png";
+            const string layerPath = "Assets/Generated/Terrain/Northern_Snow.terrainlayer";
+            Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            if (texture == null)
+            {
+                Texture2D generated = new Texture2D(128, 128, TextureFormat.RGB24, false, true);
+                Color[] pixels = new Color[128 * 128];
+                for (int y = 0; y < 128; y++)
+                for (int x = 0; x < 128; x++)
+                {
+                    float grain = Mathf.PerlinNoise(x * 0.19f, y * 0.19f) * 0.07f;
+                    float fleck = ((x * 17 + y * 31) % 13) / 13f * 0.025f;
+                    float value = Mathf.Clamp(0.82f + grain + fleck, 0.78f, 0.98f);
+                    pixels[y * 128 + x] = new Color(value * 0.96f, value * 0.985f, value, 1f);
+                }
+                generated.SetPixels(pixels);
+                generated.Apply();
+                File.WriteAllBytes(Path.GetFullPath(texturePath), generated.EncodeToPNG());
+                Object.DestroyImmediate(generated);
+                AssetDatabase.ImportAsset(texturePath, ImportAssetOptions.ForceUpdate);
+                texture = AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            }
+
+            TerrainLayer layer = AssetDatabase.LoadAssetAtPath<TerrainLayer>(layerPath);
+            if (layer == null)
+            {
+                layer = new TerrainLayer();
+                layer.diffuseTexture = texture;
+                layer.tileSize = new Vector2(24f, 24f);
+                AssetDatabase.CreateAsset(layer, layerPath);
+            }
+            return layer;
         }
 
         private static void CreateLight()
@@ -90,12 +127,25 @@ namespace LOTN.Editor
 
         private static void CreateEnvironment(int region)
         {
-            bool winterfell = region == 0;
-            AddModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, 265), 95f, winterfell ? "Winterfell Gatehouse" : "Regional Keep Landmark");
-            AddModel("Northern_Curtain_Wall.obj", new Vector3(-105, 0, 245), 105f, "Western Granite Curtain Wall");
-            AddModel("Northern_Curtain_Wall.obj", new Vector3(105, 0, 245), 105f, "Eastern Granite Curtain Wall");
-            AddModel("Northern_Watchtower.obj", new Vector3(-235, 0, 225), 36f, "Western Watchtower");
-            AddModel("Northern_Watchtower.obj", new Vector3(235, 0, 225), 36f, "Eastern Watchtower");
+            bool fortress = region == 0 || region == 1 || region == 4 || region == 8;
+            if (fortress)
+                AddModel("Winterfell_Gatehouse.obj", new Vector3(0, 0, region == 8 ? 315 : 265), region == 8 ? 78f : 95f,
+                    region == 0 ? "Winterfell Gatehouse" : "Northern Fortress Gatehouse");
+
+            if (region == 8)
+            {
+                AddModel("Northern_Curtain_Wall.obj", new Vector3(-300, 0, 310), 210f, "The Wall — Western Reach");
+                AddModel("Northern_Curtain_Wall.obj", new Vector3(0, 0, 330), 230f, "The Wall — Central Reach");
+                AddModel("Northern_Curtain_Wall.obj", new Vector3(300, 0, 310), 210f, "The Wall — Eastern Reach");
+            }
+            else if (fortress)
+            {
+                AddModel("Northern_Curtain_Wall.obj", new Vector3(-105, 0, 245), 105f, "Western Granite Curtain Wall");
+                AddModel("Northern_Curtain_Wall.obj", new Vector3(105, 0, 245), 105f, "Eastern Granite Curtain Wall");
+            }
+
+            AddModel("Northern_Watchtower.obj", new Vector3(-235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Western Watchtower");
+            AddModel("Northern_Watchtower.obj", new Vector3(235, 0, 225), region == 3 || region == 6 ? 44f : 36f, "Eastern Watchtower");
             AddModel("Northern_Cobblestone_Road.obj", new Vector3(0, 0, -55), 28f, "Snowbound Approach Road");
             AddModel("Northern_Longhouse.obj", new Vector3(-170, 0, -95), 34f, "Western Longhouse");
             AddModel("Northern_Longhouse.obj", new Vector3(170, 0, -105), 34f, "Eastern Longhouse");
@@ -109,13 +159,23 @@ namespace LOTN.Editor
             AddModel("Northern_Snowdrift.obj", new Vector3(-30, 0, -15), 25f, "Roadside Snowdrift");
             AddModel("Northern_Rock_Cluster.obj", new Vector3(-340, 0, 40), 24f, "Snow-Capped Rocks");
             AddModel("Northern_Rock_Cluster.obj", new Vector3(340, 0, 65), 24f, "Snow-Capped Rocks");
-            for (int i = 0; i < 24; i++)
+            if (region == 2) AddWaterBody("White Harbor Inlet", new Vector3(0f, -1.9f, 405f), new Vector3(8f, 1f, 2.8f));
+            if (region == 7)
+            {
+                AddWaterBody("Greywater Watch — East Channel", new Vector3(245f, -1.8f, 155f), new Vector3(2.8f, 1f, 8f));
+                AddWaterBody("Greywater Watch — West Channel", new Vector3(-235f, -1.8f, 115f), new Vector3(2.4f, 1f, 7f));
+            }
+
+            int treeCount = region == 3 || region == 6 ? 36 : (region == 7 || region == 2 ? 14 : 24);
+            for (int i = 0; i < treeCount; i++)
             {
                 float side = (i % 2 == 0) ? -1f : 1f;
                 float z = -120f + (i / 2) * 38f;
                 float x = side * (300f + (i % 3) * 24f);
                 AddModel("Northern_Pine_Tree.obj", new Vector3(x, 0, z), 22f + (i % 4) * 2.5f, "Snow-Capped Northern Pine");
             }
+
+            if (region != 0) return;
 
             GameObject npc = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             npc.name = "Northern Guard — Quest Giver";
@@ -135,6 +195,17 @@ namespace LOTN.Editor
                 objective.interactionId = "SupplyCrate";
                 objective.prompt = "Collect the supply crate";
             }
+        }
+
+        private static void AddWaterBody(string name, Vector3 position, Vector3 scale)
+        {
+            GameObject water = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            water.name = name;
+            water.transform.position = position;
+            water.transform.localScale = scale;
+            Collider collider = water.GetComponent<Collider>();
+            if (collider != null) Object.DestroyImmediate(collider);
+            water.GetComponent<Renderer>().sharedMaterial = MakeMaterial(new Color(0.12f, 0.23f, 0.31f));
         }
 
         private static GameObject AddModel(string file, Vector3 position, float targetSize, string objectName)
