@@ -22,3 +22,10 @@ The script imports the eleven OBJ sources into `/Game/Environment/North/SourceMe
 - The script must run after the C++ Editor target is compiled because it loads the native LOTNNPC and LOTNQuestObjective classes. It does not generate a .umap outside Unreal Editor.
 - Verify imported mesh pivots, material assignments, collision, normals and scale in the editor.
 - No compile, Android package or device performance result is implied by running the script.
+
+
+## Terrain and mobile atmosphere pass
+
+The rolling terrain OBJ now has broad, low-frequency hills (roughly 5–6 m peak-to-peak), with the castle foundation, central road corridor and settlement building pads kept level. Terrain faces use the existing snow material on gentle ground and stone-light/stone-dark slots on steeper slopes to break up the all-white silhouette. The assembly adds an outer tree line for a more enclosed northern-forest horizon.
+
+The directional sun is configured as a static light at a 72,000-lux baseline. The height fog is deliberately non-volumetric, with restrained density and a 2,200 cm start distance so the road, guard and objective remain readable. Build static lighting in Unreal Editor, inspect the result on the target mobile renderer, and reduce shadow distance/foliage density if frame time exceeds budget. These are configuration targets, not a verified lighting bake or device benchmark.
