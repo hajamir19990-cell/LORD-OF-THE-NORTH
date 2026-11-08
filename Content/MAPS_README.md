@@ -63,7 +63,7 @@ After the assembly script saves the binary map, the project configuration points
 - PlayerStart is reachable and the character does not spawn inside geometry.
 - Both towers and the main road read clearly in landscape.
 - NPC and objective actors block the Visibility trace through their interaction bounds.
-- All environment meshes have simple collision and mobile-appropriate LODs.
+- Environment meshes use role-appropriate prototype collision; replace complex-as-simple collision on terrain and structural assets with tested simple/convex collision where practical, and verify mobile-appropriate LODs.
 - Test movement, camera, interaction, quest, inventory, sprint and save/load before expanding the map.
 
 
