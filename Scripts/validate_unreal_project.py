@@ -147,6 +147,9 @@ if assembly_script.is_file():
             "EditorActorSubsystem" in assembly_text and
             "EditorLevelLibrary" not in assembly_text,
             "landscape assembly uses current Unreal editor subsystems")
+    require("StaticMeshEditorSubsystem" in assembly_text and
+            "set_generate_lightmap_uv" in assembly_text,
+            "environment meshes enable generated lightmap UVs for static lighting")
     require((assembly_text.count("# Timber palisades define") == 1 and
              assembly_text.count("# Snow-capped rock clusters") == 1 and
              assembly_text.count("# A small stone firepit") == 1),
