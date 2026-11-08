@@ -103,6 +103,77 @@ for index, (x, y) in enumerate(tree_positions):
     mesh_actor("Northern_Pine_Tree", (x, y, 0),
                yaw=float((index * 37) % 360), scale=size)
 
+# Native C++ NPCs and quest objective make the first slice playable without
+# requiring Blueprint children. Temporary engine primitives are visual markers;
+# replace them with licensed character/prop assets during the art pass.
+npc_class = unreal.load_class(None, "/Script/LordOfTheNorth.LOTNNPC")
+objective_class = unreal.load_class(None, "/Script/LordOfTheNorth.LOTNQuestObjective")
+if not npc_class or not objective_class:
+    raise RuntimeError("LOTNNPC/LOTNQuestObjective classes are unavailable; compile the Editor target first")
+
+def as_text(value):
+    return unreal.TextLibrary.conv_string_to_text(value)
+
+def spawn_npc(label, display_name, location, dialogue, offers_quest=False):
+    npc = actor_of(npc_class, label, location, unreal.Rotator(0.0, 0.0, 0.0))
+    npc.set_editor_property("display_name", as_text(display_name))
+    npc.set_editor_property("dialogue_text", as_text(dialogue))
+    npc.set_editor_property("b_offers_quest", offers_quest)
+    if offers_quest:
+        npc.set_editor_property("quest_id", "Winterfell_Delivery")
+        npc.set_editor_property("quest_title", as_text("A Northern Errand"))
+        npc.set_editor_property("quest_description", as_text(
+            "Inspect the supply marker on the road, then return to the northern guard."
+        ))
+        npc.set_editor_property("quest_objective", as_text(
+            "Inspect the supply marker beside the Winterfell approach road."
+        ))
+        npc.set_editor_property("required_progress", 1)
+        npc.set_editor_property("gold_reward", 25)
+        npc.set_editor_property("renown_reward", 5)
+
+    # A simple pillar marks the NPC until a proper skeletal character is imported.
+    marker = actor_of(unreal.StaticMeshActor, label + "_TEMP_VISUAL",
+                      (location[0], location[1], location[2] + 85),
+                      unreal.Rotator(0.0, 0.0, 0.0), (0.28, 0.28, 0.85))
+    marker_component = marker.get_component_by_class(unreal.StaticMeshComponent)
+    cylinder = unreal.load_asset("/Engine/BasicShapes/Cylinder.Cylinder")
+    if marker_component and cylinder:
+        marker_component.set_static_mesh(cylinder)
+        marker_component.set_collision_enabled(unreal.CollisionEnabled.NO_COLLISION)
+    return npc
+
+spawn_npc(
+    "NPC_Northern_Guard_QuestGiver",
+    "Northern Guard",
+    (0, -1320, 0),
+    "The supply marker on the road must be checked. Return to me when you have inspected it.",
+    True,
+)
+spawn_npc(
+    "NPC_Winterfell_Scout",
+    "Winterfell Scout",
+    (520, -420, 0),
+    "Keep to the road. The pines hide old tracks, and the gate is closer than it looks.",
+    False,
+)
+
+objective = actor_of(
+    objective_class,
+    "OBJ_Winterfell_Supply_Marker",
+    (0, -430, 0),
+    unreal.Rotator(0.0, 0.0, 0.0),
+)
+objective.set_editor_property("quest_id", "Winterfell_Delivery")
+objective.set_editor_property("progress_amount", 1)
+objective.set_editor_property("interaction_label", as_text("Inspect supply marker"))
+objective_mesh = objective.get_editor_property("visual_mesh")
+cube = unreal.load_asset("/Engine/BasicShapes/Cube.Cube")
+if objective_mesh and cube:
+    objective_mesh.set_static_mesh(cube)
+    objective_mesh.set_relative_location(unreal.Vector(0.0, 0.0, 45.0))
+    objective_mesh.set_relative_scale3d(unreal.Vector(0.35, 0.35, 0.9))
+
 # Player start and navigation coverage for the first walkable slice.
 actor_of(unreal.PlayerStart, "PlayerStart_Landscape_Approach",
          (0, -1700, 100), unreal.Rotator(0.0, 90.0, 0.0))
@@ -122,6 +193,6 @@ if not unreal.EditorLevelLibrary.save_current_level():
 
 unreal.log(
     "LOTN: WinterfellApproach landscape greybox saved. "
-    "Inspect rolling terrain collision/materials, add quest NPC Blueprints, "
-    "and profile mobile lighting before sign-off."
+    "Inspect terrain collision/materials, replace temporary NPC/quest markers "
+    "with final art, and profile mobile lighting before sign-off."
 )
