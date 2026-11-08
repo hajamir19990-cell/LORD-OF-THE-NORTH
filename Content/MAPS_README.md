@@ -69,7 +69,7 @@ After the assembly script saves the binary map, the project configuration points
 
 ## Additional greybox placement
 
-- Four 640 cm palisade modules at X = +/-850 and Y = -1200/-600 frame the road with a clear center lane.
+- Four 640 cm palisade modules at X = +/-850 and Y = -1200/-300 frame the road with a clear center lane.
 - Eight snow-capped rock clusters are distributed on the outer terrain margins, away from the central path.
-- A stone firepit sits near the east settlement building at approximately (1600, -1000).
+- A stone firepit sits near the east settlement building at approximately (1400, -1550).
 - NPC capsule roots and the quest crate are placed at Z=16 to align with the road surface; confirm the actual imported collision and terrain intersection in Editor.
