@@ -1,0 +1,24 @@
+name: Validate Unity migration
+
+on:
+  push:
+    branches: [migration/unity-urp]
+    paths:
+      - "UnityProject/**"
+      - "Scripts/validate_unity_project.py"
+      - ".github/workflows/unity-validate.yml"
+  pull_request:
+    branches: [migration/unity-urp]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate Unity project structure and source meshes
+        run: python3 Scripts/validate_unity_project.py
