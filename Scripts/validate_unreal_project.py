@@ -23,9 +23,10 @@ except Exception as exc:
 build_cs = ROOT / "Source/LordOfTheNorth/LordOfTheNorth.Build.cs"
 require(build_cs.is_file(), "module Build.cs exists")
 if build_cs.is_file():
-    text = build_cs.read_text(encoding="utf-8")
-    require('"Core"' in text and '"CoreUObject"' in text and '"Engine"' in text,
+    build_text = build_cs.read_text(encoding="utf-8")
+    require('"Core"' in build_text and '"CoreUObject"' in build_text and '"Engine"' in build_text,
             "module declares core Unreal dependencies")
+    require('"UMG"' in build_text, "module declares UMG dependency")
 
 for name in ("LordOfTheNorth.Target.cs", "LordOfTheNorthEditor.Target.cs"):
     require((ROOT / "Source" / name).is_file(), name + " exists")
@@ -41,17 +42,17 @@ for header in headers:
     lines = header.read_text(encoding="utf-8").splitlines()
     includes = [line.strip() for line in lines if line.strip().startswith("#include")]
     generated = [line for line in includes if ".generated.h" in line]
-    content = "\n".join(lines)
-    if any(token in content for token in ("UCLASS(", "USTRUCT(", "UINTERFACE(")):
+    content_text = "\n".join(lines)
+    if any(token in content_text for token in ("UCLASS(", "USTRUCT(", "UINTERFACE(")):
         require(len(generated) == 1, header.name + ": exactly one generated header include")
         if generated:
             require(bool(includes) and includes[-1] == generated[0],
                     header.name + ": generated header is the final include")
 
 for source in sources:
-    content = source.read_text(encoding="utf-8")
+    source_text = source.read_text(encoding="utf-8")
     if source.stem != "LordOfTheNorth":
-        require('#include "' + source.stem + '.h"' in content,
+        require('#include "' + source.stem + '.h"' in source_text,
                 source.name + ": includes its matching header")
 
 engine_config = ROOT / "Config/DefaultEngine.ini"
@@ -62,6 +63,11 @@ require("r.MobileHDR=False" in config_text, "mobile HDR is disabled in baseline 
 input_config = ROOT / "Config/DefaultInput.ini"
 input_text = input_config.read_text(encoding="utf-8") if input_config.exists() else ""
 require('ActionName="Interact"' in input_text, "interact action is mapped")
+require('ActionName="Sprint"' in input_text, "sprint action is mapped")
+require((public_dir / "LOTNInventoryComponent.h").is_file(), "inventory component header exists")
+require((private_dir / "LOTNInventoryComponent.cpp").is_file(), "inventory component source exists")
+require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
+require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
 
 for item in checks:
     print("PASS: " + item)
