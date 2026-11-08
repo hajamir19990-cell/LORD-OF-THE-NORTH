@@ -54,8 +54,5 @@ public:
     bool IsQuestCompleted(FName QuestId) const;
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Quest")
-    void RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FName>& InActiveQuestIds);
-
-    UFUNCTION(BlueprintPure, Category="LOTN|Quest")
-    TArray<FName> GetActiveQuestIds() const;
+    void RestoreQuestState(const TArray<FName>& InCompletedQuestIds, const TArray<FLOTNQuestEntry>& InActiveQuests);
 };
