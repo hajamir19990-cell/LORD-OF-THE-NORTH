@@ -15,8 +15,8 @@ ALOTNFoliageCluster::ALOTNFoliageCluster()
     TreeInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     TreeInstances->SetCanEverAffectNavigation(false);
     TreeInstances->SetCastShadow(true);
-    TreeInstances->InstanceStartCullDistance = 3500;
-    TreeInstances->InstanceEndCullDistance = 22000;
+    TreeInstances->InstanceStartCullDistance = 20000;
+    TreeInstances->InstanceEndCullDistance = 280000;
 }
 
 void ALOTNFoliageCluster::ConfigureTreeMesh(UStaticMesh* Mesh)
