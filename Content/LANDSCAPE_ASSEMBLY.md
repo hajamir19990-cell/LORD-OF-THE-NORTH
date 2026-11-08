@@ -15,7 +15,7 @@ The script imports the eleven OBJ sources into `/Game/Environment/North/SourceMe
 ## Important limitations
 
 - This is a greybox assembly script. The OBJ meshes are first-pass geometry and need art polish.
-- The rolling terrain and low-poly environment meshes use complex-as-simple collision in this prototype so the player cannot walk through the world. Verify collision cooking and profile its cost on target phones; replace with simplified UCX collision before release. The terrain is a first-pass static mesh, not a sculpted Unreal Landscape.
+- The rolling terrain includes a flattened foundation platform beneath the gatehouse, curtain walls and watchtowers. The assembly script samples the terrain grid and snaps roads, settlement buildings, trees, rocks, fences, firepit, NPCs, quest objective and PlayerStart to the terrain or road surface. The rolling terrain and low-poly environment meshes use complex-as-simple collision in this prototype so the player cannot walk through the world. Verify collision cooking and profile its cost on target phones; replace with simplified UCX collision before release. The terrain is a first-pass static mesh, not a sculpted Unreal Landscape.
 - Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.
 - The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
 - The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
