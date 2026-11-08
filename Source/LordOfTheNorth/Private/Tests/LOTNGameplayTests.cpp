@@ -115,7 +115,19 @@ bool FLOTNWorldMapDataTest::RunTest(const FString& Parameters)
     TestFalse(TEXT("Distant region remains locked below its renown gate"), WorldMap->IsLocationUnlocked(TEXT("TheDreadfort"), 0));
     TestTrue(TEXT("Renown unlocks the Dreadfort"), WorldMap->IsLocationUnlocked(TEXT("TheDreadfort"), 30));
     TestTrue(TEXT("Winterfell has the playable approach level"), WorldMap->IsLocationReadyToTravel(TEXT("Winterfell"), 0));
-    TestFalse(TEXT("Unlocked distant region is not travel-ready without a level"), WorldMap->IsLocationReadyToTravel(TEXT("TheDreadfort"), 30));
+    TestTrue(TEXT("Unlocked Dreadfort has its regional level"), WorldMap->IsLocationReadyToTravel(TEXT("TheDreadfort"), 30));
+    const FName RegionalIds[] = {
+        TEXT("TheDreadfort"), TEXT("WhiteHarbor"), TEXT("BearIsland"), TEXT("Karhold"),
+        TEXT("LastHearth"), TEXT("DeepwoodMotte"), TEXT("GreywaterWatch"), TEXT("TheWall")
+    };
+    for (const FName RegionId : RegionalIds)
+    {
+        FLOTNWorldLocation Region;
+        TestTrue(*FString::Printf(TEXT("%s has a dedicated level"), *RegionId.ToString()),
+            WorldMap->GetLocationById(RegionId, Region) && !Region.LevelName.IsNone());
+        TestTrue(*FString::Printf(TEXT("%s is travel-ready when unlocked"), *RegionId.ToString()),
+            WorldMap->IsLocationReadyToTravel(RegionId, 1000));
+    }
 
     FLOTNWorldLocation Winterfell;
     TestTrue(TEXT("Winterfell map record can be retrieved"), WorldMap->GetLocationById(TEXT("Winterfell"), Winterfell));
