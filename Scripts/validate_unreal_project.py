@@ -161,7 +161,7 @@ if assembly_script.is_file():
     require("ComponentMobility.STATIC" in assembly_text and
             '"intensity", 72000.0' in assembly_text,
             "mobile directional light uses a static-lighting baseline")
-    require('"b_enable_volumetric_fog", False' in assembly_text and
+    require('"enable_volumetric_fog", False' in assembly_text and
             '"fog_density", 0.0025' in assembly_text,
             "atmospheric fog is non-volumetric and mobile-conscious")
 
