@@ -3,7 +3,7 @@
 ## Fast editor setup
 
 1. Open the project in Unreal Engine 5; PythonScriptPlugin and EditorScriptingUtilities are enabled in the project file. Restart the editor if Unreal prompts you.
-2. Open the Python console or execute the script through the editor's Python execution command.
+2. Open the Python console or execute the script through the editor's Python execution command. The assembly uses LevelEditorSubsystem and EditorActorSubsystem rather than the deprecated EditorLevelLibrary.
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
 5. Inspect terrain collision and imported MTL material slots; replace flat starter colors with optimized snow/rock PBR textures, add foliage and a mobile-appropriate sky, then bake/static-light the scene. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
