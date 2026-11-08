@@ -21,7 +21,7 @@ Last updated: 2026-11-08
 
 ## Build and test status
 - GitHub Actions static source-structure validation exists.
-- An earlier run passed 48 static checks; that result was explicitly not an Unreal compile.
+- GitHub Actions passed 61 static structure checks with 0 failures on commit 27e7b890. The later workflow-only concurrency adjustment did not change the C++ source. These checks are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
 - No Unreal C++ compile has been verified.
 - No Android APK has been produced.
