@@ -66,7 +66,7 @@ public class MainActivity extends Activity {
 
     public static class HudView extends View {
         final GameView game; final Paint p=new Paint(3); final RectF leftJoy=new RectF(), action=new RectF();
-        float joyX,joyY; boolean joyDown; float downX,downY; String dialogueName="", dialogueText=""; boolean dialog=false;
+        float joyX,joyY; boolean joyDown,lookDown; float downX,downY; String dialogueName="", dialogueText=""; boolean dialog=false;
         HudView(Context c, GameView g){ super(c); game=g; p.setTypeface(Typeface.create("sans",Typeface.NORMAL)); setFocusable(true); }
         @Override protected void onDraw(Canvas c){
             super.onDraw(c); int w=getWidth(),h=getHeight();
@@ -106,9 +106,9 @@ public class MainActivity extends Activity {
         void interact(){ if(dialog){dialog=false; invalidate();return;} String[] d=game.renderer.interact(); if(d!=null){dialogueName=d[0];dialogueText=d[1];dialog=true;invalidate();} }
         @Override public boolean onTouchEvent(android.view.MotionEvent e){
             int a=e.getActionMasked(); float x=e.getX(),y=e.getY();
-            if(a==MotionEvent.ACTION_DOWN){downX=x;downY=y;if(leftJoy.contains(x,y)){joyDown=true;updateJoy(x,y);}else if(action.contains(x,y)){interact();} game.renderer.touchDown(x,y); return true;}
-            if(a==MotionEvent.ACTION_MOVE){if(joyDown){updateJoy(x,y);} else if(downX>getWidth()*0.45f){game.renderer.touchLook(x-downX,y-downY);downX=x;downY=y;}return true;}
-            if(a==MotionEvent.ACTION_UP||a==MotionEvent.ACTION_CANCEL){if(joyDown){joyDown=false;joyX=joyY=0;game.renderer.setJoystick(0,0);invalidate();}game.renderer.touchUp();return true;} return true;
+            if(a==MotionEvent.ACTION_DOWN){downX=x;downY=y;lookDown=x>getWidth()*0.45f&&!leftJoy.contains(x,y)&&!action.contains(x,y);if(leftJoy.contains(x,y)){joyDown=true;lookDown=false;updateJoy(x,y);}else if(action.contains(x,y)){lookDown=false;interact();} game.renderer.touchDown(x,y); return true;}
+            if(a==MotionEvent.ACTION_MOVE){if(joyDown){updateJoy(x,y);} else if(lookDown){game.renderer.touchLook(x-downX,y-downY);downX=x;downY=y;}return true;}
+            if(a==MotionEvent.ACTION_UP||a==MotionEvent.ACTION_CANCEL){if(joyDown){joyDown=false;joyX=joyY=0;game.renderer.setJoystick(0,0);invalidate();}lookDown=false;game.renderer.touchUp();return true;} return true;
         }
         void updateJoy(float x,float y){float cx=89,cy=getHeight()-101;float dx=x-cx,dy=y-cy;float l=(float)Math.hypot(dx,dy);if(l>48){dx*=48/l;dy*=48/l;}joyX=dx/48f;joyY=dy/48f;game.renderer.setJoystick(joyX,joyY);invalidate();}
     }
@@ -169,7 +169,7 @@ public class MainActivity extends Activity {
             dayTime=(dayTime+dt*.006f)%1f;
             float fx=-joystickY, rx=joystickX; float len=(float)Math.hypot(fx,rx); if(len>1){fx/=len;rx/=len;}
             float speed=6.2f; if(stamina>0 && Math.abs(fx)+Math.abs(rx)>1.4){speed=9.0f; stamina=Math.max(0,stamina-dt*18);}else stamina=Math.min(100,stamina+dt*10);
-            float sy=(float)Math.sin(playerYaw),cy=(float)Math.cos(playerYaw);
+            float sy=(float)Math.sin(camYaw),cy=(float)Math.cos(camYaw);
             playerX += (rx*cy+fx*sy)*speed*dt; playerZ += (fx*cy-rx*sy)*speed*dt;
             playerX=Math.max(-198,Math.min(198,playerX));playerZ=Math.max(-410,Math.min(80,playerZ));
             // discover sites / progress quest
