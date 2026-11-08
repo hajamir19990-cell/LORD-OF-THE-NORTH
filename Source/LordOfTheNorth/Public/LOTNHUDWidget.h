@@ -23,6 +23,7 @@ public:
 protected:
     virtual void NativeConstruct() override;
     virtual void NativeDestruct() override;
+    virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UProgressBar> HealthBar;
@@ -50,6 +51,9 @@ protected:
 
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UTextBlock> DialogueText;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> InteractionPromptText;
 
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UButton> InteractButton;
@@ -92,4 +96,8 @@ private:
     void HandleLoadClicked();
 
     void BindPlayerEvents(bool bBind);
+
+    FText CachedInteractionPrompt;
+    float PromptRefreshAccumulator = 0.f;
+    float PromptRefreshInterval = 0.15f;
 };
