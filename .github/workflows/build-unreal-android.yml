@@ -1,0 +1,50 @@
+name: Build Unreal Android package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unreal-android-package
+  cancel-in-progress: false
+
+jobs:
+  package-android:
+    name: Unreal Engine Android package (self-hosted)
+    runs-on: [self-hosted, unreal-engine, android]
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify Unreal and Android toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${UE_ROOT:-}" || { echo "UE_ROOT is not configured on this runner"; exit 1; }
+          test -x "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" || { echo "RunUAT.sh not found under UE_ROOT"; exit 1; }
+          test -n "${ANDROID_HOME:-}" || { echo "ANDROID_HOME is not configured"; exit 1; }
+          test -n "${JAVA_HOME:-}" || { echo "JAVA_HOME is not configured"; exit 1; }
+          find Content -type f -name '*.umap' -print -quit | grep -q . || {
+            echo "No Unreal map asset exists yet. Create Content/Maps/VerticalPrototype.umap before packaging."
+            exit 1
+          }
+
+      - name: Cook, build and package Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$UE_ROOT/Engine/Build/BatchFiles/RunUAT.sh" BuildCookRun \
+            -project="$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" \
+            -noP4 -platform=Android -target=LordOfTheNorth \
+            -clientconfig=Development -build -cook -stage -pak -package \
+            -archive -archivedirectory="$GITHUB_WORKSPACE/artifacts" -utf8output
+
+      - name: Upload Android package
+        uses: actions/upload-artifact@v4
+        with:
+          name: LORD-OF-THE-NORTH-Unreal-Android
+          path: artifacts/**
+          if-no-files-found: error
