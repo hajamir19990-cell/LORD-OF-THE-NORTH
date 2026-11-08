@@ -33,6 +33,32 @@ jobs:
             exit 1
           }
 
+      - name: Compile Unreal Editor target
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$UE_ROOT/Engine/Build/BatchFiles/Build.sh" LordOfTheNorthEditor Linux Development "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" -WaitMutex -NoHotReloadFromIDE
+
+      - name: Run gameplay automation tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          EDITOR_CMD="$UE_ROOT/Engine/Binaries/Linux/UnrealEditor-Cmd"
+          test -x "$EDITOR_CMD" || { echo "UnrealEditor-Cmd not found"; exit 1; }
+          "$EDITOR_CMD" "$GITHUB_WORKSPACE/LORD_OF_THE_NORTH.uproject" \
+            -unattended -nop4 -NullRHI -nosplash -nosound \
+            -ExecCmds="Automation RunTests LOTN; Quit" \
+            -TestExit="Automation Test Queue Empty" \
+            -log="$GITHUB_WORKSPACE/LOTN-Automation.log"
+
+      - name: Upload automation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LOTN-Unreal-Automation-Log
+          path: LOTN-Automation.log
+          if-no-files-found: ignore
+
       - name: Cook, build and package Android
         shell: bash
         run: |
