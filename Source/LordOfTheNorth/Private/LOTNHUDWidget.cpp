@@ -82,8 +82,8 @@ void ULOTNHUDWidget::BuildNativeLayout()
     RenownText = AddText(StatsPanel, TEXT("Renown: 0"), 12, TextColor);
     InventoryCountText = AddText(StatsPanel, TEXT("Inventory: 0"), 12, TextColor);
 
-    UVerticalBox* QuestPanel = AddPanel(TEXT("QuestPanel"), FAnchors(1.f, 0.f, 1.f, 0.f),
-        FVector2D(1.f, 0.f), FVector2D(-14.f, 14.f), FVector2D(218.f, 138.f));
+    UVerticalBox* QuestPanel = AddPanel(TEXT("QuestPanel"), FAnchors(0.f, 0.f, 0.f, 0.f),
+        FVector2D(0.f, 0.f), FVector2D(14.f, 196.f), FVector2D(292.f, 118.f));
     AddText(QuestPanel, TEXT("CURRENT TASK"), 12, FLinearColor(0.82f, 0.75f, 0.55f, 1.f));
     QuestTitleText = AddText(QuestPanel, TEXT("No active quest"), 14, TextColor);
     QuestObjectiveText = AddText(QuestPanel, TEXT(""), 11, TextColor);
@@ -100,7 +100,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
     {
         Slot->SetAnchors(FAnchors(0.5f, 1.f, 0.5f, 1.f));
         Slot->SetAlignment(FVector2D(0.5f, 1.f));
-        Slot->SetPosition(FVector2D(0.f, -250.f));
+        Slot->SetPosition(FVector2D(0.f, -278.f));
         Slot->SetSize(FVector2D(280.f, 34.f));
     }
     InteractionPromptText->SetVisibility(ESlateVisibility::Collapsed);
@@ -143,13 +143,13 @@ void ULOTNHUDWidget::BuildNativeLayout()
     };
 
     InteractButton = AddButton(TEXT("InteractButton"), TEXT("INTERACT"),
-        FAnchors(0.5f, 1.f, 0.5f, 1.f), FVector2D(0.5f, 1.f), FVector2D(-56.f, -112.f), FVector2D(112.f, 68.f));
+        FAnchors(0.5f, 1.f, 0.5f, 1.f), FVector2D(0.5f, 1.f), FVector2D(-38.f, -112.f), FVector2D(76.f, 64.f));
     SprintButton = AddButton(TEXT("SprintButton"), TEXT("SPRINT"),
-        FAnchors(1.f, 1.f, 1.f, 1.f), FVector2D(1.f, 1.f), FVector2D(-14.f, -112.f), FVector2D(96.f, 68.f));
+        FAnchors(1.f, 1.f, 1.f, 1.f), FVector2D(1.f, 1.f), FVector2D(-14.f, -112.f), FVector2D(78.f, 64.f));
     SaveButton = AddButton(TEXT("SaveButton"), TEXT("SAVE"),
-        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(14.f, -112.f), FVector2D(76.f, 48.f));
+        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(14.f, -112.f), FVector2D(50.f, 44.f));
     LoadButton = AddButton(TEXT("LoadButton"), TEXT("LOAD"),
-        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(98.f, -112.f), FVector2D(76.f, 48.f));
+        FAnchors(0.f, 1.f, 0.f, 1.f), FVector2D(0.f, 1.f), FVector2D(70.f, -112.f), FVector2D(50.f, 44.f));
 }
 
 void ULOTNHUDWidget::NativeOnInitialized()
