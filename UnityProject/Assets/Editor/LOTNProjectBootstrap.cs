@@ -3,6 +3,8 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using LOTN;
 
@@ -23,6 +25,8 @@ namespace LOTN.Editor
         public static void BuildPrototypeScenes()
         {
             EnsureFolder("Assets/Generated");
+            EnsureFolder("Assets/Settings");
+            EnsureURPAssets();
             EnsureFolder(GeneratedFolder);
             EnsureFolder(SceneFolder);
 
@@ -38,6 +42,42 @@ namespace LOTN.Editor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             Debug.Log("LOTN: created and registered " + sceneNames.Length + " landscape scenes.");
+        }
+
+        private static void EnsureURPAssets()
+        {
+            const string rendererPath = "Assets/Settings/LOTN_UniversalRenderer.asset";
+            const string pipelinePath = "Assets/Settings/LOTN_URP_Mobile.asset";
+
+            UniversalRendererData rendererData = AssetDatabase.LoadAssetAtPath<UniversalRendererData>(rendererPath);
+            if (rendererData == null)
+            {
+                rendererData = ScriptableObject.CreateInstance<UniversalRendererData>();
+                rendererData.name = "LOTN Universal Renderer";
+                rendererData.renderingMode = RenderingMode.Forward;
+                AssetDatabase.CreateAsset(rendererData, rendererPath);
+            }
+
+            UniversalRenderPipelineAsset pipeline = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>(pipelinePath);
+            if (pipeline == null)
+            {
+                pipeline = UniversalRenderPipelineAsset.Create(rendererData);
+                pipeline.name = "LOTN URP Mobile";
+                AssetDatabase.CreateAsset(pipeline, pipelinePath);
+            }
+
+            pipeline.renderScale = 0.9f;
+            pipeline.supportsHDR = false;
+            pipeline.supportsMainLightShadows = true;
+            pipeline.supportsSoftShadows = false;
+            pipeline.shadowDistance = 65f;
+            pipeline.msaaSampleCount = 2;
+            pipeline.useSRPBatcher = true;
+            GraphicsSettings.defaultRenderPipeline = pipeline;
+            QualitySettings.renderPipeline = pipeline;
+            EditorUtility.SetDirty(rendererData);
+            EditorUtility.SetDirty(pipeline);
+            AssetDatabase.SaveAssets();
         }
 
         private static void BuildScene(string sceneName, int regionIndex)
