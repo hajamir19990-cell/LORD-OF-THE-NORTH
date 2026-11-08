@@ -115,3 +115,13 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 - [ ] Two gatehouse wolf banners face the approach, show red cloth and gold crest, and do not intersect the stone facade.
 - [ ] All four new OBJ assets import successfully, expose intended material slots and have generated lightmap UVs.
 - [ ] All new decorative props have collision disabled and no actor duplicates after map assembly.
+
+
+## Northern regional map
+- [ ] MAP button opens the regional map overlay and CLOSE returns to gameplay.
+- [ ] All nine northern locations appear at their normalized map coordinates.
+- [ ] Connected route lines render behind the region buttons without crossing labels in a confusing way.
+- [ ] Selecting each region updates its name, region type, description, unlock state and connected routes.
+- [ ] Renown changes refresh locked/unlocked node styling and the selected region's status.
+- [ ] Winterfell is marked as the current region and resolves to WinterfellApproach; other regions clearly report that their destination levels are not built yet.
+- [ ] The map remains readable on 16:9, 20:9 and 16:10 landscape screens and does not overlap the movement joystick.
