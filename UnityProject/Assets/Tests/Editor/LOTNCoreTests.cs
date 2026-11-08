@@ -42,6 +42,7 @@ namespace LOTN.Tests
         [Test]
         public void PlayerPositionIsStoredPerRegion()
         {
+            PlayerPrefs.DeleteKey("LOTN.Position.LOTN_TheWall.Saved");
             GameObject go = new GameObject("Position Session Test");
             try
             {
@@ -59,6 +60,7 @@ namespace LOTN.Tests
                 PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.X");
                 PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.Y");
                 PlayerPrefs.DeleteKey("LOTN.Position.WinterfellApproach.Z");
+                PlayerPrefs.DeleteKey("LOTN.Position.LOTN_TheWall.Saved");
             }
         }
 
