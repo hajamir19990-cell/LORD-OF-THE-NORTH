@@ -10,7 +10,7 @@
 
 ALOTNCharacter::ALOTNCharacter()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
     PlayerStats = CreateDefaultSubobject<ULOTNPlayerStatsComponent>(TEXT("PlayerStats"));
     QuestComponent = CreateDefaultSubobject<ULOTNQuestComponent>(TEXT("QuestComponent"));
     InteractionComponent = CreateDefaultSubobject<ULOTNInteractionComponent>(TEXT("InteractionComponent"));
@@ -22,7 +22,7 @@ ALOTNCharacter::ALOTNCharacter()
 
     GetCharacterMovement()->bOrientRotationToMovement = true;
     GetCharacterMovement()->RotationRate = FRotator(0.f, 520.f, 0.f);
-    GetCharacterMovement()->MaxWalkSpeed = 360.f;
+    GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
     GetCharacterMovement()->BrakingDecelerationWalking = 1800.f;
 
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -37,6 +37,35 @@ ALOTNCharacter::ALOTNCharacter()
     FollowCamera->bUsePawnControlRotation = false;
 }
 
+void ALOTNCharacter::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    StaminaUpdateAccumulator += DeltaSeconds;
+    if (StaminaUpdateAccumulator < StaminaUpdateInterval)
+    {
+        return;
+    }
+
+    const float UpdateDelta = StaminaUpdateAccumulator;
+    StaminaUpdateAccumulator = 0.f;
+
+    if (PlayerStats && bSprintRequested && PlayerStats->Stamina > 0.f)
+    {
+        bIsSprinting = PlayerStats->ConsumeStamina(SprintStaminaDrainPerSecond * UpdateDelta);
+    }
+    else
+    {
+        bIsSprinting = false;
+        if (PlayerStats)
+        {
+            PlayerStats->RestoreStamina(StaminaRegenPerSecond * UpdateDelta);
+        }
+    }
+
+    GetCharacterMovement()->MaxWalkSpeed = bIsSprinting ? SprintSpeed : WalkSpeed;
+}
+
 void ALOTNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -45,6 +74,8 @@ void ALOTNCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
     PlayerInputComponent->BindAxis("Turn", this, &ALOTNCharacter::TurnCamera);
     PlayerInputComponent->BindAxis("LookUp", this, &ALOTNCharacter::LookCamera);
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ALOTNCharacter::InteractPressed);
+    PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ALOTNCharacter::StartSprint);
+    PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ALOTNCharacter::StopSprint);
 }
 
 void ALOTNCharacter::InteractPressed()
@@ -53,6 +84,16 @@ void ALOTNCharacter::InteractPressed()
     {
         InteractionComponent->TryInteract();
     }
+}
+
+void ALOTNCharacter::StartSprint()
+{
+    bSprintRequested = true;
+}
+
+void ALOTNCharacter::StopSprint()
+{
+    bSprintRequested = false;
 }
 
 void ALOTNCharacter::MoveForward(float Value)
