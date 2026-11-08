@@ -119,10 +119,28 @@ for index, (x, y) in enumerate(rock_positions):
     mesh_actor("Northern_Rock_Cluster", (x, y, -5),
                yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
 
+# Timber palisades define the settlement edge without closing the main road.
+for x in (-850, 850):
+    for y in (-1200, -600):
+        mesh_actor("Northern_Palisade_Fence", (x, y, 16),
+                   yaw=0.0 if x < 0 else 180.0)
+
+# Snow-capped rock clusters frame the outer terrain and break up empty margins.
+rock_positions = (
+    (-3300, -1750), (-2850, -650), (-3400, 650), (-2850, 1850),
+    (3300, -1700), (2850, -600), (3400, 700), (2900, 1900),
+)
+for index, (x, y) in enumerate(rock_positions):
+    mesh_actor("Northern_Rock_Cluster", (x, y, -5),
+               yaw=float(index * 29), scale=0.9 + (index % 3) * 0.12)
+
 # Settlement buildings sit off the central camera and movement corridor.
 mesh_actor("Northern_Longhouse", (-1250, -800, 0), yaw=8.0, scale=1.0)
 mesh_actor("Northern_Longhouse", (1250, -650, 0), yaw=172.0, scale=0.82)
 mesh_actor("Northern_Longhouse", (1850, -1150, 0), yaw=195.0, scale=0.68)
+
+# A small stone firepit adds a readable settlement landmark away from the road.
+mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
 
 # A small stone firepit adds a readable settlement landmark away from the road.
 mesh_actor("Northern_Stone_Firepit", (1600, -1000, 16), yaw=12.0)
