@@ -68,6 +68,7 @@ require((public_dir / "LOTNInventoryComponent.h").is_file(), "inventory componen
 require((private_dir / "LOTNInventoryComponent.cpp").is_file(), "inventory component source exists")
 require((public_dir / "LOTNWorldMapData.h").is_file(), "world map data header exists")
 require((private_dir / "LOTNWorldMapData.cpp").is_file(), "world map data source exists")
+require((private_dir / "Tests/LOTNGameplayTests.cpp").is_file(), "gameplay automation tests exist")
 
 for item in checks:
     print("PASS: " + item)
