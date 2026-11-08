@@ -44,21 +44,23 @@ namespace LOTN
 
         public void SavePlayerPosition(string sceneName, Vector3 position)
         {
-            PlayerPrefs.SetString("LOTN.LastScene", sceneName);
-            PlayerPrefs.SetFloat("LOTN.PosX", position.x);
-            PlayerPrefs.SetFloat("LOTN.PosY", position.y);
-            PlayerPrefs.SetFloat("LOTN.PosZ", position.z);
+            string key = "LOTN.Position." + sceneName + ".";
+            PlayerPrefs.SetInt(key + "Saved", 1);
+            PlayerPrefs.SetFloat(key + "X", position.x);
+            PlayerPrefs.SetFloat(key + "Y", position.y);
+            PlayerPrefs.SetFloat(key + "Z", position.z);
             PlayerPrefs.Save();
         }
 
         public bool TryGetPlayerPosition(string sceneName, out Vector3 position)
         {
-            if (PlayerPrefs.GetString("LOTN.LastScene", "") == sceneName)
+            string key = "LOTN.Position." + sceneName + ".";
+            if (PlayerPrefs.GetInt(key + "Saved", 0) == 1)
             {
                 position = new Vector3(
-                    PlayerPrefs.GetFloat("LOTN.PosX", 0f),
-                    PlayerPrefs.GetFloat("LOTN.PosY", 4f),
-                    PlayerPrefs.GetFloat("LOTN.PosZ", -345f));
+                    PlayerPrefs.GetFloat(key + "X", 0f),
+                    PlayerPrefs.GetFloat(key + "Y", 4f),
+                    PlayerPrefs.GetFloat(key + "Z", -345f));
                 return true;
             }
             position = Vector3.zero;
