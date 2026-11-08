@@ -7,10 +7,10 @@
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
 5. Inspect terrain collision; add snow/rock materials, foliage, a mobile-appropriate sky and baked/static lighting. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
-6. Create Blueprint children of LOTNNPC and LOTNQuestObjective and place them at the coordinates in MAPS_README.md.
+6. The assembly script places native LOTNNPC and LOTNQuestObjective actors for the first quest loop; replace their temporary pillar/cube markers with approved character and prop assets after import.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
-The script imports the seven OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees, a rolling terrain surface and PlayerStart. It also adds a navigation bounds volume, directional light and temporary exponential-height fog, then saves the new level.
+The script imports the seven OBJ sources into `/Game/Environment/North/SourceMeshes`, places the gatehouse, two crenellated wall segments, two watchtowers, three adjoining road tiles, three longhouses, twelve pine trees, a rolling terrain surface and PlayerStart. It also spawns a quest-giving northern guard, a scout, and a matching supply-marker objective using the native C++ gameplay classes. Temporary engine primitive markers stand in for final character/prop art. A navigation bounds volume, directional light and temporary exponential-height fog are added before the new level is saved.
 
 ## Important limitations
 
@@ -19,6 +19,6 @@ The script imports the seven OBJ sources into `/Game/Environment/North/SourceMes
 - Curtain wall and watchtower OBJ files are modular greybox geometry, not detailed production-ready castle art.
 - The navigation volume is only a starting bound; verify Recast generation and walkable slopes in the editor.
 - The script adds a fog actor but leaves its final density/material/lighting tuning to editor review.
-- The script does not generate a final .umap outside Unreal Editor and does not create NPC/quest Blueprints.
+- The script must run after the C++ Editor target is compiled because it loads the native LOTNNPC and LOTNQuestObjective classes. It does not generate a .umap outside Unreal Editor.
 - Verify imported mesh pivots, material assignments, collision, normals and scale in the editor.
 - No compile, Android package or device performance result is implied by running the script.
