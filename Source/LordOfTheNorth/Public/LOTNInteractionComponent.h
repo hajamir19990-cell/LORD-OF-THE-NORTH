@@ -5,6 +5,7 @@
 #include "LOTNInteractionComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLOTNInteractionPromptChanged, const FText&, PromptText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLOTNInteractionMessage, const FText&, MessageText);
 
 UCLASS(ClassGroup=(LOTN), meta=(BlueprintSpawnableComponent))
 class LORDOFTHENORTH_API ULOTNInteractionComponent : public UActorComponent
@@ -19,6 +20,9 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category="LOTN|Interaction")
     FLOTNInteractionPromptChanged OnPromptChanged;
+
+    UPROPERTY(BlueprintAssignable, Category="LOTN|Interaction")
+    FLOTNInteractionMessage OnInteractionMessage;
 
     UFUNCTION(BlueprintCallable, Category="LOTN|Interaction")
     bool TryInteract();
