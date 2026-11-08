@@ -9,4 +9,4 @@ Unreal Editor will generate and manage binary assets here. The first editor mile
 - UI/HUD — optional Widget Blueprint customization; the C++ native portrait HUD works by default
 - Audio/Ambience — wind, snowfall, footsteps and northern settlement ambience
 
-Do not commit Unreal-generated cache folders or derived build output. Add only source assets with confirmed redistribution licenses. See Docs/ASSET_REGISTER.md for candidate sources and mobile import checks.
+Do not commit Unreal-generated cache folders or derived build output. Add only source assets with confirmed redistribution licenses. See MAPS_README.md for the first level assembly checklist and Docs/ASSET_REGISTER.md for candidate sources and mobile import checks.
