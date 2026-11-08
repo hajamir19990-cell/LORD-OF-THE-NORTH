@@ -6,6 +6,7 @@
 #include "LOTNInventoryItemRowWidget.h"
 #include "LOTNInteractionComponent.h"
 #include "LOTNSaveSubsystem.h"
+#include "LOTNWorldMapData.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
@@ -195,6 +196,261 @@ void ULOTNHUDWidget::BuildNativeLayout()
         FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-160.f, 62.f), FVector2D(66.f, 38.f));
     LoadButton = AddButton(TEXT("LoadButton"), TEXT("LOAD"),
         FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-86.f, 62.f), FVector2D(66.f, 38.f));
+    MapButton = AddButton(TEXT("MapButton"), TEXT("MAP"),
+        FAnchors(1.f, 0.f, 1.f, 0.f), FVector2D(1.f, 0.f), FVector2D(-92.f, 14.f), FVector2D(70.f, 40.f));
+
+    BuildWorldMapPanel(Canvas);
+}
+
+void ULOTNHUDWidget::BuildWorldMapPanel(UCanvasPanel* ParentCanvas)
+{
+    if (!WidgetTree || !ParentCanvas)
+    {
+        return;
+    }
+
+    WorldMapData = NewObject<ULOTNWorldMapData>(this);
+    if (!WorldMapData)
+    {
+        return;
+    }
+
+    WorldMapPanel = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass(), TEXT("WorldMapPanel"));
+    WorldMapPanel->SetBrushColor(FLinearColor(0.018f, 0.028f, 0.04f, 0.98f));
+    WorldMapPanel->SetPadding(FMargin(14.f, 12.f, 14.f, 12.f));
+
+    UVerticalBox* MapRoot = WidgetTree->ConstructWidget<UVerticalBox>(UVerticalBox::StaticClass());
+    UHorizontalBox* MapHeader = WidgetTree->ConstructWidget<UHorizontalBox>(UHorizontalBox::StaticClass());
+
+    UTextBlock* MapTitle = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+    MapTitle->SetText(NSLOCTEXT("LOTN", "NorthernMapTitle", "THE NORTH  /  REGIONAL MAP"));
+    MapTitle->SetColorAndOpacity(FSlateColor(FLinearColor(0.82f, 0.75f, 0.55f, 1.f)));
+    MapTitle->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 16));
+    MapHeader->AddChildToHorizontalBox(MapTitle);
+
+    WorldMapCloseButton = WidgetTree->ConstructWidget<UButton>(UButton::StaticClass(), TEXT("WorldMapCloseButton"));
+    WorldMapCloseButton->SetBackgroundColor(FLinearColor(0.18f, 0.12f, 0.12f, 1.f));
+    UTextBlock* CloseLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+    CloseLabel->SetText(NSLOCTEXT("LOTN", "CloseWorldMap", "CLOSE"));
+    CloseLabel->SetColorAndOpacity(FSlateColor(FLinearColor(0.88f, 0.91f, 0.92f, 1.f)));
+    CloseLabel->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 11));
+    WorldMapCloseButton->AddChild(CloseLabel);
+    MapHeader->AddChildToHorizontalBox(WorldMapCloseButton);
+    MapRoot->AddChildToVerticalBox(MapHeader);
+
+    USizeBox* MapArea = WidgetTree->ConstructWidget<USizeBox>(USizeBox::StaticClass());
+    MapArea->SetWidthOverride(640.f);
+    MapArea->SetHeightOverride(292.f);
+
+    UBorder* MapFrame = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
+    MapFrame->SetBrushColor(FLinearColor(0.075f, 0.095f, 0.105f, 1.f));
+    MapFrame->SetPadding(FMargin(4.f));
+    WorldMapCanvas = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), TEXT("WorldMapCanvas"));
+    MapFrame->SetContent(WorldMapCanvas);
+    MapArea->AddChild(MapFrame);
+    MapRoot->AddChildToVerticalBox(MapArea);
+
+    WorldMapDetailsText = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), TEXT("WorldMapDetailsText"));
+    WorldMapDetailsText->SetColorAndOpacity(FSlateColor(FLinearColor(0.86f, 0.89f, 0.90f, 1.f)));
+    WorldMapDetailsText->SetFont(FCoreStyle::GetDefaultFontStyle("Regular", 12));
+    WorldMapDetailsText->SetAutoWrapText(true);
+    MapRoot->AddChildToVerticalBox(WorldMapDetailsText);
+
+    WorldMapPanel->SetContent(MapRoot);
+    if (UCanvasPanelSlot* Slot = ParentCanvas->AddChildToCanvas(WorldMapPanel))
+    {
+        Slot->SetAnchors(FAnchors(0.5f, 0.5f, 0.5f, 0.5f));
+        Slot->SetAlignment(FVector2D(0.5f, 0.5f));
+        Slot->SetPosition(FVector2D(0.f, 0.f));
+        Slot->SetSize(FVector2D(690.f, 430.f));
+    }
+    WorldMapPanel->SetVisibility(ESlateVisibility::Collapsed);
+
+    // Draw each road once, then place all nine regional nodes over the route graph.
+    for (const FLOTNWorldLocation& Location : WorldMapData->Locations)
+    {
+        for (const FName ConnectedId : Location.ConnectedLocationIds)
+        {
+            if (Location.LocationId.ToString() >= ConnectedId.ToString())
+            {
+                continue;
+            }
+
+            const FLOTNWorldLocation* Connected = WorldMapData->Locations.FindByPredicate(
+                [ConnectedId](const FLOTNWorldLocation& Candidate)
+                {
+                    return Candidate.LocationId == ConnectedId;
+                });
+            if (!Connected)
+            {
+                continue;
+            }
+
+            const FVector2D A(20.f + Location.MapPosition.X * 590.f,
+                              14.f + Location.MapPosition.Y * 250.f);
+            const FVector2D B(20.f + Connected->MapPosition.X * 590.f,
+                              14.f + Connected->MapPosition.Y * 250.f);
+            const FVector2D Delta = B - A;
+            UBorder* RouteLine = WidgetTree->ConstructWidget<UBorder>(UBorder::StaticClass());
+            RouteLine->SetBrushColor(FLinearColor(0.48f, 0.50f, 0.47f, 0.62f));
+            if (UCanvasPanelSlot* LineSlot = WorldMapCanvas->AddChildToCanvas(RouteLine))
+            {
+                LineSlot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+                LineSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+                LineSlot->SetPosition((A + B) * 0.5f);
+                LineSlot->SetSize(FVector2D(Delta.Size(), 3.f));
+            }
+            RouteLine->SetRenderTransformAngle(FMath::RadiansToDegrees(FMath::Atan2(Delta.Y, Delta.X)));
+        }
+    }
+
+    for (const FLOTNWorldLocation& Location : WorldMapData->Locations)
+    {
+        UButton* Node = WidgetTree->ConstructWidget<UButton>(
+            UButton::StaticClass(),
+            FName(*FString::Printf(TEXT("WorldMapNode_%s"), *Location.LocationId.ToString())));
+        Node->SetBackgroundColor(FLinearColor(0.16f, 0.19f, 0.19f, 1.f));
+
+        UTextBlock* NodeLabel = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass());
+        NodeLabel->SetText(Location.DisplayName);
+        NodeLabel->SetColorAndOpacity(FSlateColor(FLinearColor(0.92f, 0.93f, 0.91f, 1.f)));
+        NodeLabel->SetFont(FCoreStyle::GetDefaultFontStyle("Bold", 10));
+        NodeLabel->SetJustification(ETextJustify::Center);
+        Node->AddChild(NodeLabel);
+
+        if (UCanvasPanelSlot* NodeSlot = WorldMapCanvas->AddChildToCanvas(Node))
+        {
+            NodeSlot->SetAnchors(FAnchors(0.f, 0.f, 0.f, 0.f));
+            NodeSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+            NodeSlot->SetPosition(FVector2D(20.f + Location.MapPosition.X * 590.f,
+                                            14.f + Location.MapPosition.Y * 250.f));
+            NodeSlot->SetSize(FVector2D(112.f, 34.f));
+        }
+
+        const FName LocationId = Location.LocationId;
+        Node->OnClicked.AddLambda([this, LocationId]()
+        {
+            SelectWorldMapLocation(LocationId);
+        });
+        WorldMapNodeButtons.Add(Location.LocationId, Node);
+    }
+
+    RefreshWorldMapPanel();
+    SelectWorldMapLocation(TEXT("Winterfell"));
+}
+
+void ULOTNHUDWidget::RefreshWorldMapPanel()
+{
+    if (!WorldMapData)
+    {
+        return;
+    }
+
+    const ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    const int32 CurrentRenown = Player && Player->PlayerStats ? Player->PlayerStats->Renown : 0;
+
+    for (const FLOTNWorldLocation& Location : WorldMapData->Locations)
+    {
+        if (TObjectPtr<UButton>* Node = WorldMapNodeButtons.Find(Location.LocationId))
+        {
+            const bool bUnlocked = WorldMapData->IsLocationUnlocked(Location.LocationId, CurrentRenown);
+            (*Node)->SetBackgroundColor(bUnlocked
+                ? FLinearColor(0.22f, 0.28f, 0.24f, 1.f)
+                : FLinearColor(0.14f, 0.16f, 0.18f, 1.f));
+        }
+    }
+
+    if (!SelectedWorldMapLocation.IsNone())
+    {
+        SelectWorldMapLocation(SelectedWorldMapLocation);
+    }
+}
+
+void ULOTNHUDWidget::SelectWorldMapLocation(FName LocationId)
+{
+    if (!WorldMapData || !WorldMapDetailsText)
+    {
+        return;
+    }
+
+    FLOTNWorldLocation Location;
+    if (!WorldMapData->GetLocationById(LocationId, Location))
+    {
+        return;
+    }
+
+    SelectedWorldMapLocation = LocationId;
+    const ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    const int32 CurrentRenown = Player && Player->PlayerStats ? Player->PlayerStats->Renown : 0;
+    const bool bUnlocked = WorldMapData->IsLocationUnlocked(LocationId, CurrentRenown);
+
+    FString Status;
+    if (LocationId == TEXT("Winterfell"))
+    {
+        Status = TEXT("CURRENT REGION");
+    }
+    else if (bUnlocked)
+    {
+        Status = TEXT("UNLOCKED");
+    }
+    else
+    {
+        Status = FString::Printf(TEXT("LOCKED  /  %d RENOWN REQUIRED"), Location.RequiredRenown);
+    }
+
+    FString TravelStatus = WorldMapData->IsLocationReadyToTravel(LocationId, CurrentRenown)
+        ? TEXT("Travel destination available.")
+        : (bUnlocked ? TEXT("Region map is not built yet; travel is unavailable.")
+                     : TEXT("Earn more renown to unlock this region."));
+
+    FString Routes;
+    for (const FName ConnectedId : Location.ConnectedLocationIds)
+    {
+        FLOTNWorldLocation Connected;
+        if (WorldMapData->GetLocationById(ConnectedId, Connected))
+        {
+            if (!Routes.IsEmpty())
+            {
+                Routes += TEXT("  •  ");
+            }
+            Routes += Connected.DisplayName.ToString();
+        }
+    }
+
+    WorldMapDetailsText->SetText(FText::FromString(FString::Printf(
+        TEXT("%s  |  %s  |  %s\n%s\nRoutes: %s"),
+        *Location.DisplayName.ToString(),
+        *Location.RegionType.ToString(),
+        *Status,
+        *Location.Description.ToString(),
+        *Routes)));
+    (void)TravelStatus;
+}
+
+void ULOTNHUDWidget::ToggleWorldMapPanel(bool bShow)
+{
+    if (WorldMapPanel)
+    {
+        WorldMapPanel->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+        if (bShow)
+        {
+            ToggleInventoryPanel(false);
+            RefreshWorldMapPanel();
+        }
+    }
+}
+
+void ULOTNHUDWidget::HandleWorldMapToggleClicked()
+{
+    if (WorldMapPanel)
+    {
+        ToggleWorldMapPanel(WorldMapPanel->GetVisibility() != ESlateVisibility::Visible);
+    }
+}
+
+void ULOTNHUDWidget::HandleWorldMapCloseClicked()
+{
+    ToggleWorldMapPanel(false);
 }
 
 void ULOTNHUDWidget::NativeOnInitialized()
