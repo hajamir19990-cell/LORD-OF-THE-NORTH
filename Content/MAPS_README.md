@@ -82,3 +82,12 @@ After the assembly script saves the binary map, the project configuration points
 - The palisade, rock and firepit dressing is created exactly once per map assembly; all of these props use sampled terrain height rather than a hard-coded Z value.
 - Terrain, road and major structures keep prototype blocking collision. Pine trees, decorative rock clusters and the firepit are non-blocking; the player capsule remains the only character movement collider.
 - This is still an editor-generated greybox. Confirm imported mesh bounds, pivots, visual overlaps, Recast navigation and Android performance in Unreal Editor before treating the map as playable.
+
+
+## Terrain relief and forest silhouette
+
+- The 49 x 49 terrain grid now carries broad rolling elevation with approximately 5–6 m peak-to-peak variation in the outer approach and perimeter.
+- The castle footprint, road/player corridor and three longhouse pads are flattened for reliable foundations and traversal; terrain sampling still places the surrounding props and NPCs on the modified surface.
+- The terrain uses the snow MTL slot on gentle faces and existing stone-light/stone-dark slots on steeper faces to introduce exposed rock bands without adding texture dependencies.
+- The pine grove count is increased to 24, with an outer tree line framing the approach. Keep the central road and guard/objective sightlines clear.
+- The directional light is configured as static (72,000 lux baseline). Fog is non-volumetric, starts 2,200 cm from camera and has restrained density. Build lighting in the editor and profile the mobile renderer; do not treat these settings as a completed light bake.
