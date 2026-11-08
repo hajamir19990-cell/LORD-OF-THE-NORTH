@@ -2,6 +2,7 @@
 #include "LOTNCharacter.h"
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
+#include "LOTNInventoryComponent.h"
 #include "LOTNInteractionComponent.h"
 #include "LOTNSaveSubsystem.h"
 #include "Components/ProgressBar.h"
@@ -84,6 +85,18 @@ void ULOTNHUDWidget::BindPlayerEvents(bool bBind)
         }
     }
 
+    if (Player->InventoryComponent)
+    {
+        if (bBind)
+        {
+            Player->InventoryComponent->OnInventoryChanged.AddDynamic(this, &ULOTNHUDWidget::HandleInventoryChanged);
+        }
+        else
+        {
+            Player->InventoryComponent->OnInventoryChanged.RemoveDynamic(this, &ULOTNHUDWidget::HandleInventoryChanged);
+        }
+    }
+
     if (Player->InteractionComponent)
     {
         if (bBind)
@@ -125,6 +138,11 @@ void ULOTNHUDWidget::RefreshHUD()
         }
     }
 
+    if (InventoryCountText && Player->InventoryComponent)
+    {
+        InventoryCountText->SetText(FText::AsNumber(Player->InventoryComponent->GetTotalItemCount()));
+    }
+
     if (QuestTitleText && QuestObjectiveText && QuestProgressText)
     {
         if (Player->QuestComponent && Player->QuestComponent->ActiveQuests.Num() > 0)
@@ -161,6 +179,11 @@ void ULOTNHUDWidget::HandleStatsChanged()
 }
 
 void ULOTNHUDWidget::HandleQuestChanged()
+{
+    RefreshHUD();
+}
+
+void ULOTNHUDWidget::HandleInventoryChanged()
 {
     RefreshHUD();
 }
