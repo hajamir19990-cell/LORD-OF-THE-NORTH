@@ -100,7 +100,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
     {
         Slot->SetAnchors(FAnchors(0.5f, 1.f, 0.5f, 1.f));
         Slot->SetAlignment(FVector2D(0.5f, 1.f));
-        Slot->SetPosition(FVector2D(0.f, -278.f));
+        Slot->SetPosition(FVector2D(0.f, -250.f));
         Slot->SetSize(FVector2D(280.f, 34.f));
     }
     InteractionPromptText->SetVisibility(ESlateVisibility::Collapsed);
@@ -116,7 +116,7 @@ void ULOTNHUDWidget::BuildNativeLayout()
     {
         Slot->SetAnchors(FAnchors(0.5f, 1.f, 0.5f, 1.f));
         Slot->SetAlignment(FVector2D(0.5f, 1.f));
-        Slot->SetPosition(FVector2D(0.f, -204.f));
+        Slot->SetPosition(FVector2D(0.f, -180.f));
         Slot->SetSize(FVector2D(320.f, 64.f));
     }
     DialoguePanel->SetVisibility(ESlateVisibility::Collapsed);
