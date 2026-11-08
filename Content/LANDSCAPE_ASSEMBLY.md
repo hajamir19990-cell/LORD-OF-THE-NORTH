@@ -6,7 +6,7 @@
 2. Open the Python console or execute the script through the editor's Python execution command.
 3. Run `Scripts/create_winterfell_landscape.py` from the project root.
 4. Open `/Game/Maps/WinterfellApproach` and inspect imported mesh scale, wall alignment, road continuity, fog and actor placement.
-5. Inspect terrain collision; add snow/rock materials, foliage, a mobile-appropriate sky and baked/static lighting. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
+5. Inspect terrain collision and imported MTL material slots; replace flat starter colors with optimized snow/rock PBR textures, add foliage and a mobile-appropriate sky, then bake/static-light the scene. Consider converting the static terrain mesh to a sculpted Landscape for layered materials.
 6. The assembly script places native LOTNNPC and LOTNQuestObjective actors for the first quest loop; replace their temporary pillar marker and greybox crate with approved character and prop assets after import.
 7. Set the map's GameMode override to LOTNGameMode, save, then run the QA checklist.
 
