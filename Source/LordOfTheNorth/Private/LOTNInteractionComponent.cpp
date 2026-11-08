@@ -46,7 +46,11 @@ bool ULOTNInteractionComponent::TryInteract()
         return false;
     }
 
-    ILOTNInteractable::Execute_Interact(Target, OwnerActor);
+    const FText Message = ILOTNInteractable::Execute_Interact(Target, OwnerActor);
+    if (!Message.IsEmpty())
+    {
+        OnInteractionMessage.Broadcast(Message);
+    }
     OnPromptChanged.Broadcast(ILOTNInteractable::Execute_GetInteractionText(Target, OwnerActor));
     return true;
 }
