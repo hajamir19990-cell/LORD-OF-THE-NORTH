@@ -106,6 +106,9 @@ private:
     void HandleInventoryCloseClicked();
 
     UFUNCTION()
+    void HandleEquipItemRequested(FName ItemId);
+
+    UFUNCTION()
     void HandleInteractionMessage(const FText& Message);
 
     UFUNCTION()
