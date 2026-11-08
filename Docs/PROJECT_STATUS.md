@@ -17,10 +17,11 @@ Last updated: 2026-11-08
 - Stackable inventory and apparel/trinket equipment slots.
 - Save/load of transform, location ID, stats, inventory, equipment and quest state.
 - Nine-region world-map data with renown unlock checks.
-- Unreal automation tests for inventory, equipment, quest progress and map unlock rules.
+- Unreal automation tests for inventory stacking/removal, equipment slots, invalid inventory inputs and per-call limits, quest progress/restore, map unlock rules, and player health/stamina bounds.
 
 ## Build and test status
-- GitHub Actions static source-structure validation exists.
+- GitHub Actions static source-structure validation exists and now runs on relevant project/config/source changes and pull requests.
+- Additional inventory-boundary and player-stat recovery automation tests have been committed; they still require execution inside Unreal Editor.
 - GitHub Actions passed 66 static structure checks with 0 failures on commit 6a949632. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
 - No Unreal C++ compile has been verified.
