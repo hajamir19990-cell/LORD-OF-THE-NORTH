@@ -102,6 +102,6 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 ## Terrain relief and atmosphere
 - [ ] Outer terrain has readable rolling hills while the castle foundation, road/player corridor and longhouse pads remain level.
 - [ ] Snow remains dominant on gentle terrain; stone-light/dark slots appear only on steeper slopes and do not create noisy patches.
-- [ ] Twenty-four pine trees frame the approach without obscuring the gate, guard or supply marker.
+- [ ] Twenty-four layered pine trees frame the approach without obscuring the gate, guard or supply marker; inspect the six bough tiers and snow caps for shading artifacts.
 - [ ] Directional sun is static and the scene's static lighting is built successfully.
 - [ ] Fog is non-volumetric, does not obscure the quest loop and stays within the mobile frame-time budget.
