@@ -95,6 +95,16 @@ int32 ULOTNInventoryComponent::GetItemCount(FName ItemId) const
     return Total;
 }
 
+int32 ULOTNInventoryComponent::GetTotalItemCount() const
+{
+    int64 Total = 0;
+    for (const FLOTNInventoryItem& Item : Items)
+    {
+        Total += FMath::Max(0, Item.Quantity);
+    }
+    return static_cast<int32>(FMath::Min<int64>(MAX_int32, Total));
+}
+
 bool ULOTNInventoryComponent::EquipItem(FName ItemId)
 {
     const FLOTNInventoryItem* Item = Items.FindByPredicate(
