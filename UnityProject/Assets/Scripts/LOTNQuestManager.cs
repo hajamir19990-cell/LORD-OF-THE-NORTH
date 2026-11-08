@@ -48,6 +48,8 @@ namespace LOTN
                 objective = "The Guard needs supplies from the nearby crate";
         }
 
+        private void OnDestroy() { if (Instance == this) Instance = null; }
+
         private void RefreshObjective()
         {
             objective = questCompleted ? "Quest complete — the North remembers" :
