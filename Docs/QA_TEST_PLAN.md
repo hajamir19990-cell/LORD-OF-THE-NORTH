@@ -8,7 +8,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Generate project files and compile the Editor target.
 - [ ] Confirm no missing modules, reflection errors or asset load errors.
 - [ ] Confirm the default GameMode spawns LOTNCharacter and LOTNPlayerController.
-- [ ] Confirm the HUD Widget Blueprint is assigned to HUDWidgetClass.
+- [ ] Confirm the native portrait HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
 
 ## Movement and portrait controls
 
@@ -23,6 +23,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 ## Interaction and quest loop
 
 - [ ] Camera trace selects only an interactable actor in range.
+- [ ] Context prompt appears only while a valid interactable is in view.
 - [ ] No target produces a readable feedback message.
 - [ ] Guard offers the Winterfell_Delivery quest once.
 - [ ] Objective marker advances the matching quest only.
