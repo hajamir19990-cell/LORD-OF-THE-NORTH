@@ -70,9 +70,9 @@ An APK is not release-ready until the Editor compile, Android package, install, 
 
 
 ## Additional environment dressing
-- [ ] Four palisade segments frame the approach without blocking the central road or camera.
+- [ ] Four palisade segments frame the approach without blocking the central road, longhouses or camera.
 - [ ] Rock clusters sit on the outer terrain margins without floating or blocking movement.
-- [ ] Stone firepit is placed beside the east settlement building and does not obstruct the road.
+- [ ] Stone firepit is placed southeast of the east longhouse without intersecting its footprint or obstructing the road.
 - [ ] PlayerStart, NPC capsules and the quest crate rest at the sampled road surface height.
 - [ ] The flattened castle foundation keeps both towers and curtain walls seated without burying their lower sections.
 
