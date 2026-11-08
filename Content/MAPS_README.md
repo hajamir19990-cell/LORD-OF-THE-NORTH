@@ -31,9 +31,9 @@ Keep the central approach readable from the player start. The gate should occupy
 
 ## Required actors and setup
 
-- PlayerStart at (0, -1700, 100), yaw +90 degrees, facing the gate.
+- PlayerStart at (0, -1700, 116), yaw +90 degrees, facing the gate; the road source mesh rises to approximately 16 cm.
 - Walkable rolling terrain source mesh; verify imported collision and walkability in Unreal Editor before treating it as production-ready.
-- Imported environment meshes from Content/SourceMeshes: Winterfell_Gatehouse.obj, Northern_Pine_Tree.obj, Northern_Longhouse.obj, Northern_Cobblestone_Road.obj, Northern_Curtain_Wall.obj and Northern_Watchtower.obj.
+- Imported environment meshes from Content/SourceMeshes: gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower, rolling terrain, supply crate, palisade fence, snow-capped rock cluster and stone firepit.
 - Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary pillar visual must be replaced with a skeletal character asset.
 - Exponential height fog and a directional daylight baseline; tune conservatively for mobile.
 - NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
@@ -64,3 +64,10 @@ Keep the central approach readable from the player start. The gate should occupy
 - All environment meshes have simple collision and mobile-appropriate LODs.
 - Test movement, camera, interaction, quest, inventory, sprint and save/load before expanding the map.
 
+
+## Additional greybox placement
+
+- Four 640 cm palisade modules at X = +/-850 and Y = -1200/-600 frame the road with a clear center lane.
+- Eight snow-capped rock clusters are distributed on the outer terrain margins, away from the central path.
+- A stone firepit sits near the east settlement building at approximately (1600, -1000).
+- NPC capsule roots and the quest crate are placed at Z=16 to align with the road surface; confirm the actual imported collision and terrain intersection in Editor.
