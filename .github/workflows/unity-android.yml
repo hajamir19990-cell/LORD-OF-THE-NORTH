@@ -35,6 +35,29 @@ jobs:
       - name: Validate source project
         run: python3 Scripts/validate_unity_project.py
 
+      - name: Run Unity EditMode tests
+        uses: game-ci/unity-test-runner@v4
+        id: tests
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: UnityProject
+          unityVersion: auto
+          testMode: EditMode
+          artifactsPath: UnityProject/TestResults
+          coverageEnabled: false
+
+      - name: Upload Unity test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LORD-OF-THE-NORTH-Unity-EditMode-Tests
+          path: UnityProject/TestResults
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Build Android APK in Unity 6.3 LTS
         uses: game-ci/unity-builder@v4
         env:
