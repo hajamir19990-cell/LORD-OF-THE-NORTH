@@ -106,7 +106,7 @@ namespace LOTN.Editor
             string[] modelFiles = Directory.GetFiles(MeshFolder, "*.obj", SearchOption.TopDirectoryOnly);
             foreach (string absolutePath in modelFiles)
             {
-                string assetPath = absolutePath.Replace(Application.dataPath, "Assets").Replace("\\\\", "/");
+                string assetPath = MeshFolder + "/" + Path.GetFileName(absolutePath);
                 ModelImporter importer = AssetImporter.GetAtPath(assetPath) as ModelImporter;
                 if (importer == null) continue;
                 bool changed = false;
