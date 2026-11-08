@@ -33,7 +33,7 @@ Keep the central approach readable from the player start. The gate should occupy
 
 - PlayerStart at (0, -1700, 116), yaw +90 degrees, facing the gate; the road source mesh rises to approximately 16 cm.
 - Walkable rolling terrain source mesh with a flattened castle foundation platform; the assembly script samples terrain heights for prop placement. Verify imported collision and walkability in Unreal Editor before treating it as production-ready.
-- Imported environment meshes from Content/SourceMeshes: gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower, rolling terrain, supply crate, palisade fence, snow-capped rock cluster and stone firepit.
+- Imported environment meshes from Content/SourceMeshes: gatehouse, pine, longhouse, cobblestone road, curtain wall, watchtower, rolling terrain, supply crate, palisade fence, snow-capped rock cluster, stone firepit, woodpile, handcart, snowdrift and heraldic wolf banner.
 - Native LOTNNPC quest giver named Northern Guard, configured to offer Winterfell_Delivery; temporary six-part humanoid primitive visual must be replaced with a skeletal character asset.
 - Exponential height fog and a directional daylight baseline; tune conservatively for mobile.
 - NavMeshBoundsVolume covering the first approach slice; verify navigation generation in Editor.
@@ -91,3 +91,12 @@ After the assembly script saves the binary map, the project configuration points
 - The terrain uses the snow MTL slot on gentle faces and existing stone-light/stone-dark slots on steeper faces to introduce exposed rock bands without adding texture dependencies.
 - The pine grove count is 24, with an outer tree line framing the approach. The shared tree mesh has a tapered trunk, six overlapping lobed evergreen tiers and snow caps; keep the central road and guard/objective sightlines clear.
 - The directional light is configured as static (72,000 lux baseline). Fog is non-volumetric, starts 2,200 cm from camera and has restrained density. Build lighting in the editor and profile the mobile renderer; do not treat these settings as a completed light bake.
+
+
+## Settlement dressing and heraldry
+
+- Two stacked firewood props sit beside the west and east longhouses; each is decorative and non-blocking.
+- A handcart with spoked wheels, timber bed and barrel sits on the eastern settlement edge; it is non-blocking in this mobile prototype.
+- Six low snow berms line the outside of the approach road, leaving the 600 cm road lane and player/NPC route unobstructed.
+- Two red-and-gold wolf standards flank the gatehouse entrance. Their cloth and crest are source-mesh geometry with shared MTL colors, not final cloth simulation or texture art.
+- All four new source prop families are imported and receive generated lightmap UV preparation by the assembly script; confirm the UV channel and visual shading in Unreal Editor.
