@@ -5,19 +5,21 @@ ULOTNInventoryComponent::ULOTNInventoryComponent()
     PrimaryComponentTick.bCanEverTick = false;
 }
 
-int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText Description, ELOTNItemCategory Category, int32 Quantity, int32 MaxStack)
+int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText Description, ELOTNItemCategory Category, int32 Quantity, int32 MaxStack, ELOTNEquipmentSlot EquipmentSlot)
 {
     if (ItemId.IsNone() || Quantity <= 0)
     {
         return Quantity;
     }
 
+    const int32 AcceptedQuantity = FMath::Min(Quantity, 10000);
     const int32 SafeMaxStack = FMath::Max(1, MaxStack);
-    int32 Remaining = Quantity;
+    int32 Remaining = AcceptedQuantity;
 
     for (FLOTNInventoryItem& Item : Items)
     {
-        if (Item.ItemId == ItemId && Item.Category == Category && Item.Quantity < Item.MaxStack)
+        if (Item.ItemId == ItemId && Item.Category == Category &&
+            Item.EquipmentSlot == EquipmentSlot && Item.Quantity < Item.MaxStack)
         {
             const int32 Space = Item.MaxStack - Item.Quantity;
             const int32 Added = FMath::Min(Space, Remaining);
@@ -26,7 +28,7 @@ int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText De
             if (Remaining == 0)
             {
                 OnInventoryChanged.Broadcast();
-                return 0;
+                return Quantity - AcceptedQuantity;
             }
         }
     }
@@ -38,6 +40,7 @@ int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText De
         NewItem.DisplayName = DisplayName;
         NewItem.Description = Description;
         NewItem.Category = Category;
+        NewItem.EquipmentSlot = EquipmentSlot;
         NewItem.MaxStack = SafeMaxStack;
         NewItem.Quantity = FMath::Min(SafeMaxStack, Remaining);
         Remaining -= NewItem.Quantity;
@@ -45,7 +48,7 @@ int32 ULOTNInventoryComponent::AddItem(FName ItemId, FText DisplayName, FText De
     }
 
     OnInventoryChanged.Broadcast();
-    return 0;
+    return Quantity - AcceptedQuantity;
 }
 
 bool ULOTNInventoryComponent::RemoveItem(FName ItemId, int32 Quantity)
@@ -110,9 +113,22 @@ bool ULOTNInventoryComponent::EquipItem(FName ItemId)
     const FLOTNInventoryItem* Item = Items.FindByPredicate(
         [ItemId](const FLOTNInventoryItem& Entry) { return Entry.ItemId == ItemId && Entry.Quantity > 0; });
 
-    if (!Item || (Item->Category != ELOTNItemCategory::Apparel && Item->Category != ELOTNItemCategory::Trinket))
+    if (!Item || Item->EquipmentSlot == ELOTNEquipmentSlot::None ||
+        (Item->Category != ELOTNItemCategory::Apparel && Item->Category != ELOTNItemCategory::Trinket))
     {
         return false;
+    }
+
+    const ELOTNEquipmentSlot SlotToEquip = Item->EquipmentSlot;
+    for (int32 Index = EquippedItemIds.Num() - 1; Index >= 0; --Index)
+    {
+        const FName EquippedId = EquippedItemIds[Index];
+        const FLOTNInventoryItem* EquippedItem = Items.FindByPredicate(
+            [EquippedId](const FLOTNInventoryItem& Entry) { return Entry.ItemId == EquippedId; });
+        if (EquippedItem && EquippedItem->EquipmentSlot == SlotToEquip)
+        {
+            EquippedItemIds.RemoveAt(Index);
+        }
     }
 
     EquippedItemIds.AddUnique(ItemId);
