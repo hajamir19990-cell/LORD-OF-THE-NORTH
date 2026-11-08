@@ -9,7 +9,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Confirm no missing modules, reflection errors or asset load errors.
 - [ ] Confirm the default GameMode spawns LOTNCharacter and LOTNPlayerController.
 - [ ] Confirm the native portrait HUD appears, or a custom Widget Blueprint is assigned to HUDWidgetClass.
-- [ ] Run the Unreal automation tests under LOTN.Inventory, LOTN.Quests and LOTN.WorldMap.
+- [ ] Run the Unreal automation tests under LOTN.Inventory, LOTN.Quests, LOTN.WorldMap and LOTN.PlayerStats.
 
 ## Movement and portrait controls
 
@@ -19,6 +19,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 - [ ] Sprint begins while the HUD SprintButton is held and ends on release.
 - [ ] Stamina decreases during sprint and regenerates while walking.
 - [ ] Sprint cannot continue indefinitely after stamina is exhausted.
+- [ ] Health and stamina remain within configured bounds after damage, healing, consumption and recovery.
 - [ ] Touch targets remain reachable and do not overlap quest/dialogue text on the smallest target screen.
 
 ## Interaction and quest loop
@@ -35,6 +36,7 @@ This checklist is the acceptance gate for the first Winterfell outskirts build. 
 ## Inventory and save/load
 
 - [ ] AddItem creates and stacks item records up to their stack limits.
+- [ ] Inventory rejects empty IDs and zero quantities, and reports any amount above its per-call acceptance cap.
 - [ ] RemoveItem refuses removal when quantity is insufficient.
 - [ ] Inventory panel opens, lists items and shows equipped state.
 - [ ] Apparel/trinket items require a valid equipment slot.
