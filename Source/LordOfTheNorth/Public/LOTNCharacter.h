@@ -19,8 +19,16 @@ class LORDOFTHENORTH_API ALOTNCharacter : public ACharacter
 public:
     ALOTNCharacter();
 
+    virtual void Tick(float DeltaSeconds) override;
+
     UFUNCTION(BlueprintCallable, Category="LOTN|Interaction")
     void InteractPressed();
+
+    UFUNCTION(BlueprintCallable, Category="LOTN|Movement")
+    void StartSprint();
+
+    UFUNCTION(BlueprintCallable, Category="LOTN|Movement")
+    void StopSprint();
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="LOTN|World")
     FName CurrentLocationId = TEXT("Winterfell");
@@ -51,4 +59,23 @@ private:
 
     UPROPERTY(VisibleAnywhere, Category="Camera")
     TObjectPtr<UCameraComponent> FollowCamera;
+
+    UPROPERTY(EditDefaultsOnly, Category="LOTN|Movement")
+    float WalkSpeed = 360.f;
+
+    UPROPERTY(EditDefaultsOnly, Category="LOTN|Movement")
+    float SprintSpeed = 520.f;
+
+    UPROPERTY(EditDefaultsOnly, Category="LOTN|Movement")
+    float SprintStaminaDrainPerSecond = 22.f;
+
+    UPROPERTY(EditDefaultsOnly, Category="LOTN|Movement")
+    float StaminaRegenPerSecond = 14.f;
+
+    UPROPERTY(EditDefaultsOnly, Category="LOTN|Movement")
+    float StaminaUpdateInterval = 0.2f;
+
+    bool bSprintRequested = false;
+    bool bIsSprinting = false;
+    float StaminaUpdateAccumulator = 0.f;
 };
