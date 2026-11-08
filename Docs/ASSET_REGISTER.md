@@ -7,7 +7,7 @@ The art target is a grounded, weathered northern-fantasy environment in a wide l
 | Source file | Intended use | Status |
 |---|---|---|
 | Content/SourceMeshes/Winterfell_Gatehouse.obj | Main twin-tower gatehouse landmark | Detailed source OBJ with open oak gate leaves, iron bands and layered masonry accents; needs Unreal import and visual review |
-| Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Layered source OBJ committed: tapered trunk, six overlapping bough tiers and snow caps; needs Unreal import, collision and LOD review |
+| Content/SourceMeshes/Northern_Pine_Tree.obj | Repeated forest silhouette | Layered source OBJ committed: tapered trunk, six overlapping bough tiers and snow caps; assembled as 24 HISM instances with collision disabled; needs Unreal import, LOD and culling review |
 | Content/SourceMeshes/Northern_Longhouse.obj | Settlement-edge building | Detailed source OBJ with timber framing, layered roof shingles and chimney; needs Unreal import and visual review |
 | Content/SourceMeshes/Northern_Cobblestone_Road.obj | Approach road paving | Source OBJ committed; needs Unreal import and collision review |
 | Content/SourceMeshes/Northern_Curtain_Wall.obj | Modular crenellated outer wall | Detailed source OBJ with ashlar courses, projecting buttresses and stone coping; needs Unreal import, UV/material and collision review |
