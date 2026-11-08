@@ -8,7 +8,7 @@
 - ALOTNQuestObjective is an interactable world marker. Assign its QuestId to match the NPC's quest ID; interacting advances progress.
 - ULOTNQuestComponent stores active/completed quests, objective progress and reward values.
 - ULOTNInventoryComponent manages stackable items, apparel/trinket equipment slots and inventory change events.
-- ULOTNHUDWidget builds a native portrait layout by default, receives interaction messages automatically and refreshes stats, inventory count and quest progress from component events.
+- ULOTNHUDWidget builds a native portrait layout by default, receives interaction messages automatically and refreshes stats, inventory count and quest progress from component events. Its inventory overlay lists stored items and provides equip/unequip controls for valid apparel and trinket slots.
 - ULOTNSaveSubsystem saves player transform, location ID, stats, inventory, equipment and full active/completed quest state to the LOTN_Save_01 slot.
 - ULOTNWorldMapData contains nine location records, renown unlock checks and a travel-readiness check. A location is not travel-ready until its real level name is assigned.
 - Sprint is stamina-limited. The character drains stamina while sprinting and regenerates it while walking; the portrait HUD uses a hold button so sprint stops when the player releases it.
