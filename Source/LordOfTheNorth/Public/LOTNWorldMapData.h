@@ -39,7 +39,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="World Map")
     TArray<FLOTNWorldLocation> Locations;
 
-    UFUNCTION(BlueprintPure, Category="LOTN|World Map")
+    UFUNCTION(BlueprintCallable, Category="LOTN|World Map")
     bool GetLocationById(FName LocationId, FLOTNWorldLocation& OutLocation) const;
 
     UFUNCTION(BlueprintPure, Category="LOTN|World Map")
