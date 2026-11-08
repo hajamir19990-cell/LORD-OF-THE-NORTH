@@ -11,17 +11,17 @@ Last updated: 2026-11-08
 - Portrait-oriented Android configuration and package identifier.
 - Third-person character movement, camera, mobile joystick axes and stamina-based sprint.
 - Player stats: health, stamina, gold and renown.
-- Native portrait HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls.
+- Native portrait HUD fallback with contextual interaction prompt, dialogue, quest display, interactive inventory overlay with apparel/trinket equip controls, touch interaction/sprint and save/load controls; player controller now uses GameAndUI input mode so touch UI can receive input alongside gameplay.
 - Interactable interface, camera-view line trace, NPC dialogue and quest offer/turn-in.
 - Quest objective progress and one-time rewards.
 - Stackable inventory and apparel/trinket equipment slots.
 - Save/load of transform, location ID, stats, inventory, equipment and quest state.
 - Nine-region world-map data with renown unlock checks.
-- Unreal automation tests for inventory stacking/removal, equipment slots, invalid inventory inputs and per-call limits, quest progress/restore, map unlock rules, and player health/stamina bounds.
+- Unreal automation tests for inventory stacking/removal, equipment slots, invalid inventory inputs and per-call limits, quest progress/restore, map unlock rules, player health/stamina bounds, and rejection of negative gold/renown adjustments.
 
 ## Build and test status
 - GitHub Actions static source-structure validation exists and now runs on relevant project/config/source changes and pull requests.
-- Additional inventory-boundary and player-stat recovery automation tests have been committed; they still require execution inside Unreal Editor.
+- Mobile HUD input routing has been corrected to GameAndUI and added to the QA checklist/static validator. Currency and renown now reject negative adjustments, with regression coverage committed. All new automation tests still require execution inside Unreal Editor.
 - GitHub Actions passed 66 static structure checks with 0 failures on commit 6a949632. These checks validate repository structure only; they are explicitly not an Unreal compile.
 - Unreal automation tests have been added but have not been executed in Unreal Editor.
 - No Unreal C++ compile has been verified.
