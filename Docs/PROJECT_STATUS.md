@@ -38,7 +38,7 @@ Last updated: 2026-11-08
 3. Create Content/Maps/VerticalPrototype.umap with PlayerStart and the first environment.
 4. Import and profile licensed character/environment assets; assign the character mesh and animation blueprint.
 5. Run the LOTN automation tests and the manual QA checklist.
-6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package.
+6. Configure a Linux self-hosted GitHub Actions runner with Unreal Engine, Android SDK/NDK and Java, then dispatch Build Unreal Android package. The workflow compiles the Editor target and runs the LOTN automation tests before packaging.
 7. Install and test the resulting APK on a physical Android device.
 
 The repository deliberately blocks the manual APK workflow while no .umap exists. Do not mark the project complete until the compile, map, assets, automation tests, package and device QA gates all pass.
