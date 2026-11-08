@@ -263,10 +263,24 @@ tree_positions = (
     (1800, -2550), (2450, -2200), (1900, 2250), (2400, 2700),
     (-900, 2600), (900, 2600), (-900, -2600), (900, -2600),
 )
+foliage_class = unreal.load_class(None, "/Script/LordOfTheNorth.LOTNFoliageCluster")
+tree_asset = unreal.load_asset(DEST + "/Northern_Pine_Tree.Northern_Pine_Tree")
+if not foliage_class or not tree_asset:
+    raise RuntimeError("LOTNFoliageCluster or the northern pine mesh is unavailable")
+tree_cluster = actor_of(
+    foliage_class,
+    "ENV_Northern_Forest_HISM",
+    (0, 0, 0),
+    unreal.Rotator(0.0, 0.0, 0.0),
+)
+tree_cluster.configure_tree_mesh(tree_asset)
 for index, (x, y) in enumerate(tree_positions):
     size = 1.05 + (index % 4) * 0.13
-    mesh_actor("Northern_Pine_Tree", (x, y, terrain_world_z(x, y)),
-               yaw=float((index * 37) % 360), scale=size)
+    tree_cluster.add_tree_instance(
+        unreal.Vector(float(x), float(y), float(terrain_world_z(x, y))),
+        float((index * 37) % 360),
+        float(size),
+    )
 
 # Native C++ NPCs and quest objective make the first slice playable without
 # requiring Blueprint children. Temporary engine primitives are visual markers;
