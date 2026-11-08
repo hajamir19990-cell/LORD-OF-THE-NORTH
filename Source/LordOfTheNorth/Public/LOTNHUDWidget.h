@@ -9,7 +9,9 @@ class UTextBlock;
 class UButton;
 class UBorder;
 class UScrollBox;
+class UCanvasPanel;
 class ALOTNCharacter;
+class ULOTNWorldMapData;
 
 UCLASS()
 class LORDOFTHENORTH_API ULOTNHUDWidget : public UUserWidget
@@ -89,6 +91,21 @@ protected:
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UButton> LoadButton;
 
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UButton> MapButton;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UButton> WorldMapCloseButton;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UBorder> WorldMapPanel;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UCanvasPanel> WorldMapCanvas;
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UTextBlock> WorldMapDetailsText;
+
 private:
     UFUNCTION()
     void HandleStatsChanged();
@@ -130,9 +147,24 @@ private:
     void BuildNativeLayout();
     void RefreshInventoryPanel();
     void ToggleInventoryPanel(bool bShow);
+    void BuildWorldMapPanel(UCanvasPanel* ParentCanvas);
+    void RefreshWorldMapPanel();
+    void ToggleWorldMapPanel(bool bShow);
+    void SelectWorldMapLocation(FName LocationId);
+
+    UFUNCTION()
+    void HandleWorldMapToggleClicked();
+
+    UFUNCTION()
+    void HandleWorldMapCloseClicked();
 
     FText CachedInteractionPrompt;
     float PromptRefreshAccumulator = 0.f;
     float PromptRefreshInterval = 0.15f;
     TWeakObjectPtr<ALOTNCharacter> BoundPlayer;
+    UPROPERTY(Transient)
+    TObjectPtr<ULOTNWorldMapData> WorldMapData;
+
+    TMap<FName, TObjectPtr<UButton>> WorldMapNodeButtons;
+    FName SelectedWorldMapLocation = TEXT("Winterfell");
 };
