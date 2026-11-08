@@ -3,7 +3,7 @@
 #include "LOTNCharacter.h"
 #include "LOTNPlayerStatsComponent.h"
 #include "LOTNQuestComponent.h"
-#include "GameFramework/Character.h"
+#include "LOTNInventoryComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 bool ULOTNSaveSubsystem::SaveCurrentGame()
@@ -37,6 +37,12 @@ bool ULOTNSaveSubsystem::SaveCurrentGame()
     {
         SaveObject->CompletedQuestIds = Quests->CompletedQuestIds;
         SaveObject->ActiveQuests = Quests->ActiveQuests;
+    }
+
+    if (const ULOTNInventoryComponent* Inventory = Player->InventoryComponent)
+    {
+        SaveObject->InventoryItems = Inventory->Items;
+        SaveObject->EquippedItemIds = Inventory->EquippedItemIds;
     }
 
     return UGameplayStatics::SaveGameToSlot(SaveObject, SaveSlotName, 0);
@@ -82,6 +88,11 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
     if (ULOTNQuestComponent* Quests = Player->QuestComponent)
     {
         Quests->RestoreQuestState(SaveObject->CompletedQuestIds, SaveObject->ActiveQuests);
+    }
+
+    if (ULOTNInventoryComponent* Inventory = Player->InventoryComponent)
+    {
+        Inventory->RestoreInventory(SaveObject->InventoryItems, SaveObject->EquippedItemIds);
     }
 
     return true;
