@@ -244,15 +244,6 @@ def spawn_npc(label, display_name, location, dialogue, offers_quest=False):
         npc.set_editor_property("gold_reward", 25)
         npc.set_editor_property("renown_reward", 5)
 
-    # A simple pillar marks the NPC until a proper skeletal character is imported.
-    marker = actor_of(unreal.StaticMeshActor, label + "_TEMP_VISUAL",
-                      (location[0], location[1], location[2] + 45),
-                      unreal.Rotator(0.0, 0.0, 0.0), (0.28, 0.28, 0.85))
-    marker_component = marker.get_component_by_class(unreal.StaticMeshComponent)
-    cylinder = unreal.load_asset("/Engine/BasicShapes/Cylinder.Cylinder")
-    if marker_component and cylinder:
-        marker_component.set_static_mesh(cylinder)
-        marker_component.set_collision_enabled(unreal.CollisionEnabled.NO_COLLISION)
     return npc
 
 spawn_npc(
