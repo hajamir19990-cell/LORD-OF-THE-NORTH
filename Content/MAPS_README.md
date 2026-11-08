@@ -89,5 +89,5 @@ After the assembly script saves the binary map, the project configuration points
 - The 49 x 49 terrain grid now carries broad rolling elevation with approximately 5–6 m peak-to-peak variation in the outer approach and perimeter.
 - The castle footprint, road/player corridor and three longhouse pads are flattened for reliable foundations and traversal; terrain sampling still places the surrounding props and NPCs on the modified surface.
 - The terrain uses the snow MTL slot on gentle faces and existing stone-light/stone-dark slots on steeper faces to introduce exposed rock bands without adding texture dependencies.
-- The pine grove count is increased to 24, with an outer tree line framing the approach. Keep the central road and guard/objective sightlines clear.
+- The pine grove count is 24, with an outer tree line framing the approach. The shared tree mesh has a tapered trunk, six overlapping lobed evergreen tiers and snow caps; keep the central road and guard/objective sightlines clear.
 - The directional light is configured as static (72,000 lux baseline). Fog is non-volumetric, starts 2,200 cm from camera and has restrained density. Build lighting in the editor and profile the mobile renderer; do not treat these settings as a completed light bake.
