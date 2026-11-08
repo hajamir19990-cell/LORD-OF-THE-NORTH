@@ -21,9 +21,9 @@ Steps performed by the repository owner:
 Unity's documentation explains that the project subfolder must contain Assets, Packages and ProjectSettings, and that the build target and Unity version are selected in the cloud configuration.
 
 ## Option B — GitHub Actions with GameCI
-The repository includes .github/workflows/unity-android.yml. It runs only when manually dispatched and uses GameCI's Unity Builder.
+The repository includes .github/workflows/unity-android.yml. Pushes to migration/unity-urp always run static validation. If a valid Unity license is configured, the workflow also runs EditMode tests and builds the Android APK with GameCI. Without a license, the Unity Editor steps are skipped cleanly rather than reporting a false build failure. A manual workflow_dispatch trigger is also included.
 
-A valid Unity license must be configured in repository Settings → Secrets and variables → Actions. Prefer the UNITY_LICENSE secret when the account's current Unity licensing flow supports it. Do not commit license files, passwords, serials, keystores or signing passwords into Git.
+Configure the license in repository Settings → Secrets and variables → Actions. Prefer the UNITY_LICENSE secret when the account's current Unity licensing flow supports it; professional license activation may also require UNITY_EMAIL, UNITY_PASSWORD and UNITY_SERIAL. Do not commit license files, passwords, serials, keystores or signing passwords into Git.
 
 Official GameCI documentation:
 - https://game.ci/docs/github/getting-started/
