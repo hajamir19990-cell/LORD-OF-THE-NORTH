@@ -16,6 +16,12 @@ void ULOTNHUDWidget::NativeConstruct()
 {
     Super::NativeConstruct();
     BindPlayerEvents(true);
+    CachedInteractionPrompt = FText::GetEmpty();
+    PromptRefreshAccumulator = 0.f;
+    if (InteractionPromptText)
+    {
+        InteractionPromptText->SetVisibility(ESlateVisibility::Collapsed);
+    }
 
     if (InteractButton)
     {
@@ -36,6 +42,35 @@ void ULOTNHUDWidget::NativeConstruct()
     }
 
     RefreshHUD();
+}
+
+void ULOTNHUDWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+    Super::NativeTick(MyGeometry, InDeltaTime);
+
+    if (!InteractionPromptText)
+    {
+        return;
+    }
+
+    PromptRefreshAccumulator += InDeltaTime;
+    if (PromptRefreshAccumulator < PromptRefreshInterval)
+    {
+        return;
+    }
+    PromptRefreshAccumulator = 0.f;
+
+    ALOTNCharacter* Player = Cast<ALOTNCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+    const FText Prompt = Player && Player->InteractionComponent
+        ? Player->InteractionComponent->GetCurrentPrompt()
+        : FText::GetEmpty();
+
+    if (!Prompt.EqualTo(CachedInteractionPrompt))
+    {
+        CachedInteractionPrompt = Prompt;
+        InteractionPromptText->SetText(Prompt);
+        InteractionPromptText->SetVisibility(Prompt.IsEmpty() ? ESlateVisibility::Collapsed : ESlateVisibility::Visible);
+    }
 }
 
 void ULOTNHUDWidget::NativeDestruct()
