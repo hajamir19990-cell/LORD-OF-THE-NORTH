@@ -54,6 +54,20 @@ for name in MESH_NAMES:
     if not imported_paths:
         raise RuntimeError("Unreal did not import source mesh: " + source_file)
 
+# Prepare a dedicated lightmap UV channel for static/baked mobile lighting.
+# StaticMeshEditorSubsystem is the documented editor API for this setting.
+mesh_editor = unreal.get_editor_subsystem(unreal.StaticMeshEditorSubsystem)
+if not mesh_editor:
+    raise RuntimeError("StaticMeshEditorSubsystem is unavailable; lightmap UV setup cannot continue")
+for name in MESH_NAMES:
+    asset = unreal.load_asset(DEST + "/" + name + "." + name)
+    if not asset:
+        raise RuntimeError("Imported static mesh missing during lightmap setup: " + name)
+    if not mesh_editor.set_generate_lightmap_uv(asset, True):
+        raise RuntimeError("Could not enable generated lightmap UVs for: " + name)
+    asset.post_edit_change()
+    unreal.EditorAssetLibrary.save_loaded_asset(asset)
+
 # Keep complex collision only on surfaces and structures that must block movement.
 # Decorative trees, rocks and the firepit are non-blocking to avoid snagging and
 # unnecessary mobile collision work. Replace structural complex collision with
