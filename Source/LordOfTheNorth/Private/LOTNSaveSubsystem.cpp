@@ -62,7 +62,7 @@ bool ULOTNSaveSubsystem::LoadCurrentGame()
     }
 
     ULOTNSaveGame* SaveObject = Cast<ULOTNSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
-    if (!SaveObject)
+    if (!SaveObject || SaveObject->SaveVersion < 1 || SaveObject->SaveVersion > 3)
     {
         return false;
     }
