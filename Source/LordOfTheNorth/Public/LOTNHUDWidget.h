@@ -8,6 +8,7 @@ class UProgressBar;
 class UTextBlock;
 class UButton;
 class UBorder;
+class ALOTNCharacter;
 
 UCLASS()
 class LORDOFTHENORTH_API ULOTNHUDWidget : public UUserWidget
@@ -109,4 +110,5 @@ private:
     FText CachedInteractionPrompt;
     float PromptRefreshAccumulator = 0.f;
     float PromptRefreshInterval = 0.15f;
+    TWeakObjectPtr<ALOTNCharacter> BoundPlayer;
 };
