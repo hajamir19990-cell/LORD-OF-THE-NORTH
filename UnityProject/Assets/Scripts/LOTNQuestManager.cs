@@ -11,28 +11,47 @@ namespace LOTN
         public bool crateCollected;
         public bool questCompleted;
 
-        private void Awake() { Instance = this; }
+        private void Awake()
+        {
+            Instance = this;
+            LOTNGameSession session = LOTNGameSession.Instance;
+            if (session != null)
+            {
+                crateCollected = session.crateCollected;
+                questCompleted = session.questCompleted;
+                RefreshObjective();
+            }
+        }
 
         public void Interact(string interactionId)
         {
-            if (interactionId == "QuestGiver" && !questCompleted)
-            {
-                objective = crateCollected ? "Return to the Northern Guard" : "Collect the supply crate";
-                return;
-            }
+            LOTNGameSession session = LOTNGameSession.Instance;
             if (interactionId == "SupplyCrate" && !crateCollected && !questCompleted)
             {
                 crateCollected = true;
-                objective = "Return to the Northern Guard";
+                if (session != null) session.SetQuestState(crateCollected, questCompleted);
+                RefreshObjective();
                 return;
             }
+
             if (interactionId == "QuestGiver" && crateCollected && !questCompleted)
             {
                 questCompleted = true;
-                objective = "Quest complete — the North remembers";
+                if (session != null) session.SetQuestState(crateCollected, questCompleted);
                 LOTNPlayerStats stats = FindFirstObjectByType<LOTNPlayerStats>();
                 if (stats != null) { stats.AddGold(30); stats.AddRenown(10); }
+                RefreshObjective();
+                return;
             }
+
+            if (interactionId == "QuestGiver" && !questCompleted)
+                objective = "The Guard needs supplies from the nearby crate";
+        }
+
+        private void RefreshObjective()
+        {
+            objective = questCompleted ? "Quest complete — the North remembers" :
+                (crateCollected ? "Return to the Northern Guard" : "Collect the supply crate");
         }
 
         private void OnGUI()
