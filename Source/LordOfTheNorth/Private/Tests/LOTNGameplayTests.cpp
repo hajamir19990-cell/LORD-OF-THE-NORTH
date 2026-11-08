@@ -114,7 +114,27 @@ bool FLOTNWorldMapDataTest::RunTest(const FString& Parameters)
     TestTrue(TEXT("Winterfell is unlocked at the start"), WorldMap->IsLocationUnlocked(TEXT("Winterfell"), 0));
     TestFalse(TEXT("Distant region remains locked below its renown gate"), WorldMap->IsLocationUnlocked(TEXT("TheDreadfort"), 0));
     TestTrue(TEXT("Renown unlocks the Dreadfort"), WorldMap->IsLocationUnlocked(TEXT("TheDreadfort"), 30));
-    TestFalse(TEXT("Location is not travel-ready until a real level is assigned"), WorldMap->IsLocationReadyToTravel(TEXT("Winterfell"), 100));
+    TestTrue(TEXT("Winterfell has the playable approach level"), WorldMap->IsLocationReadyToTravel(TEXT("Winterfell"), 0));
+    TestFalse(TEXT("Unlocked distant region is not travel-ready without a level"), WorldMap->IsLocationReadyToTravel(TEXT("TheDreadfort"), 30));
+
+    FLOTNWorldLocation Winterfell;
+    TestTrue(TEXT("Winterfell map record can be retrieved"), WorldMap->GetLocationById(TEXT("Winterfell"), Winterfell));
+    TestTrue(TEXT("Winterfell map coordinate is normalized"), Winterfell.MapPosition.X >= 0.f &&
+        Winterfell.MapPosition.X <= 1.f && Winterfell.MapPosition.Y >= 0.f && Winterfell.MapPosition.Y <= 1.f);
+    TestTrue(TEXT("Winterfell route graph includes the Wall"), Winterfell.ConnectedLocationIds.Contains(TEXT("TheWall")));
+
+    for (const FLOTNWorldLocation& Location : WorldMap->Locations)
+    {
+        TestTrue(*FString::Printf(TEXT("%s has normalized map coordinates"), *Location.LocationId.ToString()),
+            Location.MapPosition.X >= 0.f && Location.MapPosition.X <= 1.f &&
+            Location.MapPosition.Y >= 0.f && Location.MapPosition.Y <= 1.f);
+        for (const FName ConnectedId : Location.ConnectedLocationIds)
+        {
+            FLOTNWorldLocation Connected;
+            TestTrue(*FString::Printf(TEXT("%s route target exists"), *ConnectedId.ToString()),
+                WorldMap->GetLocationById(ConnectedId, Connected));
+        }
+    }
     return true;
 }
 
