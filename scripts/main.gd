@@ -365,7 +365,9 @@ func _material(color: Color) -> StandardMaterial3D:
 	mat.roughness = 0.9
 	return mat
 
-func _add_box(size: Vector3, pos: Vector3, mat: Material, node_name := "Box", parent: Node = self) -> MeshInstance3D:
+func _add_box(size: Vector3, pos: Vector3, mat: Material, node_name := "Box", parent: Node = null) -> MeshInstance3D:
+	if parent == null:
+		parent = self
 	var node := MeshInstance3D.new()
 	var mesh := BoxMesh.new()
 	mesh.size = size
@@ -376,7 +378,9 @@ func _add_box(size: Vector3, pos: Vector3, mat: Material, node_name := "Box", pa
 	parent.add_child(node)
 	return node
 
-func _add_cylinder(top: float, bottom: float, height: float, pos: Vector3, mat: Material, node_name := "Cylinder", parent: Node = self) -> MeshInstance3D:
+func _add_cylinder(top: float, bottom: float, height: float, pos: Vector3, mat: Material, node_name := "Cylinder", parent: Node = null) -> MeshInstance3D:
+	if parent == null:
+		parent = self
 	var node := MeshInstance3D.new()
 	var mesh := CylinderMesh.new()
 	mesh.top_radius = top
@@ -389,7 +393,9 @@ func _add_cylinder(top: float, bottom: float, height: float, pos: Vector3, mat: 
 	parent.add_child(node)
 	return node
 
-func _add_sphere(radius: float, pos: Vector3, mat: Material, node_name := "Sphere", parent: Node = self) -> MeshInstance3D:
+func _add_sphere(radius: float, pos: Vector3, mat: Material, node_name := "Sphere", parent: Node = null) -> MeshInstance3D:
+	if parent == null:
+		parent = self
 	var node := MeshInstance3D.new()
 	var mesh := SphereMesh.new()
 	mesh.radius = radius
