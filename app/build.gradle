@@ -7,7 +7,9 @@ android {
     defaultConfig {
         applicationId 'com.lordofthenorth'
         minSdk 26
-        targetSdk 37
+        // Keep targetSdk aligned with the installed compile SDK until API 37
+        // is deliberately adopted and added to the CI Android SDK setup.
+        targetSdk 35
         versionCode 1
         versionName '1.0.0'
     }
