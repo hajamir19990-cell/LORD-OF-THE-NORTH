@@ -1,12 +1,12 @@
 # LORD OF THE NORTH — Unreal Engine Mobile Project
 
-A portrait-oriented mobile third-person fantasy RPG project inspired by the North of Westeros.
+A landscape-oriented mobile third-person fantasy RPG project inspired by the North of Westeros.
 
 ## Current project state
 
 - Unreal Engine project descriptor: `LORD_OF_THE_NORTH.uproject`
 - Runtime module: `LordOfTheNorth`
-- Android orientation is configured as **Portrait** in `Config/DefaultEngine.ini`.
+- Android orientation is configured as **Landscape** in `Config/DefaultEngine.ini`.
 - Source 3D meshes are stored under `Content/SourceMeshes/` as OBJ files.
 - The Unreal Android workflow is designed to validate source assets, compile the Editor target, assemble and validate nine maps, run gameplay automation tests, and package an Android build.
 - Generated Unreal assets and maps must be verified from a successful Unreal Editor run. A successful static validation workflow alone does not prove that the Unreal project compiles or that an APK exists.
